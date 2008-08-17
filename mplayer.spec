@@ -7,7 +7,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.95.%{pre}%{?dist}
+Release:        0.96.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -23,6 +23,7 @@ Patch2:         %{name}-config.patch
 Patch5:         %{name}-x86_32-compile.patch
 Patch8:         %{name}-manlinks.patch
 Patch10:        %{name}-qcelp.patch
+Patch11:        %{name}-r27449.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -44,6 +45,7 @@ BuildRequires:  ladspa-devel
 BuildRequires:  lame-devel
 BuildRequires:  libGL-devel
 BuildRequires:  libXinerama-devel
+BuildRequires:  libXScrnSaver-devel
 BuildRequires:  libXv-devel
 BuildRequires:  libXvMC-devel
 BuildRequires:  libXxf86dga-devel
@@ -57,7 +59,7 @@ BuildRequires:  libmpcdec-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  lirc-devel
-BuildRequires:  live-devel
+BuildRequires:  live555-devel
 BuildRequires:  lzo-devel >= 2
 BuildRequires:  pulseaudio-lib-devel
 BuildRequires:  speex-devel >= 1.1
@@ -142,6 +144,7 @@ MPlayer documentation in various languages.
 %patch5 -p1 -b .compile
 %patch8 -p1 -b .manlinks
 %patch10 -p1 -b .qclp
+%patch11 -p0
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -388,6 +391,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Aug 17 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.96.20080613svn
+- live-devel is now live555-devel
+- added missing libXScrnSaver-devel BR
+- fixed audio in some rtsp streams (backport from SVN)
+
 * Sat Aug 09 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info - 1.0-0.95.20080613svn
 - rebuild
 
