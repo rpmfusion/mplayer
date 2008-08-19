@@ -7,7 +7,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.97.%{pre}%{?dist}
+Release:        0.98.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -140,7 +140,7 @@ MPlayer documentation in various languages.
 %else
 %setup -q -n MPlayer-%{version}%{pre}
 %endif
-%patch2 -p0
+%patch2 -p1 -b .config
 %patch5 -p1 -b .compile
 %patch8 -p1 -b .manlinks
 %patch10 -p1 -b .qclp
@@ -292,10 +292,6 @@ rm -rf doc/HTML
 # Default config files
 install -Dpm 644 etc/example.conf \
     $RPM_BUILD_ROOT%{_sysconfdir}/mplayer/mplayer.conf
-# use Nimbus Sans L font for OSD (via fontconfig)
-echo "fontconfig=yes" >>$RPM_BUILD_ROOT%{_sysconfdir}/mplayer/mplayer.conf
-echo "font=\"Sans\"" >>$RPM_BUILD_ROOT%{_sysconfdir}/mplayer/mplayer.conf
-echo "ao=pulse,alsa," >>$RPM_BUILD_ROOT%{_sysconfdir}/mplayer/mplayer.conf
 
 install -pm 644 etc/{input,menu}.conf $RPM_BUILD_ROOT%{_sysconfdir}/mplayer/
 
@@ -394,6 +390,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug 19 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.98.20080818svn
+- moved config settings to config patch
+- rebased patches against current snapshot
+
 * Mon Aug 18 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.97.20080818svn
 - updated to latest SVN snapshot
 - dropped obsolete patches
