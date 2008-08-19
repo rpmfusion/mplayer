@@ -1,13 +1,13 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20080613svn
+%define         pre 20080818svn
 %define         svn 1
-%define         svnbuild 2008-06-13
-%define         svnrev 27055
+%define         svnbuild 2008-08-18
+%define         svnrev 27470
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.96.%{pre}%{?dist}
+Release:        0.97.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -23,7 +23,7 @@ Patch2:         %{name}-config.patch
 Patch5:         %{name}-x86_32-compile.patch
 Patch8:         %{name}-manlinks.patch
 Patch10:        %{name}-qcelp.patch
-Patch11:        %{name}-r27449.patch
+Patch12:        %{name}-man-zh_CN.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -144,7 +144,7 @@ MPlayer documentation in various languages.
 %patch5 -p1 -b .compile
 %patch8 -p1 -b .manlinks
 %patch10 -p1 -b .qclp
-%patch11 -p0
+%patch12 -p1 -b .man-zh_CN
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -172,9 +172,9 @@ export CFLAGS="$CFLAGS -maltivec -mabi=altivec"
     --libdir=%{_libdir} \
     --codecsdir=%{codecdir} \
     \
-    --disable-encoder=FAAC \
-    --disable-encoder=MP3LAME \
-    --disable-encoder=X264 \
+    --disable-faac-lavc \
+    --disable-mp3lame-lavc \
+    --disable-x264-lavc \
     \
     --enable-gui \
     --enable-largefiles \
@@ -226,9 +226,9 @@ mv -f mplayer gmplayer
     --libdir=%{_libdir} \
     --codecsdir=%{codecdir} \
     \
-    --disable-encoder=FAAC \
-    --disable-encoder=MP3LAME \
-    --disable-encoder=X264 \
+    --disable-faac-lavc \
+    --disable-mp3lame-lavc \
+    --disable-x264-lavc \
     \
     --enable-largefiles \
     --enable-unrarexec \
@@ -278,7 +278,9 @@ popd
 rm -rf $RPM_BUILD_ROOT doc
 
 make install DESTDIR=$RPM_BUILD_ROOT STRIPBINARIES=no
-install -pm 755 TOOLS/midentify $RPM_BUILD_ROOT%{_bindir}/
+for file in aconvert.sh midentify.sh ; do
+install -pm 755 TOOLS/$file $RPM_BUILD_ROOT%{_bindir}/
+done
 
 # Clean up documentation
 mkdir doc
@@ -341,7 +343,8 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/mplayer/mplayer.conf
 %config(noreplace) %{_sysconfdir}/mplayer/input.conf
 %config(noreplace) %{_sysconfdir}/mplayer/menu.conf
-%{_bindir}/midentify
+%{_bindir}/aconvert.sh
+%{_bindir}/midentify.sh
 %{_bindir}/mplayer
 %dir %{codecdir}/
 %dir %{_datadir}/mplayer/
@@ -391,6 +394,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Aug 18 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.97.20080818svn
+- updated to latest SVN snapshot
+- dropped obsolete patches
+- installed aconvert.sh to bindir
+- fixed zh_CN manpage installation
+
 * Sun Aug 17 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.96.20080613svn
 - live-devel is now live555-devel
 - added missing libXScrnSaver-devel BR
