@@ -7,7 +7,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.96.%{pre}%{?dist}.1
+Release:        0.96.%{pre}%{?dist}.2
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -59,7 +59,8 @@ BuildRequires:  libjpeg-devel
 BuildRequires:  libmpcdec-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel
-BuildRequires:  lirc-devel >= 0.8.3
+BuildRequires:  lirc-devel
+BuildRequires:  lirc >= 0.8.3
 BuildRequires:  live555-devel
 BuildRequires:  lzo-devel >= 2
 BuildRequires:  pulseaudio-lib-devel
@@ -403,6 +404,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 21 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.96.20080818svn.2
+- work around builder bug (try 2)
+
 * Thu Aug 21 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.96.20080818svn.1
 - work around builder bug
 
