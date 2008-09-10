@@ -1,24 +1,25 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20080818svn
+%define         pre 20080903svn
 %define         svn 1
-%define         svnbuild 2008-08-18
-%define         svnrev 27470
+%define         svnbuild 2008-09-03
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.98.%{pre}%{?dist}
+Release:        0.99.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.mplayerhq.hu/
 %if %{svn}
-Source0:        http://rpm.greysector.net/livna/mplayer-export-%{svnbuild}.tar.bz2
+# run ./mplayer-snapshot.sh to get this
+Source0:        mplayer-export-%{svnbuild}.tar.bz2
 %else
 Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre}.tar.bz2
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
+Source10:       mplayer-snapshot.sh
 Patch2:         %{name}-config.patch
 Patch5:         %{name}-x86_32-compile.patch
 Patch8:         %{name}-manlinks.patch
@@ -53,9 +54,10 @@ BuildRequires:  libXxf86vm-devel
 BuildRequires:  libcaca-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdv-devel
-BuildRequires:  libdvdnav-devel >= 4.1.3
+BuildRequires:  libdvdnav-devel >= 4.1.3-0.4
 BuildRequires:  libjpeg-devel
 BuildRequires:  libmpcdec-devel
+BuildRequires:  libsmbclient-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  lirc-devel
@@ -74,7 +76,6 @@ BuildRequires:  xvidcore-devel >= 0.9.2
 %{?_with_libmad:BuildRequires:  libmad-devel}
 %{?_with_nemesi:BuildRequires:  libnemesi-devel >= 0.6.3}
 %{?_with_openal:BuildRequires: openal-devel}
-%{?_with_samba:BuildRequires: libsmbclient-devel}
 %{?_with_svgalib:BuildRequires: svgalib-devel}
 %{?_with_xmms:BuildRequires: xmms-devel}
 %if %{svn}
@@ -96,7 +97,6 @@ It supports a wide range of output drivers including X11, XVideo, DGA,
 OpenGL, SVGAlib, fbdev, AAlib, DirectFB etc. There are also nice
 antialiased shaded subtitles and OSD.
 Non-default rpmbuild options:
---with samba:   Enable Samba (smb://) support
 --with xmms:    Enable XMMS input plugin support
 --with amr:     Enable AMR support
 --with libmad:  Enable libmad support
@@ -156,10 +156,8 @@ for lang in ru ; do doconv koi8-r utf-8 $lang ; done
 
 mv DOCS/man/zh DOCS/man/zh_CN
 
-sed -i -e 's/\(SVN-r[0-9]* \)/\1rpm.livna.org /' -e 's/UNKNOWN/%{svnrev}/' version.sh
-
 %build
-export CFLAGS="$RPM_OPT_FLAGS -ffast-math"
+export CFLAGS="$RPM_OPT_FLAGS -ffast-math --std=gnu99"
 %ifarch ppc
 export CFLAGS="$CFLAGS -maltivec -mabi=altivec"
 %endif
@@ -184,7 +182,6 @@ export CFLAGS="$CFLAGS -maltivec -mabi=altivec"
     --enable-lirc \
     --enable-joystick \
     %{!?_with_nemesi:--disable-nemesi} \
-    %{!?_with_samba:--disable-smb} \
     --disable-dvdread-internal \
     --disable-libdvdcss-internal \
     --enable-menu \
@@ -237,7 +234,6 @@ mv -f mplayer gmplayer
     --enable-lirc \
     --enable-joystick \
     %{!?_with_nemesi:--disable-nemesi} \
-    %{!?_with_samba:--disable-smb} \
     --disable-dvdread-internal \
     --disable-libdvdcss-internal \
     --enable-menu \
@@ -390,6 +386,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 09 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.99.20080903svn
+- updated to 20080903 SVN snapshot
+- added snapshot creation script
+- dropped version sed-patching (happens in the snapshot script now)
+- enabled samba support by default
+
 * Tue Aug 19 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.98.20080818svn
 - moved config settings to config patch
 - rebased patches against current snapshot
