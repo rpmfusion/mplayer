@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.99.%{pre}%{?dist}
+Release:        0.100.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -25,6 +25,7 @@ Patch5:         %{name}-x86_32-compile.patch
 Patch8:         %{name}-manlinks.patch
 Patch10:        %{name}-qcelp.patch
 Patch12:        %{name}-man-zh_CN.patch
+Patch13:        %{name}-CVE-2008-3827.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -145,6 +146,7 @@ MPlayer documentation in various languages.
 %patch8 -p1 -b .manlinks
 %patch10 -p1 -b .qclp
 %patch12 -p1 -b .man-zh_CN
+%patch13 -p0 -b .cve
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -386,6 +388,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Oct 12 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.100.20080903svn
+- backport the fix for CVE-2008-3827
+
 * Tue Sep 09 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.99.20080903svn
 - updated to 20080903 SVN snapshot
 - added snapshot creation script
