@@ -1,30 +1,31 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20080818svn
+%define         pre 20080903svn
 %define         svn 1
-%define         svnbuild 2008-08-18
-%define         svnrev 27470
+%define         svnbuild 2008-09-03
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.96.%{pre}%{?dist}
+Release:        0.97.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.mplayerhq.hu/
 %if %{svn}
-Source0:        http://rpm.greysector.net/livna/mplayer-export-%{svnbuild}.tar.bz2
+# run ./mplayer-snapshot.sh to get this
+Source0:        mplayer-export-%{svnbuild}.tar.bz2
 %else
 Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre}.tar.bz2
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
+Source10:       mplayer-snapshot.sh
 Patch2:         %{name}-config.patch
 Patch5:         %{name}-x86_32-compile.patch
 Patch8:         %{name}-manlinks.patch
 Patch10:        %{name}-qcelp.patch
-Patch11:        %{name}-dvdread.patch
 Patch12:        %{name}-man-zh_CN.patch
+Patch13:        %{name}-CVE-2008-3827.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -54,9 +55,10 @@ BuildRequires:  libXxf86vm-devel
 BuildRequires:  libcaca-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdv-devel
-BuildRequires:  libdvdnav-devel >= 4.1.2
+BuildRequires:  libdvdnav-devel >= 4.1.3-1
 BuildRequires:  libjpeg-devel
 BuildRequires:  libmpcdec-devel
+BuildRequires:  libsmbclient-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  lirc-devel
@@ -65,7 +67,7 @@ BuildRequires:  lzo-devel >= 2
 BuildRequires:  pulseaudio-lib-devel
 BuildRequires:  speex-devel >= 1.1
 BuildRequires:  twolame-devel
-BuildRequires:  x264-devel
+BuildRequires:  x264-devel >= 0.0.0-0.14.20080613
 BuildRequires:  xvidcore-devel >= 0.9.2
 %{?_with_arts:BuildRequires: arts-devel}
 %{?_with_amr:BuildRequires: amrnb-devel amrwb-devel}
@@ -75,7 +77,6 @@ BuildRequires:  xvidcore-devel >= 0.9.2
 %{?_with_libmad:BuildRequires:  libmad-devel}
 %{?_with_nemesi:BuildRequires:  libnemesi-devel >= 0.6.3}
 %{?_with_openal:BuildRequires: openal-devel}
-%{?_with_samba:BuildRequires: libsmbclient-devel}
 %{?_with_svgalib:BuildRequires: svgalib-devel}
 %{?_with_xmms:BuildRequires: xmms-devel}
 %if %{svn}
@@ -97,7 +98,6 @@ It supports a wide range of output drivers including X11, XVideo, DGA,
 OpenGL, SVGAlib, fbdev, AAlib, DirectFB etc. There are also nice
 antialiased shaded subtitles and OSD.
 Non-default rpmbuild options:
---with samba:   Enable Samba (smb://) support
 --with xmms:    Enable XMMS input plugin support
 --with amr:     Enable AMR support
 --with libmad:  Enable libmad support
@@ -141,12 +141,12 @@ MPlayer documentation in various languages.
 %else
 %setup -q -n MPlayer-%{version}%{pre}
 %endif
-%patch2 -p0
+%patch2 -p1 -b .config
 %patch5 -p1 -b .compile
 %patch8 -p1 -b .manlinks
 %patch10 -p1 -b .qclp
-%patch11 -p1 -b .dvdread
 %patch12 -p1 -b .man-zh_CN
+%patch13 -p0 -b .cve
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -158,13 +158,8 @@ for lang in ru ; do doconv koi8-r utf-8 $lang ; done
 
 mv DOCS/man/zh DOCS/man/zh_CN
 
-sed -i -e 's/\(SVN-r[0-9]* \)/\1rpm.livna.org /' -e 's/UNKNOWN/%{svnrev}/' version.sh
-
-# remove internal libdvdread copy to avoid clashes
-rm -r dvdread
-
 %build
-export CFLAGS="$RPM_OPT_FLAGS -ffast-math"
+export CFLAGS="$RPM_OPT_FLAGS -ffast-math --std=gnu99"
 %ifarch ppc
 export CFLAGS="$CFLAGS -maltivec -mabi=altivec"
 %endif
@@ -189,7 +184,6 @@ export CFLAGS="$CFLAGS -maltivec -mabi=altivec"
     --enable-lirc \
     --enable-joystick \
     %{!?_with_nemesi:--disable-nemesi} \
-    %{!?_with_samba:--disable-smb} \
     --disable-dvdread-internal \
     --disable-libdvdcss-internal \
     --enable-menu \
@@ -217,9 +211,7 @@ export CFLAGS="$CFLAGS -maltivec -mabi=altivec"
     %{?_with_xmms:--with-xmmslibdir=%{_libdir}} \
     --with-xvmclib=XvMCW
 
-# parallel make fails in vidix
-#%{__make} %{?_smp_mflags}
-%{__make}
+%{__make} %{?_smp_mflags}
 
 mv -f mplayer gmplayer
 %{__make} distclean
@@ -244,7 +236,6 @@ mv -f mplayer gmplayer
     --enable-lirc \
     --enable-joystick \
     %{!?_with_nemesi:--disable-nemesi} \
-    %{!?_with_samba:--disable-smb} \
     --disable-dvdread-internal \
     --disable-libdvdcss-internal \
     --enable-menu \
@@ -272,9 +263,7 @@ mv -f mplayer gmplayer
     %{?_with_xmms:--with-xmmslibdir=%{_libdir}} \
     --with-xvmclib=XvMCW
 
-# parallel make fails in vidix
-#%{__make} %{?_smp_mflags}
-%{__make}
+%{__make} %{?_smp_mflags}
 
 %if %{svn}
 # build HTML documentation from XML files 
@@ -301,10 +290,6 @@ rm -rf doc/HTML
 # Default config files
 install -Dpm 644 etc/example.conf \
     $RPM_BUILD_ROOT%{_sysconfdir}/mplayer/mplayer.conf
-# use Nimbus Sans L font for OSD (via fontconfig)
-echo "fontconfig=yes" >>$RPM_BUILD_ROOT%{_sysconfdir}/mplayer/mplayer.conf
-echo "font=\"Sans\"" >>$RPM_BUILD_ROOT%{_sysconfdir}/mplayer/mplayer.conf
-echo "ao=pulse,alsa," >>$RPM_BUILD_ROOT%{_sysconfdir}/mplayer/mplayer.conf
 
 install -pm 644 etc/{input,menu}.conf $RPM_BUILD_ROOT%{_sysconfdir}/mplayer/
 
@@ -403,6 +388,20 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Oct 12 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.97.20080903svn
+- backport the fix for CVE-2008-3827
+- updated to 20080903 SVN snapshot
+- added snapshot creation script
+- dropped version sed-patching (happens in the snapshot script now)
+- enabled samba support by default
+- moved config settings to config patch
+- rebased patches against current snapshot
+- dropped obsolete patches
+- installed aconvert.sh to bindir
+- fixed zh_CN manpage installation
+- BR latest x264
+- re-enable parallel make
+
 * Mon Aug 18 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.96.20080818svn
 - updated to latest SVN snapshot
 - dropped obsolete patches

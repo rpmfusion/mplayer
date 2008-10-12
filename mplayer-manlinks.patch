@@ -1,16 +1,16 @@
-diff -up mplayer-export-2008-06-04/Makefile.manlinks mplayer-export-2008-06-04/Makefile
---- mplayer-export-2008-06-04/Makefile.manlinks	2008-05-30 22:10:36.000000000 +0200
-+++ mplayer-export-2008-06-04/Makefile	2008-06-04 23:13:37.000000000 +0200
-@@ -805,7 +805,7 @@ install-mplayer-man-en:
- 	$(INSTALL) -c -m 644 DOCS/man/en/mplayer.1 $(MANDIR)/man1/
+diff -up mplayer-export-2008-08-18/Makefile.manlinks mplayer-export-2008-08-18/Makefile
+--- mplayer-export-2008-08-18/Makefile.manlinks	2008-08-14 22:42:54.000000000 +0200
++++ mplayer-export-2008-08-18/Makefile	2008-08-19 13:50:17.000000000 +0200
+@@ -830,7 +830,7 @@ install-mencoder-man: $(foreach lang,$(M
+ install-mplayer-man:  $(foreach lang,$(MAN_LANGS),install-mplayer-man-$(lang))
  
  install-mencoder-man-en: install-mplayer-man-en
 -	cd $(MANDIR)/man1 && ln -sf mplayer.1 mencoder.1
 +	echo ".so mplayer.1" > $(MANDIR)/man1/mencoder.1
  
- define MPLAYER_MAN_RULE
- install-mplayer-man-$(lang):
-@@ -815,7 +815,7 @@ endef
+ install-mplayer-man-en:
+ 	$(INSTALL) -d $(MANDIR)/man1
+@@ -838,7 +838,7 @@ install-mplayer-man-en:
  
  define MENCODER_MAN_RULE
  install-mencoder-man-$(lang): install-mplayer-man-$(lang)
@@ -18,4 +18,4 @@ diff -up mplayer-export-2008-06-04/Makefile.manlinks mplayer-export-2008-06-04/M
 +	echo ".so mplayer.1" > $(MANDIR)/$(lang)/man1/mencoder.1
  endef
  
- $(foreach lang,$(MAN_LANG),$(eval $(MPLAYER_MAN_RULE)))
+ define MPLAYER_MAN_RULE
