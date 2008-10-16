@@ -18,6 +18,7 @@ dirname=mplayer-export-$svn
 cd "$tmp"
 svn checkout -r {$svn} svn://svn.mplayerhq.hu/mplayer/trunk $dirname
 cd $dirname
+rm -rf libdvdcss
 for dir in libav* libpostproc ; do
 	cd $dir
 	svn update -r {$svn}
