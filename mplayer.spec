@@ -7,7 +7,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.97.%{pre}%{?dist}
+Release:        0.97.%{pre}%{?dist}.1
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -19,6 +19,7 @@ Source0:        http://rpm.greysector.net/livna/mplayer-export-%{svnbuild}.tar.b
 Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre}.tar.bz2
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
+Source10:       mplayer-snapshot.sh
 Patch2:         %{name}-config.patch
 Patch5:         %{name}-x86_32-compile.patch
 Patch8:         %{name}-manlinks.patch
@@ -26,6 +27,7 @@ Patch10:        %{name}-qcelp.patch
 Patch11:        %{name}-dvdread.patch
 Patch12:        %{name}-man-zh_CN.patch
 Patch13:        %{name}-CVE-2008-3827.patch
+Patch14:        %{name}-nodvdcss.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -150,6 +152,7 @@ MPlayer documentation in various languages.
 %patch11 -p1 -b .dvdread
 %patch12 -p1 -b .man-zh_CN
 %patch13 -p0 -b .cve
+%patch14 -p1 -b .nodvdcss
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -406,6 +409,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 16 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.97.20080818svn.1
+- remove libdvdcss copy from the source tarball
+
 * Sun Oct 12 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.97.20080818svn
 - backport the fix for CVE-2008-3827
 

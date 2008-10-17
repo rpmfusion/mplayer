@@ -1,0 +1,43 @@
+diff -up mplayer-export-2008-08-18/configure.nodvdcss mplayer-export-2008-08-18/configure
+--- mplayer-export-2008-08-18/configure.nodvdcss	2008-10-17 10:01:45.000000000 +0200
++++ mplayer-export-2008-08-18/configure	2008-10-17 10:01:45.000000000 +0200
+@@ -587,7 +587,7 @@ _dvdnavconfig=dvdnav-config
+ _dvdreadconfig=dvdread-config
+ _dvdread=auto
+ _dvdread_internal=auto
+-_libdvdcss_internal=auto
++_libdvdcss_internal=no
+ _xanim=auto
+ _real=auto
+ _live=auto
+diff -up mplayer-export-2008-08-18/Makefile.nodvdcss mplayer-export-2008-08-18/Makefile
+--- mplayer-export-2008-08-18/Makefile.nodvdcss	2008-10-17 10:01:45.000000000 +0200
++++ mplayer-export-2008-08-18/Makefile	2008-10-17 10:02:13.000000000 +0200
+@@ -336,11 +336,6 @@ SRCS_COMMON-$(LIBDCA)                += 
+ SRCS_COMMON-$(LIBDV)                 += libmpcodecs/ad_libdv.c \
+                                         libmpcodecs/vd_libdv.c \
+                                         libmpdemux/demux_rawdv.c
+-SRCS_COMMON-$(LIBDVDCSS_INTERNAL)    += libdvdcss/css.c \
+-                                        libdvdcss/device.c \
+-                                        libdvdcss/error.c \
+-                                        libdvdcss/ioctl.c \
+-                                        libdvdcss/libdvdcss.c \
+ 
+ SRCS_COMMON-$(LIBMAD)                += libmpcodecs/ad_libmad.c
+ SRCS_COMMON-$(LIBMPEG2)              += libmpcodecs/vd_libmpeg2.c \
+@@ -678,7 +673,6 @@ DIRS =  . \
+         libavcodec/sparc \
+         libavformat \
+         libavutil \
+-        libdvdcss \
+         libfaad2 \
+         libmenu \
+         libmpcodecs \
+@@ -784,7 +778,6 @@ mencoder.d mplayer.d vobsub.d gui/win32/
+ $(DEPS): help_mp.h
+ 
+ dvdread/%.o dvdread/%.d: CFLAGS += -D__USE_UNIX98 -D_GNU_SOURCE -DHAVE_CONFIG_H $(CFLAGS_LIBDVDCSS_DVDREAD)
+-libdvdcss/%.o libdvdcss/%.d: CFLAGS += -D__USE_UNIX98 -D_GNU_SOURCE -DVERSION=\"1.2.9\" $(CFLAGS_LIBDVDCSS)
+ libfaad2/%.o libfaad2/%.d: CFLAGS += -Ilibfaad2 -D_GNU_SOURCE -DHAVE_CONFIG_H $(CFLAGS_FAAD_FIXED)
+ 
+ loader/% loader/%: CFLAGS += -Iloader -fno-omit-frame-pointer $(CFLAGS_NO_OMIT_LEAF_FRAME_POINTER)
