@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.97.%{pre}%{?dist}.1
+Release:        0.98.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -135,6 +135,54 @@ Group:          Documentation
 %description    doc
 MPlayer documentation in various languages.
 
+%define mp_configure \
+./configure \\\
+    --prefix=%{_prefix} \\\
+    --bindir=%{_bindir} \\\
+    --datadir=%{_datadir}/mplayer \\\
+    --mandir=%{_mandir} \\\
+    --confdir=%{_sysconfdir}/mplayer \\\
+    --libdir=%{_libdir} \\\
+    --codecsdir=%{codecdir} \\\
+    \\\
+    --target=%{_target_cpu}-%{_target_os} \\\
+    --language=all \\\
+    \\\
+    --enable-joystick \\\
+    --enable-largefiles \\\
+    --enable-lirc \\\
+    --enable-menu \\\
+    --enable-runtime-cpudetection \\\
+    --enable-unrarexec \\\
+    \\\
+    --disable-dvdread-internal \\\
+    --disable-libdvdcss-internal \\\
+    %{!?_with_nemesi:--disable-nemesi} \\\
+    \\\
+    --disable-faac-lavc \\\
+    --disable-mp3lame-lavc \\\
+    --disable-x264-lavc \\\
+    \\\
+    %{!?_with_amr:--disable-libamr_nb --disable-libamr_wb} \\\
+    --disable-faad-internal \\\
+    %{!?_with_libmad:--disable-mad} \\\
+    --disable-tremor-internal \\\
+    %{?_with_xmms:--enable-xmms} \\\
+    %{?_with_xmms:--with-xmmslibdir=%{_libdir}} \\\
+    \\\
+    --disable-bitmap-font \\\
+    --%{?_with_directfb:enable}%{!?_with_directfb:disable}-directfb \\\
+    --with-fribidi-config="pkg-config fribidi" \\\
+    %{!?_with_svgalib:--disable-svga} \\\
+    --disable-termcap \\\
+    --enable-xvmc \\\
+    --with-xvmclib=XvMCW \\\
+    \\\
+    %{!?_with_arts:--disable-arts} \\\
+    %{!?_with_esound:--disable-esd} \\\
+    %{!?_with_jack:--disable-jack} \\\
+    %{!?_with_openal:--disable-openal} \\\
+
 
 %prep
 %if %{svn}
@@ -165,105 +213,14 @@ export CFLAGS="$RPM_OPT_FLAGS -ffast-math --std=gnu99"
 %ifarch ppc
 export CFLAGS="$CFLAGS -maltivec -mabi=altivec"
 %endif
-./configure \
-    --prefix=%{_prefix} \
-    --bindir=%{_bindir} \
-    --datadir=%{_datadir}/mplayer \
-    --mandir=%{_mandir} \
-    --confdir=%{_sysconfdir}/mplayer \
-    --libdir=%{_libdir} \
-    --codecsdir=%{codecdir} \
-    \
-    --disable-faac-lavc \
-    --disable-mp3lame-lavc \
-    --disable-x264-lavc \
-    \
-    --enable-gui \
-    --enable-largefiles \
-    --enable-unrarexec \
-    --disable-termcap \
-    --disable-bitmap-font \
-    --enable-lirc \
-    --enable-joystick \
-    %{!?_with_nemesi:--disable-nemesi} \
-    --disable-dvdread-internal \
-    --disable-libdvdcss-internal \
-    --enable-menu \
-    \
-    --disable-faad-internal \
-    --disable-tremor-internal \
-    %{!?_with_amr:--disable-libamr_nb --disable-libamr_wb} \
-    %{!?_with_libmad:--disable-mad} \
-    %{?_with_xmms:--enable-xmms} \
-    \
-    --enable-xvmc \
-    --%{?_with_directfb:enable}%{!?_with_directfb:disable}-directfb \
-    %{!?_with_svgalib:--disable-svga} \
-    \
-    %{!?_with_arts:--disable-arts} \
-    %{!?_with_esound:--disable-esd} \
-    %{!?_with_jack:--disable-jack} \
-    %{!?_with_openal:--disable-openal} \
-    \
-    --enable-runtime-cpudetection \
-    --target=%{_target_cpu}-%{_target_os} \
-    --language=all \
-    \
-    --with-fribidi-config="pkg-config fribidi" \
-    %{?_with_xmms:--with-xmmslibdir=%{_libdir}} \
-    --with-xvmclib=XvMCW
+%{mp_configure}--enable-gui
 
 %{__make} %{?_smp_mflags}
 
 mv -f mplayer gmplayer
 %{__make} distclean
 
-./configure \
-    --prefix=%{_prefix} \
-    --bindir=%{_bindir} \
-    --datadir=%{_datadir}/mplayer \
-    --mandir=%{_mandir} \
-    --confdir=%{_sysconfdir}/mplayer \
-    --libdir=%{_libdir} \
-    --codecsdir=%{codecdir} \
-    \
-    --disable-faac-lavc \
-    --disable-mp3lame-lavc \
-    --disable-x264-lavc \
-    \
-    --enable-largefiles \
-    --enable-unrarexec \
-    --disable-termcap \
-    --disable-bitmap-font \
-    --enable-lirc \
-    --enable-joystick \
-    %{!?_with_nemesi:--disable-nemesi} \
-    --disable-dvdread-internal \
-    --disable-libdvdcss-internal \
-    --enable-menu \
-    \
-    --disable-faad-internal \
-    --disable-tremor-internal \
-    %{!?_with_amr:--disable-libamr_nb --disable-libamr_wb} \
-    %{!?_with_libmad:--disable-mad} \
-    %{?_with_xmms:--enable-xmms} \
-    \
-    --enable-xvmc \
-    --%{?_with_directfb:enable}%{!?_with_directfb:disable}-directfb \
-    %{!?_with_svgalib:--disable-svga} \
-    \
-    %{!?_with_arts:--disable-arts} \
-    %{!?_with_esound:--disable-esd} \
-    %{!?_with_jack:--disable-jack} \
-    %{!?_with_openal:--disable-openal} \
-    \
-    --enable-runtime-cpudetection \
-    --target=%{_target_cpu}-%{_target_os} \
-    --language=all \
-    \
-    --with-fribidi-config="pkg-config fribidi" \
-    %{?_with_xmms:--with-xmmslibdir=%{_libdir}} \
-    --with-xvmclib=XvMCW
+%{mp_configure}
 
 %{__make} %{?_smp_mflags}
 
@@ -390,6 +347,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Oct 28 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.98.20080903svn
+- rework the build system
+
 * Thu Oct 16 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.97.20080903svn.1
 - remove libdvdcss copy from the source tarball
 
