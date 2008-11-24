@@ -27,6 +27,10 @@ Patch10:        %{name}-qcelp.patch
 Patch12:        %{name}-man-zh_CN.patch
 Patch13:        %{name}-CVE-2008-3827.patch
 Patch14:        %{name}-nodvdcss.patch
+# SVN r27892, r27893, r27897
+Patch15:        %{name}-dvb.patch
+# SVN r27849
+Patch16:        %{name}-backing-store.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -59,7 +63,6 @@ BuildRequires:  libdv-devel
 BuildRequires:  libdvdnav-devel >= 4.1.3-0.4
 BuildRequires:  libjpeg-devel
 BuildRequires:  libmpcdec-devel
-BuildRequires:  libsmbclient-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  lirc-devel
@@ -78,6 +81,7 @@ BuildRequires:  xvidcore-devel >= 0.9.2
 %{?_with_libmad:BuildRequires:  libmad-devel}
 %{?_with_nemesi:BuildRequires:  libnemesi-devel >= 0.6.3}
 %{?_with_openal:BuildRequires: openal-devel}
+%{?_with_samba:BuildRequires: libsmbclient-devel}
 %{?_with_svgalib:BuildRequires: svgalib-devel}
 %{?_with_xmms:BuildRequires: xmms-devel}
 %if %{svn}
@@ -99,6 +103,7 @@ It supports a wide range of output drivers including X11, XVideo, DGA,
 OpenGL, SVGAlib, fbdev, AAlib, DirectFB etc. There are also nice
 antialiased shaded subtitles and OSD.
 Non-default rpmbuild options:
+--with samba:   Enable Samba (smb://) support
 --with xmms:    Enable XMMS input plugin support
 --with amr:     Enable AMR support
 --with libmad:  Enable libmad support
@@ -114,6 +119,7 @@ Non-default rpmbuild options:
 Summary:        GUI for MPlayer
 Group:          Applications/Multimedia
 Requires:       mplayer = %{version}-%{release}
+Requires:       hicolor-icon-theme
 
 %description    gui
 This package contains a GUI for MPlayer and a default skin for it.
@@ -122,8 +128,6 @@ This package contains a GUI for MPlayer and a default skin for it.
 Summary:        MPlayer movie encoder
 Group:          Applications/Multimedia
 Requires:       mplayer = %{version}-%{release}
-Provides:       mplayer-mencoder = %{version}-%{release}
-Obsoletes:      mplayer-mencoder < 1.0-0.36
 
 %description -n mencoder
 This package contains the MPlayer movie encoder. 
@@ -158,6 +162,7 @@ MPlayer documentation in various languages.
     --disable-dvdread-internal \\\
     --disable-libdvdcss-internal \\\
     %{!?_with_nemesi:--disable-nemesi} \\\
+    %{!?_with_samba:--disable-smb} \\\
     \\\
     --disable-faac-lavc \\\
     --disable-mp3lame-lavc \\\
@@ -197,6 +202,8 @@ MPlayer documentation in various languages.
 %patch12 -p1 -b .man-zh_CN
 %patch13 -p0 -b .cve
 %patch14 -p1 -b .nodvdcss
+%patch15 -p1 -b .dvb
+%patch16 -p1 -b .bs
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -347,6 +354,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 23 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.103.20080903svn
+- fix broken terminal after using dvb input (bug #117)
+- disable backing store (fixes tearing on Xorg Xserver 1.5.x)
+- disable samba support by default, too much dependency bloat (bug #147)
+- add missing Requires for hicolor icon dirs to -gui
+- drop provides and obsoletes for mplayer-mencoder (last seen for FC4)
+
 * Tue Oct 28 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.102.20080903svn
 - rework the build system
 - rebuild for new libcaca
