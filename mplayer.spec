@@ -234,7 +234,6 @@ mv -f mplayer gmplayer
     --enable-unrarexec \
     --disable-termcap \
     --disable-bitmap-font \
-    --enable-lirc \
     --enable-joystick \
     %{!?_with_nemesi:--disable-nemesi} \
     --disable-dvdread-internal \
