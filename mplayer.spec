@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.101.%{pre}%{?dist}
+Release:        0.101.%{pre}%{?dist}.1
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -34,7 +34,7 @@ BuildRequires:  aalib-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  cdparanoia-devel
 BuildRequires:  desktop-file-utils
-BuildRequires:  em8300-devel
+#BuildRequires:  em8300-devel
 BuildRequires:  enca-devel
 BuildRequires:  faac-devel
 BuildRequires:  faad2 >= %{faad2min}
@@ -59,14 +59,14 @@ BuildRequires:  libdv-devel
 BuildRequires:  libdvdnav-devel >= 4.1.3-0.4
 BuildRequires:  libjpeg-devel
 BuildRequires:  libmpcdec-devel
-BuildRequires:  libsmbclient-devel
+#BuildRequires:  libsmbclient-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel
-BuildRequires:  lirc-devel
+#BuildRequires:  lirc-devel
 BuildRequires:  live555-devel
 BuildRequires:  lzo-devel >= 2
 BuildRequires:  pulseaudio-lib-devel
-BuildRequires:  speex-devel >= 1.1
+#BuildRequires:  speex-devel >= 1.1
 BuildRequires:  twolame-devel
 BuildRequires:  x264-devel >= 0.0.0-0.14.20080613
 BuildRequires:  xvidcore-devel >= 0.9.2
@@ -390,6 +390,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Dec 04 2008 Thorsten Leemhuis <fedora at leemhuis.info> - 1.0-0.101.20080903svn.1
+- disable BRs lirc-devel libsmbclient-devel speex-devel and em8300-devel for EL
+
 * Thu Oct 16 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.101.20080903svn
 - remove libdvdcss copy from the source tarball
 
