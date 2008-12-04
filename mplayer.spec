@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20080903svn
+%define         pre 20081204svn
 %define         svn 1
-%define         svnbuild 2008-09-03
+%define         svnbuild 2008-12-04
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.103.%{pre}%{?dist}
+Release:        0.104.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -25,12 +25,7 @@ Patch5:         %{name}-x86_32-compile.patch
 Patch8:         %{name}-manlinks.patch
 Patch10:        %{name}-qcelp.patch
 Patch12:        %{name}-man-zh_CN.patch
-Patch13:        %{name}-CVE-2008-3827.patch
 Patch14:        %{name}-nodvdcss.patch
-# SVN r27892, r27893, r27897
-Patch15:        %{name}-dvb.patch
-# SVN r27849
-Patch16:        %{name}-backing-store.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -200,10 +195,7 @@ MPlayer documentation in various languages.
 %patch8 -p1 -b .manlinks
 %patch10 -p1 -b .qclp
 %patch12 -p1 -b .man-zh_CN
-%patch13 -p0 -b .cve
 %patch14 -p1 -b .nodvdcss
-%patch15 -p1 -b .dvb
-%patch16 -p1 -b .bs
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -354,6 +346,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Dec 04 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.104.20081204svn
+- 20081204 snapshot
+- dropped obsolete/upstreamed patches
+
 * Sun Nov 23 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.103.20080903svn
 - fix broken terminal after using dvb input (bug #117)
 - disable backing store (fixes tearing on Xorg Xserver 1.5.x)

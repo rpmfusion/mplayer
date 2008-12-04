@@ -1,10 +1,10 @@
-diff -up mplayer-export-2008-05-31/libavcodec/Makefile.compile mplayer-export-2008-05-31/libavcodec/Makefile
---- mplayer-export-2008-05-31/libavcodec/Makefile.compile	2008-05-31 16:32:11.000000000 +0200
-+++ mplayer-export-2008-05-31/libavcodec/Makefile	2008-06-11 07:47:18.000000000 +0200
-@@ -91,6 +91,11 @@ OBJS-$(CONFIG_H263I_DECODER)           +
+diff -up mplayer-export-2008-12-04/libavcodec/Makefile.compile mplayer-export-2008-12-04/libavcodec/Makefile
+--- mplayer-export-2008-12-04/libavcodec/Makefile.compile	2008-12-02 17:48:05.000000000 +0100
++++ mplayer-export-2008-12-04/libavcodec/Makefile	2008-12-05 00:20:51.000000000 +0100
+@@ -99,6 +99,11 @@ OBJS-$(CONFIG_H263I_DECODER)           +
  OBJS-$(CONFIG_H263_ENCODER)            += mpegvideo_enc.o motion_est.o ratecontrol.o h263.o mpeg12data.o mpegvideo.o error_resilience.o
  OBJS-$(CONFIG_H263P_ENCODER)           += mpegvideo_enc.o motion_est.o ratecontrol.o h263.o mpeg12data.o mpegvideo.o error_resilience.o
- OBJS-$(CONFIG_H264_DECODER)            += h264.o h264idct.o h264pred.o h264_parser.o cabac.o golomb.o mpegvideo.o error_resilience.o
+ OBJS-$(CONFIG_H264_DECODER)            += h264.o h264idct.o h264pred.o h264_parser.o cabac.o mpegvideo.o error_resilience.o
 +# to "fix" can't find a register in class 'GENERAL_REGS' while reloading 'asm'
 +# on ix86 in cabac.h
 +ifeq ($(ARCH_X86_32),yes)
@@ -13,15 +13,15 @@ diff -up mplayer-export-2008-05-31/libavcodec/Makefile.compile mplayer-export-20
  OBJS-$(CONFIG_H264_ENCODER)            += h264enc.o h264dspenc.o
  OBJS-$(CONFIG_HUFFYUV_DECODER)         += huffyuv.o
  OBJS-$(CONFIG_HUFFYUV_ENCODER)         += huffyuv.o
-@@ -395,6 +400,11 @@ OBJS-$(CONFIG_ENCODERS)                +
- OBJS-$(CONFIG_CAVS_DECODER)            += i386/cavsdsp_mmx.o
- OBJS-$(CONFIG_FLAC_ENCODER)            += i386/flacdsp_mmx.o
- OBJS-$(CONFIG_SNOW_DECODER)            += i386/snowdsp_mmx.o
+@@ -397,6 +402,11 @@ MMX-OBJS-$(CONFIG_ENCODERS)            +
+ MMX-OBJS-$(CONFIG_FLAC_ENCODER)        += i386/flacdsp_mmx.o
+ MMX-OBJS-$(CONFIG_GPL)                 += i386/idct_mmx.o
+ MMX-OBJS-$(CONFIG_SNOW_DECODER)        += i386/snowdsp_mmx.o
 +# to "fix" can't find a register in class 'GENERAL_REGS' while reloading 'asm'
 +# on ix86 in snowdsp_mmx.o
 +ifeq ($(ARCH_X86_32),yes)
 +i386/snowdsp_mmx.o: CFLAGS += -fomit-frame-pointer
 +endif
- OBJS-$(CONFIG_VC1_DECODER)             += i386/vc1dsp_mmx.o
- OBJS-$(CONFIG_VP3_DECODER)             += i386/vp3dsp_mmx.o i386/vp3dsp_sse2.o
- OBJS-$(CONFIG_VP5_DECODER)             += i386/vp3dsp_mmx.o i386/vp3dsp_sse2.o
+ MMX-OBJS-$(CONFIG_VC1_DECODER)         += i386/vc1dsp_mmx.o
+ MMX-OBJS-$(CONFIG_VP3_DECODER)         += i386/vp3dsp_mmx.o i386/vp3dsp_sse2.o
+ MMX-OBJS-$(CONFIG_VP5_DECODER)         += i386/vp3dsp_mmx.o i386/vp3dsp_sse2.o
