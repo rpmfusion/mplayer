@@ -1,7 +1,7 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20081204svn
+%define         pre 20081218svn
 %define         svn 1
-%define         svnbuild 2008-12-04
+%define         svnbuild 2008-12-18
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
@@ -346,8 +346,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Dec 04 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.104.20081204svn
-- 20081204 snapshot
+* Thu Dec 18 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.104.20081218svn
+- 20081218 snapshot
 - dropped obsolete/upstreamed patches
 
 * Sun Nov 23 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.103.20080903svn
