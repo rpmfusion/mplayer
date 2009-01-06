@@ -235,7 +235,7 @@ rm -rf $RPM_BUILD_ROOT doc
 
 make install DESTDIR=$RPM_BUILD_ROOT STRIPBINARIES=no
 for file in aconvert.sh midentify.sh ; do
-install -pm 755 TOOLS/$file $RPM_BUILD_ROOT%{_bindir}/
+install -pm 755 TOOLS/$file $RPM_BUILD_ROOT%{_bindir}/`basename $file .sh`
 done
 
 # Clean up documentation
@@ -295,8 +295,8 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/mplayer/mplayer.conf
 %config(noreplace) %{_sysconfdir}/mplayer/input.conf
 %config(noreplace) %{_sysconfdir}/mplayer/menu.conf
-%{_bindir}/aconvert.sh
-%{_bindir}/midentify.sh
+%{_bindir}/aconvert
+%{_bindir}/midentify
 %{_bindir}/mplayer
 %dir %{codecdir}/
 %dir %{_datadir}/mplayer/
@@ -346,6 +346,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* ??? Jan ?? 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.105.???
+- dropped .sh extension from shell scripts in %%{_bindir}
+
 * Thu Dec 18 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.104.20081218svn
 - 20081218 snapshot
 - dropped obsolete/upstreamed patches
