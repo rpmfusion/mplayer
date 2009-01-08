@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20081218svn
+%define         pre 20090107svn
 %define         svn 1
-%define         svnbuild 2008-12-18
+%define         svnbuild 2009-01-07
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.104.%{pre}%{?dist}
+Release:        0.105.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -68,6 +68,7 @@ BuildRequires:  speex-devel >= 1.1
 BuildRequires:  twolame-devel
 BuildRequires:  x264-devel >= 0.0.0-0.14.20080613
 BuildRequires:  xvidcore-devel >= 0.9.2
+BuildRequires:  yasm
 %{?_with_arts:BuildRequires: arts-devel}
 %{?_with_amr:BuildRequires: amrnb-devel amrwb-devel}
 %{?_with_directfb:BuildRequires: directfb-devel}
@@ -346,8 +347,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* ??? Jan ?? 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.105.???
+* Wed Jan 07 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.105.20090107svn
+- 20090107 snapshot
 - dropped .sh extension from shell scripts in %%{_bindir}
+- BR: yasm for more asm-optimized routines
+- rebased patches
 
 * Thu Dec 18 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.104.20081218svn
 - 20081218 snapshot

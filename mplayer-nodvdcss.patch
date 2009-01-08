@@ -1,7 +1,7 @@
-diff -up mplayer-export-2008-09-03/configure.nodvdcss mplayer-export-2008-09-03/configure
---- mplayer-export-2008-09-03/configure.nodvdcss	2008-10-16 21:22:23.000000000 +0200
-+++ mplayer-export-2008-09-03/configure	2008-10-16 21:30:47.000000000 +0200
-@@ -589,7 +589,7 @@ _dvdnavconfig=dvdnav-config
+diff -up mplayer-export-2009-01-07/configure.nodvdcss mplayer-export-2009-01-07/configure
+--- mplayer-export-2009-01-07/configure.nodvdcss	2009-01-07 00:27:10.000000000 +0100
++++ mplayer-export-2009-01-07/configure	2009-01-07 00:27:10.000000000 +0100
+@@ -617,7 +617,7 @@ _dvdnavconfig=dvdnav-config
  _dvdreadconfig=dvdread-config
  _dvdread=auto
  _dvdread_internal=auto
@@ -10,9 +10,9 @@ diff -up mplayer-export-2008-09-03/configure.nodvdcss mplayer-export-2008-09-03/
  _xanim=auto
  _real=auto
  _live=auto
-diff -up mplayer-export-2008-09-03/Makefile.nodvdcss mplayer-export-2008-09-03/Makefile
---- mplayer-export-2008-09-03/Makefile.nodvdcss	2008-10-16 21:22:23.000000000 +0200
-+++ mplayer-export-2008-09-03/Makefile	2008-10-16 21:27:12.000000000 +0200
+diff -up mplayer-export-2009-01-07/Makefile.nodvdcss mplayer-export-2009-01-07/Makefile
+--- mplayer-export-2009-01-07/Makefile.nodvdcss	2009-01-07 00:27:10.000000000 +0100
++++ mplayer-export-2009-01-07/Makefile	2009-01-07 00:27:10.000000000 +0100
 @@ -336,11 +336,6 @@ SRCS_COMMON-$(LIBDCA)                += 
  SRCS_COMMON-$(LIBDV)                 += libmpcodecs/ad_libdv.c \
                                          libmpcodecs/vd_libdv.c \
@@ -25,15 +25,15 @@ diff -up mplayer-export-2008-09-03/Makefile.nodvdcss mplayer-export-2008-09-03/M
  
  SRCS_COMMON-$(LIBMAD)                += libmpcodecs/ad_libmad.c
  SRCS_COMMON-$(LIBMPEG2)              += libmpcodecs/vd_libmpeg2.c \
-@@ -677,7 +672,6 @@ DIRS =  . \
-         libavcodec/sparc \
+@@ -732,7 +727,6 @@ DIRS =  . \
+         libavcodec/x86 \
          libavformat \
          libavutil \
 -        libdvdcss \
          libdvdread \
          libfaad2 \
          libmenu \
-@@ -783,7 +777,6 @@ codec-cfg.d: codecs.conf.h
+@@ -838,7 +832,6 @@ codec-cfg.d: codecs.conf.h
  mencoder.d mplayer.d vobsub.d gui/win32/gui.d libmpdemux/muxer_avi.d osdep/mplayer-rc.o stream/network.d stream/stream_cddb.d: version.h
  $(DEPS): help_mp.h
  
