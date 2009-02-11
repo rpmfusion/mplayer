@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20090107svn
+%define         pre 20090204svn
 %define         svn 1
-%define         svnbuild 2009-01-07
+%define         svnbuild 2009-02-04
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.105.%{pre}%{?dist}
+Release:        0.106.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -24,7 +24,6 @@ Patch2:         %{name}-config.patch
 Patch5:         %{name}-x86_32-compile.patch
 Patch8:         %{name}-manlinks.patch
 Patch10:        %{name}-qcelp.patch
-Patch12:        %{name}-man-zh_CN.patch
 Patch14:        %{name}-nodvdcss.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -36,7 +35,6 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  em8300-devel
 BuildRequires:  enca-devel
 BuildRequires:  faac-devel
-BuildRequires:  faad2 >= %{faad2min}
 BuildRequires:  faad2-devel >= %{faad2min}
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
@@ -195,7 +193,6 @@ MPlayer documentation in various languages.
 %patch5 -p1 -b .compile
 %patch8 -p1 -b .manlinks
 %patch10 -p1 -b .qclp
-%patch12 -p1 -b .man-zh_CN
 %patch14 -p1 -b .nodvdcss
 
 doconv() {
@@ -205,8 +202,6 @@ doconv() {
 for lang in de es fr it ; do doconv iso-8859-1 utf-8 $lang ; done
 for lang in hu pl ; do doconv iso-8859-2 utf-8 $lang ; done
 for lang in ru ; do doconv koi8-r utf-8 $lang ; done
-
-mv DOCS/man/zh DOCS/man/zh_CN
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -ffast-math --std=gnu99"
@@ -347,6 +342,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 04 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.106.20090204svn
+- 20090204 snapshot
+- dropped obsolete patch
+- dropped obsolete BR
+
 * Wed Jan 07 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.105.20090107svn
 - 20090107 snapshot
 - dropped .sh extension from shell scripts in %%{_bindir}
