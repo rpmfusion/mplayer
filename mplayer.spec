@@ -1,7 +1,7 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20081218svn
+%define         pre 20090204svn
 %define         svn 1
-%define         svnbuild 2008-12-18
+%define         svnbuild 2009-02-04
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
@@ -24,7 +24,6 @@ Patch2:         %{name}-config.patch
 Patch5:         %{name}-x86_32-compile.patch
 Patch8:         %{name}-manlinks.patch
 Patch10:        %{name}-qcelp.patch
-Patch12:        %{name}-man-zh_CN.patch
 Patch14:        %{name}-nodvdcss.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -68,6 +67,9 @@ BuildRequires:  speex-devel >= 1.1
 BuildRequires:  twolame-devel
 BuildRequires:  x264-devel >= 0.0.0-0.14.20080613
 BuildRequires:  xvidcore-devel >= 0.9.2
+%ifarch %{ix86} x86_64
+BuildRequires:  yasm
+%endif
 %{?_with_arts:BuildRequires: arts-devel}
 %{?_with_amr:BuildRequires: amrnb-devel amrwb-devel}
 %{?_with_directfb:BuildRequires: directfb-devel}
@@ -194,7 +196,6 @@ MPlayer documentation in various languages.
 %patch5 -p1 -b .compile
 %patch8 -p1 -b .manlinks
 %patch10 -p1 -b .qclp
-%patch12 -p1 -b .man-zh_CN
 %patch14 -p1 -b .nodvdcss
 
 doconv() {
@@ -204,8 +205,6 @@ doconv() {
 for lang in de es fr it ; do doconv iso-8859-1 utf-8 $lang ; done
 for lang in hu pl ; do doconv iso-8859-2 utf-8 $lang ; done
 for lang in ru ; do doconv koi8-r utf-8 $lang ; done
-
-mv DOCS/man/zh DOCS/man/zh_CN
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -ffast-math --std=gnu99"
@@ -346,10 +345,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Jan 06 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.100.20081218svn
-- 20081218 snapshot
+* Tue Feb 10 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.100.20090204svn
+- 20090204 snapshot
 - dropped obsolete/upstreamed patches
 - dropped .sh extension from shell scripts in %%{_bindir}
+- BR: yasm for more asm optimizations
 
 * Sun Nov 23 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.99.20080903svn
 - fix broken terminal after using dvb input (bug #117)
