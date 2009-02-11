@@ -53,7 +53,7 @@ BuildRequires:  libXxf86vm-devel
 BuildRequires:  libcaca-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdv-devel
-BuildRequires:  libdvdnav-devel >= 4.1.3-0.4
+BuildRequires:  libdvdnav-devel >= 4.1.3-1
 BuildRequires:  libjpeg-devel
 BuildRequires:  libmpcdec-devel
 BuildRequires:  libtheora-devel
