@@ -205,9 +205,6 @@ for lang in ru ; do doconv koi8-r utf-8 $lang ; done
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -ffast-math --std=gnu99"
-%ifarch ppc
-export CFLAGS="$CFLAGS -maltivec -mabi=altivec"
-%endif
 %{mp_configure}--enable-gui
 
 %{__make} %{?_smp_mflags}
@@ -346,6 +343,7 @@ rm -rf $RPM_BUILD_ROOT
 - 20090204 snapshot
 - dropped obsolete patch
 - dropped obsolete BR
+- dropped redundant altivec CFLAGS on ppc
 
 * Wed Jan 07 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.105.20090107svn
 - 20090107 snapshot
