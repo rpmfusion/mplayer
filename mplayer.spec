@@ -208,9 +208,6 @@ for lang in ru ; do doconv koi8-r utf-8 $lang ; done
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -ffast-math --std=gnu99"
-%ifarch ppc
-export CFLAGS="$CFLAGS -maltivec -mabi=altivec"
-%endif
 %{mp_configure}--enable-gui
 
 %{__make} %{?_smp_mflags}
@@ -350,6 +347,7 @@ rm -rf $RPM_BUILD_ROOT
 - dropped obsolete/upstreamed patches
 - dropped .sh extension from shell scripts in %%{_bindir}
 - BR: yasm for more asm optimizations
+- dropped redundant altivec CFLAGS on ppc
 
 * Sun Nov 23 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.103.20080903svn
 - fix broken terminal after using dvb input (bug #117)
