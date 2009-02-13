@@ -20,6 +20,7 @@ Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
 Source10:       mplayer-snapshot.sh
+Patch1:         %{name}-ppc-compile.patch
 Patch2:         %{name}-config.patch
 Patch5:         %{name}-x86_32-compile.patch
 Patch8:         %{name}-manlinks.patch
@@ -192,6 +193,7 @@ MPlayer documentation in various languages.
 %else
 %setup -q -n MPlayer-%{version}%{pre}
 %endif
+%patch1 -p1 -b .ppc-compile
 %patch2 -p1 -b .config
 %patch5 -p1 -b .compile
 %patch8 -p1 -b .manlinks
@@ -348,6 +350,7 @@ rm -rf $RPM_BUILD_ROOT
 - dropped .sh extension from shell scripts in %%{_bindir}
 - BR: yasm for more asm optimizations
 - dropped redundant altivec CFLAGS on ppc
+- fixed build on ppc
 
 * Sun Nov 23 2008 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.99.20080903svn
 - fix broken terminal after using dvb input (bug #117)
