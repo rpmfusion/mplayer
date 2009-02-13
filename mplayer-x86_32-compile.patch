@@ -1,11 +1,11 @@
-diff -up mplayer-export-2008-12-18/libavcodec/Makefile.compile mplayer-export-2008-12-18/libavcodec/Makefile
---- mplayer-export-2008-12-18/libavcodec/Makefile.compile	2008-12-17 01:54:54.000000000 +0100
-+++ mplayer-export-2008-12-18/libavcodec/Makefile	2008-12-18 19:44:49.000000000 +0100
-@@ -505,3 +505,7 @@ include $(SUBDIR)../subdir.mak
+diff -up mplayer-export-2009-02-04/libavcodec/Makefile.compile mplayer-export-2009-02-04/libavcodec/Makefile
+--- mplayer-export-2009-02-04/libavcodec/Makefile.compile	2009-01-30 21:15:48.000000000 +0100
++++ mplayer-export-2009-02-04/libavcodec/Makefile	2009-02-13 21:00:46.000000000 +0100
+@@ -518,3 +518,7 @@ include $(SUBDIR)../subdir.mak
  
  $(SUBDIR)dct-test$(EXESUF): $(SUBDIR)fdctref.o $(SUBDIR)aandcttab.o
  $(SUBDIR)fft-test$(EXESUF): $(SUBDIR)fdctref.o
 +ifeq ($(ARCH_X86_32),yes)
-+$(SUBDIR)i386/snowdsp_mmx.o: CFLAGS += -fomit-frame-pointer
++$(SUBDIR)x86/snowdsp_mmx.o: CFLAGS += -fomit-frame-pointer
 +$(SUBDIR)h264.o: CFLAGS += -fomit-frame-pointer
 +endif
