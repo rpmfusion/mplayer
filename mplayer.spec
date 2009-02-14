@@ -212,16 +212,12 @@ for lang in ru ; do doconv koi8-r utf-8 $lang ; done
 export CFLAGS="$RPM_OPT_FLAGS -ffast-math --std=gnu99"
 %{mp_configure}--enable-gui
 
-cat configure.log config.h config.mak
-
 %{__make} %{?_smp_mflags}
 
 mv -f mplayer gmplayer
 %{__make} distclean
 
 %{mp_configure}
-
-cat configure.log config.h config.mak
 
 %{__make} %{?_smp_mflags}
 
