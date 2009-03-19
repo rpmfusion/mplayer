@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20090204svn
+%define         pre 20090319svn
 %define         svn 1
-%define         svnbuild 2009-02-04
+%define         svnbuild 2009-03-19
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.106.%{pre}%{?dist}
+Release:        0.107.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -20,7 +20,7 @@ Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
 Source10:       mplayer-snapshot.sh
-Patch1:         %{name}-ppc-compile.patch
+Patch1:         %{name}-htmldocs.patch
 Patch2:         %{name}-config.patch
 Patch5:         %{name}-x86_32-compile.patch
 Patch8:         %{name}-manlinks.patch
@@ -190,7 +190,7 @@ MPlayer documentation in various languages.
 %else
 %setup -q -n MPlayer-%{version}%{pre}
 %endif
-%patch1 -p1 -b .ppc-compile
+%patch1 -p1 -b .htmldocs
 %patch2 -p1 -b .config
 %patch5 -p1 -b .compile
 %patch8 -p1 -b .manlinks
@@ -341,6 +341,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Mar 19 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.107.20091319svn
+- 20090319 snapshot
+- fix HTML docs generation
+
 * Wed Feb 04 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.106.20090204svn
 - 20090204 snapshot
 - dropped obsolete patch
