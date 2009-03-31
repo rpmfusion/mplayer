@@ -20,7 +20,7 @@ Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
 Source10:       mplayer-snapshot.sh
-Patch1:         %{name}-htmldocs.patch
+Patch1:         %{name}-ppc-compile.patch
 Patch2:         %{name}-config.patch
 Patch3:         %{name}-cflags.patch
 Patch8:         %{name}-manlinks.patch
@@ -190,7 +190,7 @@ MPlayer documentation in various languages.
 %else
 %setup -q -n MPlayer-%{version}%{pre}
 %endif
-%patch1 -p1 -b .htmldocs
+%patch1 -p1 -b .ppc-compile
 %patch2 -p1 -b .config
 %patch3 -p1 -b .cflags
 %patch8 -p1 -b .manlinks
@@ -343,6 +343,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sun Mar 29 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.109.20090329svn
 - 20090329 snapshot from 1.0rc3 branch
 - fix RPM_OPT_FLAGS usage
+- drop obsolete patch
 
 * Sun Mar 29 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.0-0.108.20090319svn
 - rebuild for new F11 features
