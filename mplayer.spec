@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20090319svn
+%define         pre 20090329svn
 %define         svn 1
-%define         svnbuild 2009-03-19
+%define         svnbuild 2009-03-29
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.108.%{pre}%{?dist}
+Release:        0.109.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -22,7 +22,7 @@ Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
 Source10:       mplayer-snapshot.sh
 Patch1:         %{name}-htmldocs.patch
 Patch2:         %{name}-config.patch
-Patch5:         %{name}-x86_32-compile.patch
+Patch3:         %{name}-cflags.patch
 Patch8:         %{name}-manlinks.patch
 Patch10:        %{name}-qcelp.patch
 Patch14:        %{name}-nodvdcss.patch
@@ -144,7 +144,7 @@ MPlayer documentation in various languages.
     --libdir=%{_libdir} \\\
     --codecsdir=%{codecdir} \\\
     \\\
-    --target=%{_target_cpu}-%{_target_os} \\\
+    --extra-cflags="`echo $RPM_OPT_FLAGS|sed -e s,i386,i486,`" \\\
     --language=all \\\
     \\\
     --enable-joystick \\\
@@ -192,7 +192,7 @@ MPlayer documentation in various languages.
 %endif
 %patch1 -p1 -b .htmldocs
 %patch2 -p1 -b .config
-%patch5 -p1 -b .compile
+%patch3 -p1 -b .cflags
 %patch8 -p1 -b .manlinks
 %patch10 -p1 -b .qclp
 %patch14 -p1 -b .nodvdcss
@@ -206,7 +206,6 @@ for lang in hu pl ; do doconv iso-8859-2 utf-8 $lang ; done
 for lang in ru ; do doconv koi8-r utf-8 $lang ; done
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -ffast-math --std=gnu99"
 %{mp_configure}--enable-gui
 
 %{__make} %{?_smp_mflags}
@@ -341,6 +340,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Mar 29 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.109.20090329svn
+- 20090329 snapshot from 1.0rc3 branch
+- fix RPM_OPT_FLAGS usage
+
 * Sun Mar 29 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.0-0.108.20090319svn
 - rebuild for new F11 features
 

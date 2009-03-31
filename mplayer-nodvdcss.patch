@@ -1,7 +1,7 @@
-diff -up mplayer-export-2009-03-19/configure.nodvdcss mplayer-export-2009-03-19/configure
---- mplayer-export-2009-03-19/configure.nodvdcss	2009-03-18 22:48:35.000000000 +0100
-+++ mplayer-export-2009-03-19/configure	2009-03-19 00:16:32.000000000 +0100
-@@ -623,7 +623,7 @@ _dvdnavconfig=dvdnav-config
+diff -up mplayer-export-2009-03-29/configure.nodvdcss mplayer-export-2009-03-29/configure
+--- mplayer-export-2009-03-29/configure.nodvdcss	2009-03-29 00:21:21.000000000 +0100
++++ mplayer-export-2009-03-29/configure	2009-03-29 11:20:11.000000000 +0200
+@@ -622,7 +622,7 @@ _dvdnavconfig=dvdnav-config
  _dvdreadconfig=dvdread-config
  _dvdread=auto
  _dvdread_internal=auto
@@ -10,9 +10,9 @@ diff -up mplayer-export-2009-03-19/configure.nodvdcss mplayer-export-2009-03-19/
  _xanim=auto
  _real=auto
  _live=auto
-diff -up mplayer-export-2009-03-19/Makefile.nodvdcss mplayer-export-2009-03-19/Makefile
---- mplayer-export-2009-03-19/Makefile.nodvdcss	2009-03-19 00:16:32.000000000 +0100
-+++ mplayer-export-2009-03-19/Makefile	2009-03-19 00:17:04.000000000 +0100
+diff -up mplayer-export-2009-03-29/Makefile.nodvdcss mplayer-export-2009-03-29/Makefile
+--- mplayer-export-2009-03-29/Makefile.nodvdcss	2009-03-29 11:20:11.000000000 +0200
++++ mplayer-export-2009-03-29/Makefile	2009-03-29 11:20:55.000000000 +0200
 @@ -345,11 +345,6 @@ SRCS_COMMON-$(LIBDCA)                += 
  SRCS_COMMON-$(LIBDV)                 += libmpcodecs/ad_libdv.c \
                                          libmpcodecs/vd_libdv.c \
