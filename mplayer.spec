@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.100.%{pre}%{?dist}
+Release:        0.100.%{pre}%{?dist}.1
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -344,6 +344,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May 11 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.0-0.100.20090204svn.1
+- rebuild
+
 * Tue Feb 10 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.100.20090204svn
 - 20090204 snapshot
 - dropped obsolete/upstreamed patches
