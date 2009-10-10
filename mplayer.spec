@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.109.%{pre}%{?dist}
+Release:        0.110.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -340,6 +340,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 10 2009 kwizart < kwizart at gmail.com > - 1.0-0.110.20090329svn
+- Rebuild for rfbz#591
+
 * Sun Mar 29 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.109.20090329svn
 - 20090329 snapshot from 1.0rc3 branch
 - fix RPM_OPT_FLAGS usage
