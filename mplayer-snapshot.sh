@@ -12,7 +12,7 @@ cleanup() {
 
 unset CDPATH
 pwd=$(pwd)
-svn=20091021
+svn=$(date +%Y-%m-%d)
 dirname=mplayer-export-$svn
 mplayer_rev=29776
 ffmpeg_rev=HEAD
