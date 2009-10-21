@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20090329svn
+%define         pre 20091021svn
 %define         svn 1
-%define         svnbuild 2009-03-29
+%define         svnbuild 20091021
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.109.%{pre}%{?dist}
+Release:        0.110.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -20,10 +20,7 @@ Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
 Source10:       mplayer-snapshot.sh
-Patch1:         %{name}-ppc-compile.patch
 Patch2:         %{name}-config.patch
-Patch3:         %{name}-cflags.patch
-Patch8:         %{name}-manlinks.patch
 Patch10:        %{name}-qcelp.patch
 Patch14:        %{name}-nodvdcss.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -35,7 +32,7 @@ BuildRequires:  cdparanoia-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  em8300-devel
 BuildRequires:  enca-devel
-BuildRequires:  faac-devel
+%{?_with_faac: BuildRequires:  faac-devel}
 BuildRequires:  faad2-devel >= %{faad2min}
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
@@ -58,6 +55,7 @@ BuildRequires:  libdvdnav-devel >= 4.1.3-1
 BuildRequires:  libjpeg-devel
 BuildRequires:  libmpcdec-devel
 BuildRequires:  libtheora-devel
+BuildRequires:  libvdpau-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  lirc-devel
 BuildRequires:  live555-devel
@@ -69,7 +67,7 @@ BuildRequires:  x264-devel >= 0.0.0-0.14.20080613
 BuildRequires:  xvidcore-devel >= 0.9.2
 BuildRequires:  yasm
 %{?_with_arts:BuildRequires: arts-devel}
-%{?_with_amr:BuildRequires: amrnb-devel amrwb-devel}
+%{!?_without_amr:BuildRequires: opencore-amr-devel}
 %{?_with_directfb:BuildRequires: directfb-devel}
 %{?_with_esound:BuildRequires: esound-devel}
 %{?_with_jack:BuildRequires: jack-audio-connection-kit-devel}
@@ -163,7 +161,7 @@ MPlayer documentation in various languages.
     --disable-mp3lame-lavc \\\
     --disable-x264-lavc \\\
     \\\
-    %{!?_with_amr:--disable-libamr_nb --disable-libamr_wb} \\\
+    %{?_without_amr:--disable-libopencore_amrnb --disable-libopencore_amrwb} \\\
     --disable-faad-internal \\\
     %{!?_with_libmad:--disable-mad} \\\
     --disable-tremor-internal \\\
@@ -190,12 +188,8 @@ MPlayer documentation in various languages.
 %else
 %setup -q -n MPlayer-%{version}%{pre}
 %endif
-%patch1 -p1 -b .ppc-compile
 %patch2 -p1 -b .config
-%patch3 -p1 -b .cflags
-%patch8 -p1 -b .manlinks
-%patch10 -p1 -b .qclp
-%patch14 -p1 -b .nodvdcss
+
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -340,6 +334,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Oct 21 2009 kwizart < kwizart at gmail.com > - 1.0-0.110.20091021svn
+- Update to snapshot 20091021
+  mplayer svn rev: 29776
+  ffmpeg : HEAD
+  dvdnav : HEAD
+- Move from amrnb amrwb to opencore-amr
+- Conditionalize faac (moved to nonfree).
+
 * Sun Mar 29 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.109.20090329svn
 - 20090329 snapshot from 1.0rc3 branch
 - fix RPM_OPT_FLAGS usage
