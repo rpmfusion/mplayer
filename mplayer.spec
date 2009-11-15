@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20090329svn
+%define         pre 20090923svn
 %define         svn 1
-%define         svnbuild 2009-03-29
+%define         svnbuild 2009-09-23
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.110.%{pre}%{?dist}
+Release:        0.111.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -20,22 +20,21 @@ Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
 Source10:       mplayer-snapshot.sh
-Patch1:         %{name}-ppc-compile.patch
 Patch2:         %{name}-config.patch
-Patch3:         %{name}-cflags.patch
 Patch8:         %{name}-manlinks.patch
 Patch10:        %{name}-qcelp.patch
 Patch14:        %{name}-nodvdcss.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
+BuildRequires:  a52dec-devel
 BuildRequires:  aalib-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  cdparanoia-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  em8300-devel
 BuildRequires:  enca-devel
-BuildRequires:  faac-devel
+%{?_with_faac:BuildRequires:  faac-devel}
 BuildRequires:  faad2-devel >= %{faad2min}
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
@@ -58,18 +57,20 @@ BuildRequires:  libdvdnav-devel >= 4.1.3-1
 BuildRequires:  libjpeg-devel
 BuildRequires:  libmpcdec-devel
 BuildRequires:  libtheora-devel
+BuildRequires:  libvdpau-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  lirc-devel
 BuildRequires:  live555-devel
 BuildRequires:  lzo-devel >= 2
 BuildRequires:  pulseaudio-lib-devel
+BuildRequires:  schroedinger-devel
 BuildRequires:  speex-devel >= 1.1
 BuildRequires:  twolame-devel
 BuildRequires:  x264-devel >= 0.0.0-0.14.20080613
 BuildRequires:  xvidcore-devel >= 0.9.2
 BuildRequires:  yasm
 %{?_with_arts:BuildRequires: arts-devel}
-%{?_with_amr:BuildRequires: amrnb-devel amrwb-devel}
+%{!?_without_amr:BuildRequires: opencore-amr-devel}
 %{?_with_directfb:BuildRequires: directfb-devel}
 %{?_with_esound:BuildRequires: esound-devel}
 %{?_with_jack:BuildRequires: jack-audio-connection-kit-devel}
@@ -144,7 +145,7 @@ MPlayer documentation in various languages.
     --libdir=%{_libdir} \\\
     --codecsdir=%{codecdir} \\\
     \\\
-    --extra-cflags="`echo $RPM_OPT_FLAGS|sed -e s,i386,i486,`" \\\
+    --extra-cflags="$RPM_OPT_FLAGS" \\\
     --language=all \\\
     \\\
     --enable-joystick \\\
@@ -163,7 +164,8 @@ MPlayer documentation in various languages.
     --disable-mp3lame-lavc \\\
     --disable-x264-lavc \\\
     \\\
-    %{!?_with_amr:--disable-libamr_nb --disable-libamr_wb} \\\
+    --disable-liba52-internal \\\
+    %{?_without_amr:--disable-libopencore_amrnb --disable-libopencore_amrwb} \\\
     --disable-faad-internal \\\
     %{!?_with_libmad:--disable-mad} \\\
     --disable-tremor-internal \\\
@@ -190,9 +192,7 @@ MPlayer documentation in various languages.
 %else
 %setup -q -n MPlayer-%{version}%{pre}
 %endif
-%patch1 -p1 -b .ppc-compile
 %patch2 -p1 -b .config
-%patch3 -p1 -b .cflags
 %patch8 -p1 -b .manlinks
 %patch10 -p1 -b .qclp
 %patch14 -p1 -b .nodvdcss
@@ -205,13 +205,15 @@ for lang in de es fr it ; do doconv iso-8859-1 utf-8 $lang ; done
 for lang in hu pl ; do doconv iso-8859-2 utf-8 $lang ; done
 for lang in ru ; do doconv koi8-r utf-8 $lang ; done
 
+mkdir GUI
+cp -a `ls -1|grep -v GUI` GUI/
+
 %build
-%{mp_configure}--enable-gui
+pushd GUI
+%{mp_configure}--enable-gui --disable-mencoder
 
 %{__make} %{?_smp_mflags}
-
-mv -f mplayer gmplayer
-%{__make} distclean
+popd
 
 %{mp_configure}
 
@@ -246,7 +248,7 @@ install -Dpm 644 etc/example.conf \
 install -pm 644 etc/{input,menu}.conf $RPM_BUILD_ROOT%{_sysconfdir}/mplayer/
 
 # GUI mplayer
-install -pm 755 g%{name} $RPM_BUILD_ROOT%{_bindir}/
+install -pm 755 GUI/%{name} $RPM_BUILD_ROOT%{_bindir}/gmplayer
 
 # Default skin
 install -dm 755 $RPM_BUILD_ROOT%{_datadir}/mplayer/skins
@@ -289,7 +291,6 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/mplayer/mplayer.conf
 %config(noreplace) %{_sysconfdir}/mplayer/input.conf
 %config(noreplace) %{_sysconfdir}/mplayer/menu.conf
-%{_bindir}/aconvert
 %{_bindir}/midentify
 %{_bindir}/mplayer
 %dir %{codecdir}/
@@ -314,6 +315,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n mencoder
 %defattr(-, root, root, -)
+%{_bindir}/aconvert
 %{_bindir}/mencoder
 %{_mandir}/man1/mencoder.1*
 %lang(cs) %{_mandir}/cs/man1/mencoder.1*
@@ -340,6 +342,18 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 29 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.111.20090923svn
+- 20090923 snapshot
+- try to fix debuginfo generation (bug #101)
+- move aconvert to mencoder package (bug #544)
+- fix snapshot script not to mangle version string (bug #577)
+- disable screensaver by default (bug #672)
+- restore and rebase some of the dropped patches
+- build against external liba52
+- enable dirac decoding via libschroedinger
+- Move from amrnb amrwb to opencore-amr (kwizart)
+- Conditionalize faac (moved to nonfree) (kwizart)
+
 * Sat Oct 10 2009 kwizart < kwizart at gmail.com > - 1.0-0.110.20090329svn
 - Rebuild for rfbz#591
 
