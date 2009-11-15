@@ -1,8 +1,8 @@
-diff -up mplayer-export-2008-02-11/libmpdemux/demux_nemesi.c.qclp mplayer-export-2008-02-11/libmpdemux/demux_nemesi.c
---- mplayer-export-2008-02-11/libmpdemux/demux_nemesi.c.qclp	2008-01-13 17:00:39.000000000 +0100
-+++ mplayer-export-2008-02-11/libmpdemux/demux_nemesi.c	2008-02-22 21:19:57.000000000 +0100
-@@ -40,6 +40,7 @@ MIMEto4CC supported_audio[NMS_MAX_FORMAT
-     {"MPA", 0x55}, 
+diff -up mplayer-export-2009-10-29/libmpdemux/demux_nemesi.c.qcelp mplayer-export-2009-10-29/libmpdemux/demux_nemesi.c
+--- mplayer-export-2009-10-29/libmpdemux/demux_nemesi.c.qcelp	2009-05-13 04:58:57.000000000 +0200
++++ mplayer-export-2009-10-29/libmpdemux/demux_nemesi.c	2009-10-30 00:36:02.000000000 +0100
+@@ -42,6 +42,7 @@ MIMEto4CC supported_audio[NMS_MAX_FORMAT
+     {"MPA", 0x55},
      {"vorbis", mmioFOURCC('v','r','b','s')},
      {"mpeg4-generic", mmioFOURCC('M','P','4','A')},
 +    {"x-Purevoice", mmioFOURCC('Q','c','l','p')},
