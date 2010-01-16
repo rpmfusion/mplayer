@@ -193,11 +193,10 @@ MPlayer documentation in various languages.
 %setup -q -n MPlayer-%{version}%{pre}
 %endif
 %patch2 -p1 -b .config
-
-
 %patch8 -p1 -b .manlinks
 %patch10 -p1 -b .qcelp
 %patch14 -p1 -b .nodvdcss
+
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
     mv DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1
