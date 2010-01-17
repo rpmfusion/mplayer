@@ -1,16 +1,20 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20091029svn
+%define         pre 20100116svn
 %define         svn 1
-%define         svnbuild 2009-10-29
+%define         svnbuild 2010-01-16
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.111.%{pre}%{?dist}
+Release:        0.112.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
+%if 0%{!?_without_amr:1}
+License:        GPLv3+
+%else
 License:        GPLv2+
+%endif
 URL:            http://www.mplayerhq.hu/
 %if %{svn}
 # run ./mplayer-snapshot.sh to get this
@@ -34,7 +38,6 @@ BuildRequires:  cdparanoia-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  em8300-devel
 BuildRequires:  enca-devel
-%{?_with_faac: BuildRequires:  faac-devel}
 BuildRequires:  faad2-devel >= %{faad2min}
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
@@ -66,17 +69,18 @@ BuildRequires:  pulseaudio-lib-devel
 BuildRequires:  schroedinger-devel
 BuildRequires:  speex-devel >= 1.1
 BuildRequires:  twolame-devel
-BuildRequires:  x264-devel >= 0.0.0-0.26.20091026
+BuildRequires:  x264-devel >= 0.0.0-0.27
 BuildRequires:  xvidcore-devel >= 0.9.2
 BuildRequires:  yasm
 %{?_with_arts:BuildRequires: arts-devel}
 %{!?_without_amr:BuildRequires: opencore-amr-devel}
 %{?_with_directfb:BuildRequires: directfb-devel}
 %{?_with_esound:BuildRequires: esound-devel}
+%{?_with_faac:BuildRequires:  faac-devel}
 %{?_with_jack:BuildRequires: jack-audio-connection-kit-devel}
 %{?_with_libmad:BuildRequires:  libmad-devel}
 %{?_with_nemesi:BuildRequires:  libnemesi-devel >= 0.6.3}
-%{?_with_openal:BuildRequires: openal-devel}
+%{?_with_openal:BuildRequires: openal-soft-devel}
 %{?_with_samba:BuildRequires: libsmbclient-devel}
 %{?_with_svgalib:BuildRequires: svgalib-devel}
 %{?_with_xmms:BuildRequires: xmms-devel}
@@ -89,6 +93,7 @@ BuildRequires:  libxslt
 %endif
 Obsoletes:      mplayer-fonts
 Requires:       faad2-libs >= %{faad2min}
+Requires:       mplayer-common = %{version}-%{release}
 
 %description
 MPlayer is a movie player that plays most MPEG, VOB, AVI, OGG/OGM,
@@ -101,7 +106,8 @@ antialiased shaded subtitles and OSD.
 Non-default rpmbuild options:
 --with samba:   Enable Samba (smb://) support
 --with xmms:    Enable XMMS input plugin support
---with amr:     Enable AMR support
+--without amr:  Disable AMR support
+--with faac:    Enable FAAC support
 --with libmad:  Enable libmad support
 --with openal:  Enable OpenAL support
 --with jack:    Enable JACK support
@@ -111,10 +117,17 @@ Non-default rpmbuild options:
 --with svgalib: Enable SVGAlib support
 --with nemesi:  Enable libnemesi RTSP support
 
+%package        common
+Summary:        MPlayer common files
+Group:          Applications/Multimedia
+
+%description    common
+This package contains common files for MPlayer packages.
+
 %package        gui
 Summary:        GUI for MPlayer
 Group:          Applications/Multimedia
-Requires:       mplayer = %{version}-%{release}
+Requires:       mplayer-common = %{version}-%{release}
 Requires:       hicolor-icon-theme
 
 %description    gui
@@ -123,7 +136,7 @@ This package contains a GUI for MPlayer and a default skin for it.
 %package     -n mencoder
 Summary:        MPlayer movie encoder
 Group:          Applications/Multimedia
-Requires:       mplayer = %{version}-%{release}
+Requires:       mplayer-common = %{version}-%{release}
 
 %description -n mencoder
 This package contains the MPlayer movie encoder. 
@@ -134,6 +147,15 @@ Group:          Documentation
 
 %description    doc
 MPlayer documentation in various languages.
+
+%package        tools
+Summary:        Useful scripts for MPlayer
+Group:          Applications/Multimedia
+Requires:       mencoder = %{version}-%{release}
+Requires:       mplayer = %{version}-%{release}
+
+%description    tools
+This package contains various scripts from MPlayer TOOLS directory.
 
 %define mp_configure \
 ./configure \\\
@@ -152,6 +174,8 @@ MPlayer documentation in various languages.
     --enable-largefiles \\\
     --enable-lirc \\\
     --enable-menu \\\
+    --enable-radio \\\
+    --enable-radio-capture \\\
     --enable-runtime-cpudetection \\\
     --enable-unrarexec \\\
     \\\
@@ -166,6 +190,7 @@ MPlayer documentation in various languages.
     \\\
     --disable-liba52-internal \\\
     %{?_without_amr:--disable-libopencore_amrnb --disable-libopencore_amrwb} \\\
+    %{!?_with_faac:--disable-faac} \\\
     --disable-faad-internal \\\
     %{!?_with_libmad:--disable-mad} \\\
     --disable-tremor-internal \\\
@@ -210,7 +235,7 @@ cp -a `ls -1|grep -v GUI` GUI/
 
 %build
 pushd GUI
-%{mp_configure}--enable-gui --disable-mencoder
+%{mp_configure}--enable-gui
 
 %{__make} %{?_smp_mflags}
 popd
@@ -230,9 +255,20 @@ popd
 rm -rf $RPM_BUILD_ROOT doc
 
 make install DESTDIR=$RPM_BUILD_ROOT STRIPBINARIES=no
-for file in aconvert.sh midentify.sh ; do
+for file in aconvert.sh divx2svcd.sh mencvcd.sh midentify.sh mpconsole.sh qepdvcd.sh subsearch.sh ; do
 install -pm 755 TOOLS/$file $RPM_BUILD_ROOT%{_bindir}/`basename $file .sh`
 done
+
+for file in calcbpp.pl countquant.pl dvd2divxscript.pl ; do
+install -pm 755 TOOLS/$file $RPM_BUILD_ROOT%{_bindir}/`basename $file .pl`
+done
+
+for file in vobshift.py ; do
+install -pm 755 TOOLS/$file $RPM_BUILD_ROOT%{_bindir}/`basename $file .py`
+done
+
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/mplayer
+install -pm 644 TOOLS/*.fp $RPM_BUILD_ROOT%{_datadir}/mplayer/
 
 # Clean up documentation
 mkdir doc
@@ -286,13 +322,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-, root, root, -)
+%{_bindir}/mplayer
+
+%files common
+%defattr(-, root, root, -)
 %doc AUTHORS Changelog Copyright LICENSE README
 %dir %{_sysconfdir}/mplayer
 %config(noreplace) %{_sysconfdir}/mplayer/mplayer.conf
 %config(noreplace) %{_sysconfdir}/mplayer/input.conf
 %config(noreplace) %{_sysconfdir}/mplayer/menu.conf
-%{_bindir}/midentify
-%{_bindir}/mplayer
 %dir %{codecdir}/
 %dir %{_datadir}/mplayer/
 %{_mandir}/man1/mplayer.1*
@@ -315,7 +353,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n mencoder
 %defattr(-, root, root, -)
-%{_bindir}/aconvert
 %{_bindir}/mencoder
 %{_mandir}/man1/mencoder.1*
 %lang(cs) %{_mandir}/cs/man1/mencoder.1*
@@ -340,8 +377,32 @@ rm -rf $RPM_BUILD_ROOT
 %lang(ru) %doc doc/ru/
 %lang(zh_CN) %doc doc/zh_CN/
 
+%files tools
+%defattr(-, root, root, -)
+%{_bindir}/aconvert
+%{_bindir}/calcbpp
+%{_bindir}/countquant
+%{_bindir}/divx2svcd
+%{_bindir}/dvd2divxscript
+%{_bindir}/mencvcd
+%{_bindir}/midentify
+%{_bindir}/mpconsole
+%{_bindir}/qepdvcd
+%{_bindir}/subsearch
+%{_bindir}/vobshift
+%{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Jan 16 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.112.20100116svn
+- 20100116 snapshot
+- rebuild against current x264
+- fix licence tag when compiled with OpenCore AMR
+- fix build --with faac (bug #997)
+- enable radio support (bug #634)
+- openal-devel is now openal-soft-devel (bug #935)
+- move some files to -common subpackage, adjust dependencies (bug #1037)
+- introduce -tools subpackage, move scripts there (bugs #544, #1037)
+
 * Thu Oct 29 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.111.20091029svn
 - 20091029 snapshot
 - rebuild against current x264
