@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20100116svn
+%define         pre 20100327svn
 %define         svn 1
-%define         svnbuild 2010-01-16
+%define         svnbuild 2010-03-27
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.113.%{pre}%{?dist}
+Release:        0.114.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -26,8 +26,8 @@ Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
 Source10:       mplayer-snapshot.sh
 Patch2:         %{name}-config.patch
 Patch8:         %{name}-manlinks.patch
-Patch10:        %{name}-qcelp.patch
 Patch14:        %{name}-nodvdcss.patch
+Patch15:        %{name}-libgif.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -219,8 +219,8 @@ This package contains various scripts from MPlayer TOOLS directory.
 %endif
 %patch2 -p1 -b .config
 %patch8 -p1 -b .manlinks
-%patch10 -p1 -b .qcelp
 %patch14 -p1 -b .nodvdcss
+%patch15 -p1 -b .libgif
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -393,6 +393,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Mar 27 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.114.20100327svn
+- 20100327 snapshot
+- drop unused patch
+- fix build on F-13+ by linking against libgif instead of libungif
+
 * Thu Jan 28 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 1.0-0.113.20100116svn
 - Rebuild for live555
 
