@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20100327svn
+%define         pre 20100424svn
 %define         svn 1
-%define         svnbuild 2010-03-27
+%define         svnbuild 2010-04-24
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.114.%{pre}%{?dist}
+Release:        0.115.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -28,6 +28,8 @@ Patch2:         %{name}-config.patch
 Patch8:         %{name}-manlinks.patch
 Patch14:        %{name}-nodvdcss.patch
 Patch15:        %{name}-libgif.patch
+Patch16:        %{name}-x264.patch
+Patch17:        %{name}-llrintf.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -221,6 +223,8 @@ This package contains various scripts from MPlayer TOOLS directory.
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
 %patch15 -p1 -b .libgif
+%patch16 -p1 -b .x264
+%patch17 -p1 -b .llrintf
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -235,7 +239,7 @@ cp -a `ls -1|grep -v GUI` GUI/
 
 %build
 pushd GUI
-%{mp_configure}--enable-gui
+%{mp_configure}--enable-gui --disable-mencoder
 
 %{__make} %{?_smp_mflags}
 popd
@@ -254,7 +258,7 @@ popd
 %install
 rm -rf $RPM_BUILD_ROOT doc
 
-make install DESTDIR=$RPM_BUILD_ROOT STRIPBINARIES=no
+make install DESTDIR=$RPM_BUILD_ROOT INSTALLSTRIP=
 for file in aconvert.sh divx2svcd.sh mencvcd.sh midentify.sh mpconsole.sh qepdvcd.sh subsearch.sh ; do
 install -pm 755 TOOLS/$file $RPM_BUILD_ROOT%{_bindir}/`basename $file .sh`
 done
@@ -393,6 +397,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Apr 24 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.115.20100424svn
+- 20100424 snapshot
+- patch to build against older x264 in F-13
+
 * Sat Mar 27 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.114.20100327svn
 - 20100327 snapshot
 - drop unused patch
