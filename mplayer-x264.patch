@@ -1,0 +1,35 @@
+diff -up mplayer-export-2010-04-24/configure.x264 mplayer-export-2010-04-24/configure
+--- mplayer-export-2010-04-24/configure.x264	2010-04-24 19:00:26.000000000 +0200
++++ mplayer-export-2010-04-24/configure	2010-04-24 19:00:26.000000000 +0200
+@@ -7482,7 +7482,7 @@ if test "$_x264" = auto ; then
+   cat > $TMPC << EOF
+ #include <inttypes.h>
+ #include <x264.h>
+-#if X264_BUILD < 89
++#if X264_BUILD < 78
+ #error We do not support old versions of x264. Get the latest from git.
+ #endif
+ int main(void) { x264_encoder_open((void*)0); return 0; }
+diff -up mplayer-export-2010-04-24/libmpcodecs/ve_x264.c.x264 mplayer-export-2010-04-24/libmpcodecs/ve_x264.c
+--- mplayer-export-2010-04-24/libmpcodecs/ve_x264.c.x264	2010-04-20 11:14:54.000000000 +0200
++++ mplayer-export-2010-04-24/libmpcodecs/ve_x264.c	2010-04-24 19:18:51.000000000 +0200
+@@ -152,7 +166,6 @@ static int config(struct vf_instance *vf
+     param.i_height = height;
+     param.i_fps_num = mod->mux->h.dwRate;
+     param.i_fps_den = mod->mux->h.dwScale;
+-    param.b_vfr_input = 0;
+     param.vui.i_sar_width = d_width*height;
+     param.vui.i_sar_height = d_height*width;
+ 
+@@ -258,7 +258,10 @@
+         return -1;
+     }
+     if(i_size>0) {
++        int keyframe = (pic_out.i_type == X264_TYPE_IDR) ||
++                       (pic_out.i_type == X264_TYPE_I
++                        && param.i_frame_reference == 1
++                        && !param.i_bframe);
+-        int keyframe = pic_out.b_keyframe;
+         memcpy(mod->mux->buffer, nal->p_payload, i_size);
+         muxer_write_chunk(mod->mux, i_size, keyframe?AVIIF_KEYFRAME:0, MP_NOPTS_VALUE, MP_NOPTS_VALUE);
+     }
