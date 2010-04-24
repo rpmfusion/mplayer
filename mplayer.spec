@@ -71,7 +71,7 @@ BuildRequires:  pulseaudio-lib-devel
 BuildRequires:  schroedinger-devel
 BuildRequires:  speex-devel >= 1.1
 BuildRequires:  twolame-devel
-BuildRequires:  x264-devel >= 0.0.0-0.14.20080613
+BuildRequires:  x264-devel >= 0.0.0-0.26.20091026
 BuildRequires:  xvidcore-devel >= 0.9.2
 BuildRequires:  yasm
 %{?_with_arts:BuildRequires: arts-devel}
