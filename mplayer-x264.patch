@@ -1,21 +1,19 @@
-diff -up mplayer-export-2010-03-27/configure.x264 mplayer-export-2010-03-27/configure
---- mplayer-export-2010-03-27/configure.x264	2010-03-28 01:43:37.000000000 +0100
-+++ mplayer-export-2010-03-27/configure	2010-03-28 01:47:25.000000000 +0100
-@@ -7479,8 +7479,8 @@ if test "$_x264" = auto ; then
+diff -up mplayer-export-2010-04-24/configure.x264 mplayer-export-2010-04-24/configure
+--- mplayer-export-2010-04-24/configure.x264	2010-04-24 19:00:26.000000000 +0200
++++ mplayer-export-2010-04-24/configure	2010-04-24 19:00:26.000000000 +0200
+@@ -7482,7 +7482,7 @@ if test "$_x264" = auto ; then
    cat > $TMPC << EOF
  #include <inttypes.h>
  #include <x264.h>
--#if X264_BUILD < 83
--#error We do not support old versions of x264. Get the latest from git.
+-#if X264_BUILD < 89
 +#if X264_BUILD < 65
-+#error We do not support old versions of x264. Get the latest from SVN.
+ #error We do not support old versions of x264. Get the latest from git.
  #endif
  int main(void) { x264_encoder_open((void*)0); return 0; }
- EOF
-diff -up mplayer-export-2010-03-27/libmpcodecs/ve_x264.c.x264 mplayer-export-2010-03-27/libmpcodecs/ve_x264.c
---- mplayer-export-2010-03-27/libmpcodecs/ve_x264.c.x264	2010-02-28 08:52:34.000000000 +0100
-+++ mplayer-export-2010-03-27/libmpcodecs/ve_x264.c	2010-03-28 01:50:53.000000000 +0100
-@@ -59,6 +59,20 @@ static int turbo = 0;
+diff -up mplayer-export-2010-04-24/libmpcodecs/ve_x264.c.x264 mplayer-export-2010-04-24/libmpcodecs/ve_x264.c
+--- mplayer-export-2010-04-24/libmpcodecs/ve_x264.c.x264	2010-04-20 11:14:54.000000000 +0200
++++ mplayer-export-2010-04-24/libmpcodecs/ve_x264.c	2010-04-24 19:18:51.000000000 +0200
+@@ -60,6 +60,20 @@ static int turbo = 0;
  static x264_param_t param;
  static int parse_error = 0;
  
@@ -36,7 +34,15 @@ diff -up mplayer-export-2010-03-27/libmpcodecs/ve_x264.c.x264 mplayer-export-201
  static int put_image(struct vf_instance *vf, mp_image_t *mpi, double pts);
  static int encode_frame(struct vf_instance *vf, x264_picture_t *pic_in);
  
-@@ -175,17 +189,25 @@ static int config(struct vf_instance *vf
+@@ -152,7 +166,6 @@ static int config(struct vf_instance *vf
+     param.i_height = height;
+     param.i_fps_num = mod->mux->h.dwRate;
+     param.i_fps_den = mod->mux->h.dwScale;
+-    param.b_vfr_input = 0;
+     param.vui.i_sar_width = d_width*height;
+     param.vui.i_sar_height = d_height*width;
+ 
+@@ -177,17 +190,25 @@ static int config(struct vf_instance *vf
      }
  
      if(!param.b_repeat_headers){
@@ -66,7 +72,7 @@ diff -up mplayer-export-2010-03-27/libmpcodecs/ve_x264.c.x264 mplayer-export-201
          mod->mux->decoder_delay = 2;
      else
          mod->mux->decoder_delay = param.i_bframe ? 1 : 0;
-@@ -196,10 +218,12 @@ static int config(struct vf_instance *vf
+@@ -198,10 +219,12 @@ static int config(struct vf_instance *vf
  static int control(struct vf_instance *vf, int request, void *data)
  {
      h264_module_t *mod=(h264_module_t*)vf->priv;
@@ -81,7 +87,7 @@ diff -up mplayer-export-2010-03-27/libmpcodecs/ve_x264.c.x264 mplayer-export-201
              return CONTROL_TRUE;
          default:
              return CONTROL_UNKNOWN;
-@@ -249,17 +273,23 @@ static int encode_frame(struct vf_instan
+@@ -251,17 +274,23 @@ static int encode_frame(struct vf_instan
      x264_picture_t pic_out;
      x264_nal_t *nal;
      int i_nal;

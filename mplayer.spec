@@ -1,7 +1,7 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20100327svn
+%define         pre 20100424svn
 %define         svn 1
-%define         svnbuild 2010-03-27
+%define         svnbuild 2010-04-24
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
@@ -29,6 +29,7 @@ Patch8:         %{name}-manlinks.patch
 Patch14:        %{name}-nodvdcss.patch
 Patch15:        %{name}-libgif.patch
 Patch16:        %{name}-x264.patch
+Patch17:        %{name}-llrintf.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -223,6 +224,7 @@ This package contains various scripts from MPlayer TOOLS directory.
 %patch14 -p1 -b .nodvdcss
 %patch15 -p1 -b .libgif
 %patch16 -p1 -b .x264
+%patch17 -p1 -b .llrintf
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -256,7 +258,7 @@ popd
 %install
 rm -rf $RPM_BUILD_ROOT doc
 
-make install DESTDIR=$RPM_BUILD_ROOT STRIPBINARIES=no
+make install DESTDIR=$RPM_BUILD_ROOT INSTALLSTRIP=
 for file in aconvert.sh divx2svcd.sh mencvcd.sh midentify.sh mpconsole.sh qepdvcd.sh subsearch.sh ; do
 install -pm 755 TOOLS/$file $RPM_BUILD_ROOT%{_bindir}/`basename $file .sh`
 done
@@ -395,8 +397,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
-* Sat Mar 27 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.112.20100327svn
-- 20100327 snapshot
+* Sat Apr 24 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.112.20100424svn
+- 20100424 snapshot
 - drop unused patch
 - fix licence tag when compiled with OpenCore AMR
 - fix build --with faac (bug #997)
@@ -405,6 +407,7 @@ rm -rf $RPM_BUILD_ROOT
 - move some files to -common subpackage, adjust dependencies (bug #1037)
 - introduce -tools subpackage, move scripts there (bugs #544, #1037)
 - support old x264 in F-11
+- fix debuginfo generation (bug #101)
 
 * Thu Oct 29 2009 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.111.20090923svn
 - 20090923 snapshot
