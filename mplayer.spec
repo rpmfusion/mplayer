@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20100424svn
+%define         pre 20100429svn
 %define         svn 1
-%define         svnbuild 2010-04-24
+%define         svnbuild 2010-04-29
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.115.%{pre}%{?dist}
+Release:        0.116.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -28,8 +28,6 @@ Patch2:         %{name}-config.patch
 Patch8:         %{name}-manlinks.patch
 Patch14:        %{name}-nodvdcss.patch
 Patch15:        %{name}-libgif.patch
-Patch16:        %{name}-x264.patch
-Patch17:        %{name}-llrintf.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -223,8 +221,6 @@ This package contains various scripts from MPlayer TOOLS directory.
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
 %patch15 -p1 -b .libgif
-%patch16 -p1 -b .x264
-%patch17 -p1 -b .llrintf
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -397,6 +393,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu Apr 29 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.116.20100429svn
+- 20100429 snapshot
+- drop unnecessary patches
+
 * Sat Apr 24 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.115.20100424svn
 - 20100424 snapshot
 - patch to build against older x264
