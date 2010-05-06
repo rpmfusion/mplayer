@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.115.%{pre}%{?dist}
+Release:        0.116.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -397,6 +397,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu May 06 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 1.0-0.116.20100424svn
+- Rebuilt for live555
+
 * Sat Apr 24 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.115.20100424svn
 - 20100424 snapshot
 - patch to build against older x264 in F-13
