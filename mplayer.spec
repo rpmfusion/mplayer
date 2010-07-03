@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20100424svn
+%define         pre 20100703svn
 %define         svn 1
-%define         svnbuild 2010-04-24
+%define         svnbuild 2010-07-03
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.116.%{pre}%{?dist}
+Release:        0.117.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -27,9 +27,7 @@ Source10:       mplayer-snapshot.sh
 Patch2:         %{name}-config.patch
 Patch8:         %{name}-manlinks.patch
 Patch14:        %{name}-nodvdcss.patch
-Patch15:        %{name}-libgif.patch
 Patch16:        %{name}-x264.patch
-Patch17:        %{name}-llrintf.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -61,9 +59,11 @@ BuildRequires:  libdv-devel
 BuildRequires:  libdvdnav-devel >= 4.1.3-1
 BuildRequires:  libjpeg-devel
 BuildRequires:  libmpcdec-devel
+BuildRequires:  libmpeg2-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvdpau-devel
 BuildRequires:  libvorbis-devel
+BuildRequires:  libvpx-devel >= 0.9.1
 BuildRequires:  lirc-devel
 BuildRequires:  live555-devel
 BuildRequires:  lzo-devel >= 2
@@ -190,18 +190,17 @@ This package contains various scripts from MPlayer TOOLS directory.
     --disable-mp3lame-lavc \\\
     --disable-x264-lavc \\\
     \\\
-    --disable-liba52-internal \\\
     %{?_without_amr:--disable-libopencore_amrnb --disable-libopencore_amrwb} \\\
     %{!?_with_faac:--disable-faac} \\\
     --disable-faad-internal \\\
     %{!?_with_libmad:--disable-mad} \\\
+    --disable-libmpeg2-internal \\\
     --disable-tremor-internal \\\
     %{?_with_xmms:--enable-xmms} \\\
     %{?_with_xmms:--with-xmmslibdir=%{_libdir}} \\\
     \\\
     --disable-bitmap-font \\\
     --%{?_with_directfb:enable}%{!?_with_directfb:disable}-directfb \\\
-    --with-fribidi-config="pkg-config fribidi" \\\
     %{!?_with_svgalib:--disable-svga} \\\
     --disable-termcap \\\
     --enable-xvmc \\\
@@ -222,9 +221,7 @@ This package contains various scripts from MPlayer TOOLS directory.
 %patch2 -p1 -b .config
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
-%patch15 -p1 -b .libgif
 %patch16 -p1 -b .x264
-%patch17 -p1 -b .llrintf
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -397,6 +394,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Jul 03 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.117.20100703svn
+- 20100703 snapshot
+- rebased patches
+- dropped obsolete libgif patch
+- enabled libvpx support
+- enabled external libmpeg2 (internal copy is scheduled to be dropped by upstream)
+
 * Thu May 06 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 1.0-0.116.20100424svn
 - Rebuilt for live555
 
