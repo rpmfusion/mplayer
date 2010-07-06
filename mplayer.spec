@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.118.%{pre}%{?dist}
+Release:        0.119.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -70,7 +70,7 @@ BuildRequires:  pulseaudio-lib-devel
 BuildRequires:  schroedinger-devel
 BuildRequires:  speex-devel >= 1.1
 BuildRequires:  twolame-devel
-BuildRequires:  x264-devel >= 0.0.0-0.27
+BuildRequires:  x264-devel >= 0.0.0-0.28
 BuildRequires:  xvidcore-devel >= 0.9.2
 BuildRequires:  yasm
 %{?_with_arts:BuildRequires: arts-devel}
@@ -392,6 +392,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Jul 03 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.119.20100703svn
+- rebuild against latest x264
+
 * Sat Jul 03 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.118.20100703svn
 - 20100703 snapshot
 - dropped obsolete libgif patch
