@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20100703svn
+%define         pre 20101205svn
 %define         svn 1
-%define         svnbuild 2010-07-03
+%define         svnbuild 2010-12-05
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.117.%{pre}%{?dist}
+Release:        0.118.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -28,11 +28,14 @@ Patch2:         %{name}-config.patch
 Patch8:         %{name}-manlinks.patch
 Patch14:        %{name}-nodvdcss.patch
 Patch16:        %{name}-x264.patch
+Patch17:        %{name}-libvorbis.patch
+Patch18:        %{name}-lame.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
 BuildRequires:  aalib-devel
+BuildRequires:  bzip2-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  cdparanoia-devel
 BuildRequires:  desktop-file-utils
@@ -43,6 +46,7 @@ BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
 BuildRequires:  fribidi-devel
 BuildRequires:  giflib-devel
+BuildRequires:  gsm-devel
 BuildRequires:  gtk2-devel
 BuildRequires:  ladspa-devel
 BuildRequires:  lame-devel
@@ -51,8 +55,9 @@ BuildRequires:  libXinerama-devel
 BuildRequires:  libXScrnSaver-devel
 BuildRequires:  libXv-devel
 BuildRequires:  libXvMC-devel
-BuildRequires:  libXxf86dga-devel
 BuildRequires:  libXxf86vm-devel
+BuildRequires:  libass-devel >= 0.9.10
+BuildRequires:  libbluray-devel
 BuildRequires:  libcaca-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdv-devel
@@ -60,6 +65,7 @@ BuildRequires:  libdvdnav-devel >= 4.1.3-1
 BuildRequires:  libjpeg-devel
 BuildRequires:  libmpcdec-devel
 BuildRequires:  libmpeg2-devel
+BuildRequires:  librtmp-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvdpau-devel
 BuildRequires:  libvorbis-devel
@@ -76,6 +82,7 @@ BuildRequires:  xvidcore-devel >= 0.9.2
 BuildRequires:  yasm
 %{?_with_arts:BuildRequires: arts-devel}
 %{!?_without_amr:BuildRequires: opencore-amr-devel}
+%{?_with_dga:BuildRequires: libXxf86dga-devel}
 %{?_with_directfb:BuildRequires: directfb-devel}
 %{?_with_esound:BuildRequires: esound-devel}
 %{?_with_faac:BuildRequires:  faac-devel}
@@ -115,6 +122,7 @@ Non-default rpmbuild options:
 --with jack:    Enable JACK support
 --with arts:    Enable aRts support
 --with esound:  Enable EsounD support
+--with dga:     Enable DGA support
 --with directfb:Enable DirectFB support
 --with svgalib: Enable SVGAlib support
 --with nemesi:  Enable libnemesi RTSP support
@@ -200,6 +208,7 @@ This package contains various scripts from MPlayer TOOLS directory.
     %{?_with_xmms:--with-xmmslibdir=%{_libdir}} \\\
     \\\
     --disable-bitmap-font \\\
+    %{!?_with_dga:--disable-dga1 --disable-dga2} \\\
     --%{?_with_directfb:enable}%{!?_with_directfb:disable}-directfb \\\
     %{!?_with_svgalib:--disable-svga} \\\
     --disable-termcap \\\
@@ -222,6 +231,8 @@ This package contains various scripts from MPlayer TOOLS directory.
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
 %patch16 -p1 -b .x264
+%patch17 -p1 -b .libvorbis
+%patch18 -p1 -b .lame
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -238,12 +249,12 @@ cp -a `ls -1|grep -v GUI` GUI/
 pushd GUI
 %{mp_configure}--enable-gui --disable-mencoder
 
-%{__make} %{?_smp_mflags}
+%{__make} V=1 %{?_smp_mflags}
 popd
 
 %{mp_configure}
 
-%{__make} %{?_smp_mflags}
+%{__make} V=1 %{?_smp_mflags}
 
 %if %{svn}
 # build HTML documentation from XML files 
@@ -394,6 +405,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Dec 05 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.118.20101205svn
+- 20101205 snapshot
+- enabled BluRay, bzip2, libgsm, rtmp support
+- restored --disable-mp3lame-lavc to working condition
+- DGA support is now a build-time option
+
 * Sat Jul 03 2010 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.117.20100703svn
 - 20100703 snapshot
 - rebased patches

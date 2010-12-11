@@ -1,27 +1,47 @@
-diff -up mplayer-export-2010-07-03/configure.x264 mplayer-export-2010-07-03/configure
---- mplayer-export-2010-07-03/configure.x264	2010-07-03 23:24:14.000000000 +0200
-+++ mplayer-export-2010-07-03/configure	2010-07-03 23:24:36.000000000 +0200
-@@ -7485,7 +7485,7 @@ if test "$_x264" = auto ; then
+diff -up mplayer-export-2010-12-04/configure.x264 mplayer-export-2010-12-04/configure
+--- mplayer-export-2010-12-04/configure.x264	2010-12-05 00:42:20.000000000 +0100
++++ mplayer-export-2010-12-04/configure	2010-12-05 00:42:22.000000000 +0100
+@@ -7065,7 +7083,7 @@ if test "$_x264" = auto ; then
    cat > $TMPC << EOF
  #include <inttypes.h>
  #include <x264.h>
--#if X264_BUILD < 98
-+#if X264_BUILD < 83
+-#if !(X264_BUILD >= 99)
++#if !(X264_BUILD >= 78)
  #error We do not support old versions of x264. Get the latest from git.
  #endif
  int main(void) { x264_encoder_open((void*)0); return 0; }
-diff -up mplayer-export-2010-07-03/libmpcodecs/ve_x264.c.x264 mplayer-export-2010-07-03/libmpcodecs/ve_x264.c
---- mplayer-export-2010-07-03/libmpcodecs/ve_x264.c.x264	2010-06-10 23:58:03.000000000 +0200
-+++ mplayer-export-2010-07-03/libmpcodecs/ve_x264.c	2010-07-03 23:24:43.000000000 +0200
-@@ -56,6 +56,7 @@ typedef struct h264_module_t {
+diff -up mplayer-export-2010-12-04/DOCS/man/en/mplayer.1.x264 mplayer-export-2010-12-04/DOCS/man/en/mplayer.1
+--- mplayer-export-2010-12-04/DOCS/man/en/mplayer.1.x264	2010-11-27 20:15:54.000000000 +0100
++++ mplayer-export-2010-12-04/DOCS/man/en/mplayer.1	2010-12-05 00:42:21.000000000 +0100
+@@ -8015,7 +8015,7 @@ need to use the fixpts filter for this o
+ .sp 1
+ Not all codecs support forced key frames.
+ Currently, support is only implemented for the following encoders:
+-lavc, x264, xvid.
++lavc, xvid.
+ .
+ .
+ .
+diff -up mplayer-export-2010-12-04/libmpcodecs/ve_x264.c.x264 mplayer-export-2010-12-04/libmpcodecs/ve_x264.c
+--- mplayer-export-2010-12-04/libmpcodecs/ve_x264.c.x264	2010-11-10 09:32:54.000000000 +0100
++++ mplayer-export-2010-12-04/libmpcodecs/ve_x264.c	2010-12-05 00:50:51.000000000 +0100
+@@ -45,7 +45,6 @@
+ #include "img_format.h"
+ #include "mp_image.h"
+ #include "vf.h"
+-#include "ve.h"
+ #include "ve_x264.h"
+ 
+ #include <x264.h>
+@@ -56,6 +55,7 @@ typedef struct h264_module_t {
+     x264_picture_t  pic;
  } h264_module_t;
  
- extern char* passtmpfile;
 +static int turbo = 0;
  static x264_param_t param;
  static int parse_error = 0;
  
-@@ -64,79 +65,74 @@ static int encode_frame(struct vf_instan
+@@ -64,79 +64,74 @@ static int encode_frame(struct vf_instan
  
  void x264enc_set_param(const m_option_t* opt, char* arg)
  {
@@ -114,9 +134,9 @@ diff -up mplayer-export-2010-07-03/libmpcodecs/ve_x264.c.x264 mplayer-export-201
 +
 +        ret = x264_param_parse(&param, name, value);
 +        if(ret == X264_PARAM_BAD_NAME)
-+	    mp_msg(MSGT_CFGPARSER, MSGL_ERR, "Option x264encopts: Unknown suboption %s\n", name);
++            mp_msg(MSGT_CFGPARSER, MSGL_ERR, "Option x264encopts: Unknown suboption %s\n", name);
 +        if(ret == X264_PARAM_BAD_VALUE)
-+	    mp_msg(MSGT_CFGPARSER, MSGL_ERR, "Option x264encopts: Bad argument %s=%s\n", name, value ? value : "(null)");
++            mp_msg(MSGT_CFGPARSER, MSGL_ERR, "Option x264encopts: Bad argument %s=%s\n", name, value ? value : "(null)");
 +
          /* mark this option as done, so it's not reparsed if there's another -x264encopts */
          *name = 0;
@@ -155,3 +175,41 @@ diff -up mplayer-export-2010-07-03/libmpcodecs/ve_x264.c.x264 mplayer-export-201
  }
  
  static int config(struct vf_instance *vf, int width, int height, int d_width, int d_height, unsigned int flags, unsigned int outfmt) {
+@@ -156,7 +151,6 @@ static int config(struct vf_instance *vf
+     param.i_height = height;
+     param.i_fps_num = mod->mux->h.dwRate;
+     param.i_fps_den = mod->mux->h.dwScale;
+-    param.b_vfr_input = 0;
+     param.vui.i_sar_width = d_width*height;
+     param.vui.i_sar_height = d_height*width;
+ 
+@@ -236,7 +230,7 @@ static int put_image(struct vf_instance 
+     h264_module_t *mod=(h264_module_t*)vf->priv;
+     int i;
+ 
+-    x264_picture_init(&mod->pic);
++    memset(&mod->pic, 0, sizeof(x264_picture_t));
+     mod->pic.img.i_csp=param.i_csp;
+     mod->pic.img.i_plane=3;
+     for(i=0; i<4; i++) {
+@@ -245,8 +239,6 @@ static int put_image(struct vf_instance 
+     }
+ 
+     mod->pic.i_type = X264_TYPE_AUTO;
+-    if (is_forced_key_frame(pts))
+-        mod->pic.i_type = X264_TYPE_KEYFRAME;
+ 
+     return encode_frame(vf, &mod->pic) >= 0;
+ }
+@@ -266,7 +258,10 @@ static int encode_frame(struct vf_instan
+         return -1;
+     }
+     if(i_size>0) {
+-        int keyframe = pic_out.b_keyframe;
++        int keyframe = (pic_out.i_type == X264_TYPE_IDR) ||
++                       (pic_out.i_type == X264_TYPE_I
++                        && param.i_frame_reference == 1
++                        && !param.i_bframe);
+         memcpy(mod->mux->buffer, nal->p_payload, i_size);
+         muxer_write_chunk(mod->mux, i_size, keyframe?AVIIF_KEYFRAME:0, MP_NOPTS_VALUE, MP_NOPTS_VALUE);
+     }

@@ -1,0 +1,21 @@
+diff -up mplayer-export-2010-12-04/configure.lame mplayer-export-2010-12-04/configure
+--- mplayer-export-2010-12-04/configure.lame	2010-12-05 00:51:46.000000000 +0100
++++ mplayer-export-2010-12-04/configure	2010-12-05 01:12:17.000000000 +0100
+@@ -7275,7 +7275,7 @@ def_mp3lame_preset_medium='#undef CONFIG
+ if test "$_mp3lame" = auto ; then
+   _mp3lame=no
+   statement_check lame/lame.h 'lame_set_VBR_quality(NULL, 0)' -lmp3lame $_ld_lm &&
+-    _mp3lame=yes && _mp3lame_lavc=yes
++    _mp3lame=yes
+ fi
+ if test "$_mp3lame" = yes ; then
+   def_mp3lame="#define CONFIG_MP3LAME 1"
+@@ -7283,7 +7283,7 @@ if test "$_mp3lame" = yes ; then
+   libs_mencoder="$libs_mencoder $_ld_mp3lame"
+   statement_check lame/lame.h 'lame_set_preset(NULL, STANDARD_FAST)' $_ld_mp3lame $_ld_lm && def_mp3lame_preset="#define CONFIG_MP3LAME_PRESET 1"
+   statement_check lame/lame.h 'lame_set_preset(NULL,   MEDIUM_FAST)' $_ld_mp3lame $_ld_lm && def_mp3lame_preset_medium="#define CONFIG_MP3LAME_PRESET_MEDIUM 1"
+-  if test "$_mp3lame_lavc" = yes ; then
++  if test "$_mp3lame_lavc" != no ; then
+     def_mp3lame_lavc="#define CONFIG_LIBMP3LAME 1"
+     libavencoders="$libavencoders LIBMP3LAME_ENCODER"
+     libs_mplayer="$libs_mplayer $_ld_mp3lame"

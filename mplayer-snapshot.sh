@@ -21,7 +21,7 @@ svn checkout -r ${mplayer_rev} svn://svn.mplayerhq.hu/mplayer/trunk $dirname
 cd $dirname
 
 rm -rf libdvdcss
-for dir in libav* libdvd* libpostproc ; do
+for dir in ffmpeg libdvd* ; do
 	cd $dir
 	svn update -r ${mplayer_rev}
 	cd ..
