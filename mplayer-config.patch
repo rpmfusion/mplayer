@@ -1,16 +1,16 @@
-diff -up mplayer-export-2009-10-29/etc/example.conf.config mplayer-export-2009-10-29/etc/example.conf
---- mplayer-export-2009-10-29/etc/example.conf.config	2008-02-08 19:33:39.000000000 +0100
-+++ mplayer-export-2009-10-29/etc/example.conf	2009-10-29 23:54:30.000000000 +0100
+diff -up mplayer-export-2011-01-10/etc/example.conf.config mplayer-export-2011-01-10/etc/example.conf
+--- mplayer-export-2011-01-10/etc/example.conf.config	2011-01-05 15:55:45.000000000 +0100
++++ mplayer-export-2011-01-10/etc/example.conf	2011-01-10 19:46:06.000000000 +0100
 @@ -1,7 +1,7 @@
  #
  # MPlayer configuration file
  #
 -# Configuration files are read system-wide from /usr/local/etc/mplayer.conf
 +# Configuration files are read system-wide from /etc/mplayer/mplayer.conf
- # and per user from ~/.mplayer/config, where per-user settings override
+ # and per-user from ~/.mplayer/config, where per-user settings override
  # system-wide settings, all of which are overrriden by the command line.
  #
-@@ -71,7 +71,7 @@
+@@ -74,7 +74,7 @@
  ##################
  
  # Specify default audio driver (see -ao help for a list).
@@ -19,7 +19,7 @@ diff -up mplayer-export-2009-10-29/etc/example.conf.config mplayer-export-2009-1
  
  # Use SDL audio driver with the esd subdriver by default.
  #ao = sdl:esd
-@@ -95,7 +95,7 @@
+@@ -114,7 +114,7 @@
  #framedrop = yes
  
  # Specify your preferred skin here (skins are searched for in
@@ -28,7 +28,7 @@ diff -up mplayer-export-2009-10-29/etc/example.conf.config mplayer-export-2009-1
  #skin = Abyss
  
  # Resample the font alphamap.
-@@ -105,6 +105,15 @@
+@@ -124,6 +124,15 @@
  # 10    bold black outline
  #ffactor = 0.75
  
@@ -44,7 +44,7 @@ diff -up mplayer-export-2009-10-29/etc/example.conf.config mplayer-export-2009-1
  # cache settings
  #
  # Use 8MB input cache by default.
-@@ -122,6 +131,12 @@
+@@ -141,6 +150,11 @@
  # DVD: Play English audio tracks if available.
  #alang = en
  
@@ -53,7 +53,6 @@ diff -up mplayer-export-2009-10-29/etc/example.conf.config mplayer-export-2009-1
 +
 +# Inhibit (a XScrnSaver compatible) screensaver while playing a movie
 +stop-xscreensaver = yes
-+
- ###################
- # DVDNAV Settings #
- ###################
+ 
+ ############
+ # Profiles #
