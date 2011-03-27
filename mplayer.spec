@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.120.%{pre}%{?dist}
+Release:        0.121.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -399,6 +399,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Mar 27 2011 Nicolas Chauvet <kwizart@gmail.com> - 1.0-0.121.20110110svn
+- Rebuild for x264
+
 * Mon Jan 10 2011 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.120.20110110svn
 - 20110110 snapshot
 - enabled BluRay, bzip2, libgsm, rtmp support
