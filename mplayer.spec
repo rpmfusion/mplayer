@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20110110svn
+%define         pre 20110227svn
 %define         svn 1
-%define         svnbuild 2011-01-10
+%define         svnbuild 2011-02-27
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.121.%{pre}%{?dist}
+Release:        0.122.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -399,6 +399,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Mar 27 2011 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.122.20110227svn
+- 20110227 snapshot
+- rebuilt for new ffmpeg and x264
+
 * Sun Mar 27 2011 Nicolas Chauvet <kwizart@gmail.com> - 1.0-0.121.20110110svn
 - Rebuild for x264
 
