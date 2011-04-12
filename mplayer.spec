@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20110227svn
+%define         pre 20110412svn
 %define         svn 1
-%define         svnbuild 2011-02-27
+%define         svnbuild 2011-04-12
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.122.%{pre}%{?dist}
+Release:        0.123.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -24,10 +24,13 @@ Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
 Source10:       mplayer-snapshot.sh
+# set defaults for Fedora
 Patch2:         %{name}-config.patch
+# use roff include statements instead of symlinks
 Patch8:         %{name}-manlinks.patch
+# erase any trace of libdvdcss
 Patch14:        %{name}-nodvdcss.patch
-Patch17:        %{name}-libvorbis.patch
+# use system FFmpeg libraries
 Patch18:        %{name}-ffmpeg.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -41,7 +44,7 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  em8300-devel
 BuildRequires:  enca-devel
 BuildRequires:  faad2-devel >= %{faad2min}
-BuildRequires:  ffmpeg-devel
+BuildRequires:  ffmpeg-devel >= 0.6.90-0.1.rc0
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
 BuildRequires:  fribidi-devel
@@ -214,6 +217,7 @@ This package contains various scripts from MPlayer TOOLS directory.
     %{!?_with_esound:--disable-esd} \\\
     %{!?_with_jack:--disable-jack} \\\
     %{!?_with_openal:--disable-openal} \\\
+    --disable-mp3lib \\\
 
 
 %prep
@@ -225,7 +229,6 @@ This package contains various scripts from MPlayer TOOLS directory.
 %patch2 -p1 -b .config
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
-%patch17 -p1 -b .libvorbis
 %patch18 -p1 -b .ffmpeg
 
 doconv() {
@@ -399,6 +402,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Apr 12 2011 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.123.20110412svn
+- 20110412 snapshot
+- drop obsolete libvorbis patch
+- add explanatory comments to all patches
+- temporarily disable mp3lib decoder (workaround for bug #1680)
+
 * Sun Mar 27 2011 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.122.20110227svn
 - 20110227 snapshot
 - rebuilt for new ffmpeg and x264

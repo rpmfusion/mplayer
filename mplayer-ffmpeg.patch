@@ -1,7 +1,7 @@
-diff -up mplayer-export-2011-02-27/configure.ffmpeg mplayer-export-2011-02-27/configure
---- mplayer-export-2011-02-27/configure.ffmpeg	2011-03-23 19:39:17.000000000 +0100
-+++ mplayer-export-2011-02-27/configure	2011-03-23 19:42:40.000000000 +0100
-@@ -6887,7 +6887,8 @@ elif test "$ffmpeg_so" = auto ; then
+diff -up mplayer-export-2011-04-12/configure.ffmpeg mplayer-export-2011-04-12/configure
+--- mplayer-export-2011-04-12/configure.ffmpeg	2011-04-12 17:18:33.000000000 +0200
++++ mplayer-export-2011-04-12/configure	2011-04-12 17:18:33.000000000 +0200
+@@ -6888,7 +6888,8 @@ elif test "$ffmpeg_so" = auto ; then
      inc_ffmpeg=$($_pkg_config --cflags libpostproc libswscale libavformat libavcodec libavutil)
      _ld_tmp=$($_pkg_config --libs libpostproc libswscale libavformat libavcodec libavutil)
      header_check libavutil/avutil.h $inc_ffmpeg $_ld_tmp &&
@@ -11,7 +11,7 @@ diff -up mplayer-export-2011-02-27/configure.ffmpeg mplayer-export-2011-02-27/co
    elif header_check libavutil/avutil.h -lpostproc -lswscale -lavformat -lavcodec -lavutil $_ld_lm ; then
      extra_ldflags="$extra_ldflags -lpostproc -lswscale -lavformat -lavcodec -lavutil"
      ffmpeg_so=yes
-@@ -7574,7 +7575,7 @@ if test "$_gui" = yes ; then
+@@ -7593,7 +7594,7 @@ if test "$_gui" = yes ; then
  
    # Required libraries
    if test "$ffmpeg" != yes ||
@@ -20,9 +20,9 @@ diff -up mplayer-export-2011-02-27/configure.ffmpeg mplayer-export-2011-02-27/co
      die "The GUI requires libavcodec with PNG support (needs zlib)."
    fi
    test "$_freetype" = no && test "$_bitmap_font" = no &&
-diff -up mplayer-export-2011-02-27/ffmpeg/libavformat/riff.h.ffmpeg mplayer-export-2011-02-27/ffmpeg/libavformat/riff.h
---- mplayer-export-2011-02-27/ffmpeg/libavformat/riff.h.ffmpeg	2011-03-23 19:39:17.000000000 +0100
-+++ mplayer-export-2011-02-27/ffmpeg/libavformat/riff.h	2011-03-23 19:39:17.000000000 +0100
+diff -up mplayer-export-2011-04-12/ffmpeg/libavformat/riff.h.ffmpeg mplayer-export-2011-04-12/ffmpeg/libavformat/riff.h
+--- mplayer-export-2011-04-12/ffmpeg/libavformat/riff.h.ffmpeg	2011-04-12 17:18:33.000000000 +0200
++++ mplayer-export-2011-04-12/ffmpeg/libavformat/riff.h	2011-04-12 17:18:33.000000000 +0200
 @@ -0,0 +1,41 @@
 +/*
 + * RIFF codec tags
@@ -65,9 +65,9 @@ diff -up mplayer-export-2011-02-27/ffmpeg/libavformat/riff.h.ffmpeg mplayer-expo
 +extern const AVCodecTag ff_codec_wav_tags[];
 +
 +#endif /* AVFORMAT_RIFF_H */
-diff -up mplayer-export-2011-02-27/ffmpeg/libavutil/aes.h.ffmpeg mplayer-export-2011-02-27/ffmpeg/libavutil/aes.h
---- mplayer-export-2011-02-27/ffmpeg/libavutil/aes.h.ffmpeg	2011-03-23 19:39:17.000000000 +0100
-+++ mplayer-export-2011-02-27/ffmpeg/libavutil/aes.h	2011-03-23 19:39:17.000000000 +0100
+diff -up mplayer-export-2011-04-12/ffmpeg/libavutil/aes.h.ffmpeg mplayer-export-2011-04-12/ffmpeg/libavutil/aes.h
+--- mplayer-export-2011-04-12/ffmpeg/libavutil/aes.h.ffmpeg	2011-04-12 17:18:33.000000000 +0200
++++ mplayer-export-2011-04-12/ffmpeg/libavutil/aes.h	2011-04-12 17:18:33.000000000 +0200
 @@ -0,0 +1,47 @@
 +/*
 + * copyright (c) 2007 Michael Niedermayer <michaelni@gmx.at>
@@ -116,9 +116,9 @@ diff -up mplayer-export-2011-02-27/ffmpeg/libavutil/aes.h.ffmpeg mplayer-export-
 +void av_aes_crypt(struct AVAES *a, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
 +
 +#endif /* AVUTIL_AES_H */
-diff -up mplayer-export-2011-02-27/ffmpeg/libavutil/sha.h.ffmpeg mplayer-export-2011-02-27/ffmpeg/libavutil/sha.h
---- mplayer-export-2011-02-27/ffmpeg/libavutil/sha.h.ffmpeg	2011-03-23 19:39:17.000000000 +0100
-+++ mplayer-export-2011-02-27/ffmpeg/libavutil/sha.h	2011-03-23 19:39:17.000000000 +0100
+diff -up mplayer-export-2011-04-12/ffmpeg/libavutil/sha.h.ffmpeg mplayer-export-2011-04-12/ffmpeg/libavutil/sha.h
+--- mplayer-export-2011-04-12/ffmpeg/libavutil/sha.h.ffmpeg	2011-04-12 17:18:33.000000000 +0200
++++ mplayer-export-2011-04-12/ffmpeg/libavutil/sha.h	2011-04-12 17:18:33.000000000 +0200
 @@ -0,0 +1,56 @@
 +/*
 + * Copyright (C) 2007 Michael Niedermayer <michaelni@gmx.at>
@@ -176,9 +176,9 @@ diff -up mplayer-export-2011-02-27/ffmpeg/libavutil/sha.h.ffmpeg mplayer-export-
 +void av_sha_final(struct AVSHA* context, uint8_t *digest);
 +
 +#endif /* AVUTIL_SHA_H */
-diff -up mplayer-export-2011-02-27/ffmpeg/libavutil/x86_cpu.h.ffmpeg mplayer-export-2011-02-27/ffmpeg/libavutil/x86_cpu.h
---- mplayer-export-2011-02-27/ffmpeg/libavutil/x86_cpu.h.ffmpeg	2011-03-23 19:39:17.000000000 +0100
-+++ mplayer-export-2011-02-27/ffmpeg/libavutil/x86_cpu.h	2011-03-23 19:39:17.000000000 +0100
+diff -up mplayer-export-2011-04-12/ffmpeg/libavutil/x86_cpu.h.ffmpeg mplayer-export-2011-04-12/ffmpeg/libavutil/x86_cpu.h
+--- mplayer-export-2011-04-12/ffmpeg/libavutil/x86_cpu.h.ffmpeg	2011-04-12 17:18:33.000000000 +0200
++++ mplayer-export-2011-04-12/ffmpeg/libavutil/x86_cpu.h	2011-04-12 17:18:33.000000000 +0200
 @@ -0,0 +1,98 @@
 +/*
 + * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
@@ -278,25 +278,10 @@ diff -up mplayer-export-2011-02-27/ffmpeg/libavutil/x86_cpu.h.ffmpeg mplayer-exp
 +#endif
 +
 +#endif /* AVUTIL_X86_CPU_H */
-diff -up mplayer-export-2011-02-27/libmpcodecs/vf_pp.c.ffmpeg mplayer-export-2011-02-27/libmpcodecs/vf_pp.c
---- mplayer-export-2011-02-27/libmpcodecs/vf_pp.c.ffmpeg	2011-02-04 11:01:46.000000000 +0100
-+++ mplayer-export-2011-02-27/libmpcodecs/vf_pp.c	2011-03-23 19:39:17.000000000 +0100
-@@ -34,10 +34,10 @@
- #include "img_format.h"
- #include "mp_image.h"
- #include "vf.h"
--#include "libavutil/internal.h"
- #include "libpostproc/postprocess.h"
- 
- #ifdef CONFIG_FFMPEG_A
-+#include "libavutil/internal.h"
- #define EMU_OLD
- #include "libpostproc/postprocess_internal.h"
- #endif
-diff -up mplayer-export-2011-02-27/Makefile.ffmpeg mplayer-export-2011-02-27/Makefile
---- mplayer-export-2011-02-27/Makefile.ffmpeg	2011-03-23 19:39:17.000000000 +0100
-+++ mplayer-export-2011-02-27/Makefile	2011-03-23 19:39:17.000000000 +0100
-@@ -808,7 +808,7 @@ mencoder$(EXESUF) mplayer$(EXESUF):
+diff -up mplayer-export-2011-04-12/Makefile.ffmpeg mplayer-export-2011-04-12/Makefile
+--- mplayer-export-2011-04-12/Makefile.ffmpeg	2011-04-12 17:18:33.000000000 +0200
++++ mplayer-export-2011-04-12/Makefile	2011-04-12 17:18:33.000000000 +0200
+@@ -809,7 +809,7 @@ mencoder$(EXESUF) mplayer$(EXESUF):
  	$(CC) -o $@ $^ $(EXTRALIBS)
  
  codec-cfg$(EXESUF): codec-cfg.c codec-cfg.h help_mp.h
