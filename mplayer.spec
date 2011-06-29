@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.123.%{pre}%{?dist}
+Release:        0.124.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -32,6 +32,8 @@ Patch8:         %{name}-manlinks.patch
 Patch14:        %{name}-nodvdcss.patch
 # use system FFmpeg libraries
 Patch18:        %{name}-ffmpeg.patch
+# Upstream fix for http://bugzilla.mplayerhq.hu/show_bug.cgi?id=1904
+Patch19:        %{name}-pause.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -230,6 +232,7 @@ This package contains various scripts from MPlayer TOOLS directory.
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
 %patch18 -p1 -b .ffmpeg
+%patch19 -p1 -b .pause
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -402,6 +405,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu Jun 16 2011 Ricky Zhou <ricky@rzhou.org> - 1.0-0.124.20110412svn
+- Add upstream patch for pause crash.
+
 * Tue Apr 12 2011 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.123.20110412svn
 - 20110412 snapshot
 - drop obsolete libvorbis patch
