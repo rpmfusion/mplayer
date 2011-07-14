@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.124.%{pre}%{?dist}
+Release:        0.125.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -405,6 +405,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Fri Jul 15 2011 Nicolas Chauvet <kwizart@gmail.com> - 1.0-0.125.20110412svn
+- Rebuilt for x264 ABI 115
+
 * Thu Jun 16 2011 Ricky Zhou <ricky@rzhou.org> - 1.0-0.124.20110412svn
 - Add upstream patch for pause crash.
 
