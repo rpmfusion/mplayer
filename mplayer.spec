@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20110412svn
+%define         pre 20110816svn
 %define         svn 1
-%define         svnbuild 2011-04-12
+%define         svnbuild 2011-08-16
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.125.%{pre}%{?dist}
+Release:        0.126.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -32,8 +32,6 @@ Patch8:         %{name}-manlinks.patch
 Patch14:        %{name}-nodvdcss.patch
 # use system FFmpeg libraries
 Patch18:        %{name}-ffmpeg.patch
-# Upstream fix for http://bugzilla.mplayerhq.hu/show_bug.cgi?id=1904
-Patch19:        %{name}-pause.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -46,7 +44,7 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  em8300-devel
 BuildRequires:  enca-devel
 BuildRequires:  faad2-devel >= %{faad2min}
-BuildRequires:  ffmpeg-devel >= 0.6.90-0.1.rc0
+BuildRequires:  ffmpeg-devel >= 0.7.3
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
 BuildRequires:  fribidi-devel
@@ -70,6 +68,7 @@ BuildRequires:  libdvdnav-devel >= 4.1.3-1
 BuildRequires:  libjpeg-devel
 BuildRequires:  libmpcdec-devel
 BuildRequires:  libmpeg2-devel
+BuildRequires:  libmpg123-devel
 BuildRequires:  librtmp-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvdpau-devel
@@ -184,7 +183,6 @@ This package contains various scripts from MPlayer TOOLS directory.
     --language=all \\\
     \\\
     --enable-joystick \\\
-    --enable-largefiles \\\
     --enable-lirc \\\
     --enable-menu \\\
     --enable-radio \\\
@@ -219,7 +217,6 @@ This package contains various scripts from MPlayer TOOLS directory.
     %{!?_with_esound:--disable-esd} \\\
     %{!?_with_jack:--disable-jack} \\\
     %{!?_with_openal:--disable-openal} \\\
-    --disable-mp3lib \\\
 
 
 %prep
@@ -232,7 +229,6 @@ This package contains various scripts from MPlayer TOOLS directory.
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
 %patch18 -p1 -b .ffmpeg
-%patch19 -p1 -b .pause
 
 doconv() {
     iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
@@ -304,9 +300,9 @@ tar xjC $RPM_BUILD_ROOT%{_datadir}/mplayer/skins --exclude=.svn -f %{SOURCE1}
 ln -s Blue $RPM_BUILD_ROOT%{_datadir}/mplayer/skins/default
 
 # Icons
-install -dm 755 $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/32x32/apps
-install -pm 644 etc/mplayer.xpm \
-    $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/32x32/apps
+install -dm 755 $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps
+install -pm 644 etc/mplayer.png \
+    $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps
 
 # Desktop file
 desktop-file-install \
@@ -360,7 +356,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root, -)
 %{_bindir}/gmplayer
 %{_datadir}/applications/*mplayer.desktop
-%{_datadir}/icons/hicolor/32x32/apps/mplayer.xpm
+%{_datadir}/icons/hicolor/48x48/apps/mplayer.png
 %{_datadir}/mplayer/skins/
 
 %files -n mencoder
@@ -405,6 +401,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Fri Sep 23 2011 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.126.20110816svn
+- 20110816 snapshot
+- drop obsolete pause crash patch
+- re-enable mp3lib decoder
+- enable libmpg123 decoder
+
 * Fri Jul 15 2011 Nicolas Chauvet <kwizart@gmail.com> - 1.0-0.125.20110412svn
 - Rebuilt for x264 ABI 115
 
