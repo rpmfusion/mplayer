@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.126.%{pre}%{?dist}
+Release:        0.127.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 Group:          Applications/Multimedia
@@ -400,6 +400,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Jan 10 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.0-0.127.20110816svn
+- Rebuild for FFmpeg
+
 * Mon Jan 02 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.0-0.126.20110816svn
 - Rebuild for new ffmpeg
 
