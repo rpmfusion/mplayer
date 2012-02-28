@@ -6,10 +6,9 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.128.%{pre}%{?dist}
+Release:        0.129.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
-Group:          Applications/Multimedia
 %if 0%{!?_without_amr:1}
 License:        GPLv3+
 %else
@@ -32,7 +31,6 @@ Patch8:         %{name}-manlinks.patch
 Patch14:        %{name}-nodvdcss.patch
 # use system FFmpeg libraries
 Patch18:        %{name}-ffmpeg.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -61,6 +59,7 @@ BuildRequires:  libXvMC-devel
 BuildRequires:  libXxf86vm-devel
 BuildRequires:  libass-devel >= 0.9.10
 BuildRequires:  libbluray-devel
+BuildRequires:  libbs2b-devel
 BuildRequires:  libcaca-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdv-devel
@@ -131,14 +130,12 @@ Non-default rpmbuild options:
 
 %package        common
 Summary:        MPlayer common files
-Group:          Applications/Multimedia
 
 %description    common
 This package contains common files for MPlayer packages.
 
 %package        gui
 Summary:        GUI for MPlayer
-Group:          Applications/Multimedia
 Requires:       mplayer-common = %{version}-%{release}
 Requires:       hicolor-icon-theme
 
@@ -147,7 +144,6 @@ This package contains a GUI for MPlayer and a default skin for it.
 
 %package     -n mencoder
 Summary:        MPlayer movie encoder
-Group:          Applications/Multimedia
 Requires:       mplayer-common = %{version}-%{release}
 
 %description -n mencoder
@@ -155,14 +151,12 @@ This package contains the MPlayer movie encoder.
 
 %package        doc
 Summary:        MPlayer documentation in various languages
-Group:          Documentation
 
 %description    doc
 MPlayer documentation in various languages.
 
 %package        tools
 Summary:        Useful scripts for MPlayer
-Group:          Applications/Multimedia
 Requires:       mencoder = %{version}-%{release}
 Requires:       mplayer = %{version}-%{release}
 
@@ -207,7 +201,7 @@ This package contains various scripts from MPlayer TOOLS directory.
     \\\
     --disable-bitmap-font \\\
     %{!?_with_dga:--disable-dga1 --disable-dga2} \\\
-    --%{?_with_directfb:enable}%{!?_with_directfb:disable}-directfb \\\
+    %{!?_with_directfb:--disable-directfb} \\\
     %{!?_with_svgalib:--disable-svga} \\\
     --disable-termcap \\\
     --enable-xvmc \\\
@@ -229,14 +223,6 @@ This package contains various scripts from MPlayer TOOLS directory.
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
 %patch18 -p1 -b .ffmpeg
-
-doconv() {
-    iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
-    mv DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1
-}
-for lang in de es fr it ; do doconv iso-8859-1 utf-8 $lang ; done
-for lang in hu pl ; do doconv iso-8859-2 utf-8 $lang ; done
-for lang in ru ; do doconv koi8-r utf-8 $lang ; done
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
@@ -324,16 +310,10 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 update-desktop-database &>/dev/null || :
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-, root, root, -)
 %{_bindir}/mplayer
 
 %files common
-%defattr(-, root, root, -)
 %doc AUTHORS Changelog Copyright LICENSE README
 %dir %{_sysconfdir}/mplayer
 %config(noreplace) %{_sysconfdir}/mplayer/mplayer.conf
@@ -353,14 +333,12 @@ rm -rf $RPM_BUILD_ROOT
 %lang(zh_CN) %{_mandir}/zh_CN/man1/mplayer.1*
 
 %files gui
-%defattr(-, root, root, -)
 %{_bindir}/gmplayer
 %{_datadir}/applications/*mplayer.desktop
 %{_datadir}/icons/hicolor/48x48/apps/mplayer.png
 %{_datadir}/mplayer/skins/
 
 %files -n mencoder
-%defattr(-, root, root, -)
 %{_bindir}/mencoder
 %{_mandir}/man1/mencoder.1*
 %lang(cs) %{_mandir}/cs/man1/mencoder.1*
@@ -374,7 +352,6 @@ rm -rf $RPM_BUILD_ROOT
 %lang(zh_CN) %{_mandir}/zh_CN/man1/mencoder.1*
 
 %files doc
-%defattr(-, root, root, -)
 %doc doc/en/ doc/tech/
 %lang(cs) %doc doc/cs/
 %lang(de) %doc doc/de/
@@ -386,7 +363,6 @@ rm -rf $RPM_BUILD_ROOT
 %lang(zh_CN) %doc doc/zh_CN/
 
 %files tools
-%defattr(-, root, root, -)
 %{_bindir}/aconvert
 %{_bindir}/calcbpp
 %{_bindir}/countquant
@@ -401,6 +377,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Feb 28 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.129.20110816svn
+- Added libbs2b-devel to BuildRequires (RPM Fusion bug #2157)
+- Fixed --with directfb (RPM Fusion bug #2141)
+- Don't mangle the manpages (RPM Fusion bug #1994)
+- Fixed man links (RPM Fusion bug #1625)
+- Dropped obsolete Group, Buildroot, %%clean and %%defattr
+
 * Tue Jan 10 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.0-0.128.20110816svn
 - Rebuild for FFmpeg
 
