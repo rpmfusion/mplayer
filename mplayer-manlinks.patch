@@ -29,3 +29,4 @@ diff -up mplayer-export-2009-10-29/Makefile.manlinks mplayer-export-2009-10-29/M
  endef
  
  define MPLAYER_MAN_RULE
+E
