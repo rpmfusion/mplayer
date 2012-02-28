@@ -1,15 +1,14 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20110816svn
+%define         pre 20120204svn
 %define         svn 1
-%define         svnbuild 2011-08-16
+%define         svnbuild 2012-02-04
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.129.%{pre}%{?dist}
+Release:        0.131.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
-Group:          Applications/Multimedia
 %if 0%{!?_without_amr:1}
 License:        GPLv3+
 %else
@@ -22,7 +21,7 @@ Source0:        mplayer-export-%{svnbuild}.tar.bz2
 %else
 Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre}.tar.bz2
 %endif
-Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
+Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.8.tar.bz2
 Source10:       mplayer-snapshot.sh
 # set defaults for Fedora
 Patch2:         %{name}-config.patch
@@ -32,7 +31,6 @@ Patch8:         %{name}-manlinks.patch
 Patch14:        %{name}-nodvdcss.patch
 # use system FFmpeg libraries
 Patch18:        %{name}-ffmpeg.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -44,7 +42,7 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  em8300-devel
 BuildRequires:  enca-devel
 BuildRequires:  faad2-devel >= %{faad2min}
-BuildRequires:  ffmpeg-devel >= 0.7.3
+BuildRequires:  ffmpeg-devel >= 0.10
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
 BuildRequires:  fribidi-devel
@@ -61,6 +59,7 @@ BuildRequires:  libXvMC-devel
 BuildRequires:  libXxf86vm-devel
 BuildRequires:  libass-devel >= 0.9.10
 BuildRequires:  libbluray-devel
+BuildRequires:  libbs2b-devel
 BuildRequires:  libcaca-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdv-devel
@@ -131,14 +130,12 @@ Non-default rpmbuild options:
 
 %package        common
 Summary:        MPlayer common files
-Group:          Applications/Multimedia
 
 %description    common
 This package contains common files for MPlayer packages.
 
 %package        gui
 Summary:        GUI for MPlayer
-Group:          Applications/Multimedia
 Requires:       mplayer-common = %{version}-%{release}
 Requires:       hicolor-icon-theme
 
@@ -147,7 +144,6 @@ This package contains a GUI for MPlayer and a default skin for it.
 
 %package     -n mencoder
 Summary:        MPlayer movie encoder
-Group:          Applications/Multimedia
 Requires:       mplayer-common = %{version}-%{release}
 
 %description -n mencoder
@@ -155,14 +151,12 @@ This package contains the MPlayer movie encoder.
 
 %package        doc
 Summary:        MPlayer documentation in various languages
-Group:          Documentation
 
 %description    doc
 MPlayer documentation in various languages.
 
 %package        tools
 Summary:        Useful scripts for MPlayer
-Group:          Applications/Multimedia
 Requires:       mencoder = %{version}-%{release}
 Requires:       mplayer = %{version}-%{release}
 
@@ -207,7 +201,7 @@ This package contains various scripts from MPlayer TOOLS directory.
     \\\
     --disable-bitmap-font \\\
     %{!?_with_dga:--disable-dga1 --disable-dga2} \\\
-    --%{?_with_directfb:enable}%{!?_with_directfb:disable}-directfb \\\
+    %{!?_with_directfb:--disable-directfb} \\\
     %{!?_with_svgalib:--disable-svga} \\\
     --disable-termcap \\\
     --enable-xvmc \\\
@@ -230,14 +224,6 @@ This package contains various scripts from MPlayer TOOLS directory.
 %patch14 -p1 -b .nodvdcss
 %patch18 -p1 -b .ffmpeg
 
-doconv() {
-    iconv -f $1 -t $2 -o DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1 && \
-    mv DOCS/man/$3/mplayer.1.utf8 DOCS/man/$3/mplayer.1
-}
-for lang in de es fr it ; do doconv iso-8859-1 utf-8 $lang ; done
-for lang in hu pl ; do doconv iso-8859-2 utf-8 $lang ; done
-for lang in ru ; do doconv koi8-r utf-8 $lang ; done
-
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
 
@@ -254,9 +240,7 @@ popd
 
 %if %{svn}
 # build HTML documentation from XML files 
-pushd DOCS/xml
 %{__make} html-chunked
-popd
 %endif
 
 %install
@@ -300,9 +284,12 @@ tar xjC $RPM_BUILD_ROOT%{_datadir}/mplayer/skins --exclude=.svn -f %{SOURCE1}
 ln -s Blue $RPM_BUILD_ROOT%{_datadir}/mplayer/skins/default
 
 # Icons
-install -dm 755 $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps
-install -pm 644 etc/mplayer.png \
-    $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps
+for iconsize in 16x16 22x22 24x24 32x32 48x48 256x256
+do
+install -dm 755 $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/$iconsize/apps
+install -pm 644 etc/mplayer$iconsize.png \
+    $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/$iconsize/apps/mplayer.png
+done
 
 # Desktop file
 desktop-file-install \
@@ -324,16 +311,10 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 update-desktop-database &>/dev/null || :
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-, root, root, -)
 %{_bindir}/mplayer
 
 %files common
-%defattr(-, root, root, -)
 %doc AUTHORS Changelog Copyright LICENSE README
 %dir %{_sysconfdir}/mplayer
 %config(noreplace) %{_sysconfdir}/mplayer/mplayer.conf
@@ -353,14 +334,12 @@ rm -rf $RPM_BUILD_ROOT
 %lang(zh_CN) %{_mandir}/zh_CN/man1/mplayer.1*
 
 %files gui
-%defattr(-, root, root, -)
 %{_bindir}/gmplayer
 %{_datadir}/applications/*mplayer.desktop
-%{_datadir}/icons/hicolor/48x48/apps/mplayer.png
+%{_datadir}/icons/hicolor/*/apps/mplayer.png
 %{_datadir}/mplayer/skins/
 
 %files -n mencoder
-%defattr(-, root, root, -)
 %{_bindir}/mencoder
 %{_mandir}/man1/mencoder.1*
 %lang(cs) %{_mandir}/cs/man1/mencoder.1*
@@ -374,7 +353,6 @@ rm -rf $RPM_BUILD_ROOT
 %lang(zh_CN) %{_mandir}/zh_CN/man1/mencoder.1*
 
 %files doc
-%defattr(-, root, root, -)
 %doc doc/en/ doc/tech/
 %lang(cs) %doc doc/cs/
 %lang(de) %doc doc/de/
@@ -386,7 +364,6 @@ rm -rf $RPM_BUILD_ROOT
 %lang(zh_CN) %doc doc/zh_CN/
 
 %files tools
-%defattr(-, root, root, -)
 %{_bindir}/aconvert
 %{_bindir}/calcbpp
 %{_bindir}/countquant
@@ -401,6 +378,20 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Mon Feb 27 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.131.20120204svn
+- Added libbs2b-devel to BuildRequires (RPM Fusion bug #2157)
+- Fixed --with directfb (RPM Fusion bug #2141)
+- Don't mangle the manpages (RPM Fusion bug #1994)
+- Fixed man links (RPM Fusion bug #1625)
+
+* Mon Feb 27 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.130.20120204svn
+- 20120204 snapshot
+- Dropped obsolete Group, Buildroot, %%clean and %%defattr
+- Updated the ffmpeg patch
+- Updated Blue skin to 1.8
+- Building documentation is now done from the top-level Makefile
+- Icons now come in different sizes
+
 * Fri Jan 27 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.0-0.129.20110816svn
 - Rebuilt for live555
 
