@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20120204svn
+%define         pre 20120205svn
 %define         svn 1
-%define         svnbuild 2012-02-04
+%define         svnbuild 2012-02-05
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.131.%{pre}%{?dist}
+Release:        0.132.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -378,6 +378,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Wed Feb 29 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.132.20120205svn
+- 20120205 snapshot
+
 * Mon Feb 27 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.131.20120204svn
 - Added libbs2b-devel to BuildRequires (RPM Fusion bug #2157)
 - Fixed --with directfb (RPM Fusion bug #2141)
