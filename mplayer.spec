@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20110816svn
+%define         pre 20110925svn
 %define         svn 1
-%define         svnbuild 2011-08-16
+%define         svnbuild 2011-09-25
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.0
-Release:        0.129.%{pre}%{?dist}
+Release:        0.130.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -23,6 +23,8 @@ Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
 Source10:       mplayer-snapshot.sh
+# http://bugzilla.mplayerhq.hu/show_bug.cgi?id=2001
+Patch1:         %{name}-streamswitch.patch
 # set defaults for Fedora
 Patch2:         %{name}-config.patch
 # use roff include statements instead of symlinks
@@ -219,6 +221,7 @@ This package contains various scripts from MPlayer TOOLS directory.
 %else
 %setup -q -n MPlayer-%{version}%{pre}
 %endif
+%patch1 -p1 -b .streamswitch
 %patch2 -p1 -b .config
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
@@ -377,6 +380,10 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Feb 28 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.130.20110925svn
+- 20110925 snapshot
+- Fixed audio streams switching using a patch from SVN (RPM Fusion bug #2032)
+
 * Tue Feb 28 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.129.20110816svn
 - Added libbs2b-devel to BuildRequires (RPM Fusion bug #2157)
 - Fixed --with directfb (RPM Fusion bug #2141)
