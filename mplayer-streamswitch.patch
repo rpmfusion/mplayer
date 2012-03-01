@@ -1,0 +1,21 @@
+diff -up mplayer-export-2011-09-24/gui/ui/main.c.streamswitch mplayer-export-2011-09-24/gui/ui/main.c
+--- mplayer-export-2011-09-24/gui/ui/main.c.streamswitch	2012-02-29 00:48:32.000000000 +0100
++++ mplayer-export-2011-09-24/gui/ui/main.c	2012-02-29 15:53:10.021379433 +0100
+@@ -154,13 +154,15 @@ void uiEventHandling( int msg,float para
+ 
+    case evSetAudio:
+         if ( !mpctx_get_demuxer(guiInfo.mpcontext) || audio_id == iparam ) break;
++	mp_property_do("switch_audio",M_PROPERTY_SET,&iparam,guiInfo.mpcontext);
+ 	audio_id=iparam;
+-	goto play;
++	break;
+ 
+    case evSetVideo:
+         if ( !mpctx_get_demuxer(guiInfo.mpcontext) || video_id == iparam ) break;
++	mp_property_do("switch_video",M_PROPERTY_SET,&iparam,guiInfo.mpcontext);
+ 	video_id=iparam;
+-	goto play;
++	break;
+ 
+    case evSetSubtitle:
+         mp_property_do("sub",M_PROPERTY_SET,&iparam,guiInfo.mpcontext);
