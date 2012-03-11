@@ -37,7 +37,6 @@ BuildRequires:  a52dec-devel
 BuildRequires:  aalib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  alsa-lib-devel
-BuildRequires:  cdparanoia-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  em8300-devel
 BuildRequires:  enca-devel
@@ -61,11 +60,11 @@ BuildRequires:  libass-devel >= 0.9.10
 BuildRequires:  libbluray-devel
 BuildRequires:  libbs2b-devel
 BuildRequires:  libcaca-devel
+BuildRequires:  libcdio-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdv-devel
 BuildRequires:  libdvdnav-devel >= 4.1.3-1
 BuildRequires:  libjpeg-devel
-BuildRequires:  libmpcdec-devel
 BuildRequires:  libmpeg2-devel
 BuildRequires:  libmpg123-devel
 BuildRequires:  librtmp-devel
@@ -88,6 +87,7 @@ BuildRequires:  yasm
 %{?_with_faac:BuildRequires:  faac-devel}
 %{?_with_jack:BuildRequires: jack-audio-connection-kit-devel}
 %{?_with_libmad:BuildRequires:  libmad-devel}
+%{?_with_libmpcdec:BuildRequires:  libmpcdec-devel}
 %{?_with_nemesi:BuildRequires:  libnemesi-devel >= 0.6.3}
 %{?_with_openal:BuildRequires: openal-soft-devel}
 %{?_with_samba:BuildRequires: libsmbclient-devel}
@@ -193,6 +193,7 @@ This package contains various scripts from MPlayer TOOLS directory.
     %{?_without_amr:--disable-libopencore_amrnb --disable-libopencore_amrwb} \\\
     %{!?_with_faac:--disable-faac} \\\
     %{!?_with_libmad:--disable-mad} \\\
+    %{?_with_libmpcdec:--enable-musepack} \\\
     --disable-libmpeg2-internal \\\
     --disable-tremor-internal \\\
     %{?_with_xmms:--enable-xmms} \\\
@@ -380,6 +381,8 @@ update-desktop-database &>/dev/null || :
 * Sun Mar 11 2012 Dominik Mierzejewski <rpm@greysector.net> - 1.0-0.133.20120205svn
 - drop libvpx build requirement (unused due to shared FFmpeg)
 - trim patch for shared FFmpeg support to minimum
+- replace cdparanoia with libcdio for better CD-Audio support
+- add conditional to enable libmpcdec (disabled upstream by default)
 
 * Wed Feb 29 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.132.20120205svn
 - 20120205 snapshot
