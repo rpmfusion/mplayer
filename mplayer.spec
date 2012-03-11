@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.132.%{pre}%{?dist}
+Release:        0.133.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -72,7 +72,6 @@ BuildRequires:  librtmp-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvdpau-devel
 BuildRequires:  libvorbis-devel
-BuildRequires:  libvpx-devel >= 0.9.1
 BuildRequires:  lirc-devel
 BuildRequires:  live555-devel
 BuildRequires:  lzo-devel >= 2
@@ -378,6 +377,10 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Mar 11 2012 Dominik Mierzejewski <rpm@greysector.net> - 1.0-0.133.20120205svn
+- drop libvpx build requirement (unused due to shared FFmpeg)
+- trim patch for shared FFmpeg support to minimum
+
 * Wed Feb 29 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.132.20120205svn
 - 20120205 snapshot
 
