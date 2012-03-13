@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.133.%{pre}%{?dist}
+Release:        0.134.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -378,6 +378,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Mar 13 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.0-0.134.20120205svn
+- Rebuilt for x264 ABI 0.120
+
 * Sun Mar 11 2012 Dominik Mierzejewski <rpm@greysector.net> - 1.0-0.133.20120205svn
 - drop libvpx build requirement (unused due to shared FFmpeg)
 - trim patch for shared FFmpeg support to minimum
