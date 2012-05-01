@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.130.%{pre}%{?dist}
+Release:        0.131.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -380,6 +380,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue May 01 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.0-0.131.20110925svn
+- Rebuilt for FFmpeg
+
 * Tue Feb 28 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.130.20110925svn
 - 20110925 snapshot
 - Fixed audio streams switching using a patch from SVN (RPM Fusion bug #2032)
