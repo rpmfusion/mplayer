@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.136.%{pre}%{?dist}
+Release:        0.137.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -72,7 +72,7 @@ BuildRequires:  libtheora-devel
 BuildRequires:  libvdpau-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  lirc-devel
-BuildRequires:  live555-devel
+#BuildRequires:  live555-devel #broken - see libnemesi as an alternative
 BuildRequires:  lzo-devel >= 2
 BuildRequires:  pulseaudio-lib-devel
 BuildRequires:  speex-devel >= 1.1
@@ -211,6 +211,7 @@ This package contains various scripts from MPlayer TOOLS directory.
     %{!?_with_esound:--disable-esd} \\\
     %{!?_with_jack:--disable-jack} \\\
     %{!?_with_openal:--disable-openal} \\\
+    --disable-live \\\
 
 
 %prep
@@ -378,8 +379,8 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
-* Tue May 01 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.0-0.136.20120205svn
-- Rebuilt for live555
+* Fri May 04 2012 Nicolas Chauvet <kwizart@gmail.com>  - 1.0-0.137.20120205svn
+- Disable live (broken) - See libnemesi as an alternative
 
 * Sun Mar 18 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.135.20120205svn
 - Rebuilt for ffmpeg-0.10.2
