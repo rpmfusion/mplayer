@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.137.%{pre}%{?dist}
+Release:        0.138.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -379,6 +379,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Mon May 07 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.138.20120205svn
+- Rebuilt for ffmpeg-0.10.3
+
 * Fri May 04 2012 Nicolas Chauvet <kwizart@gmail.com>  - 1.0-0.137.20120205svn
 - Disable live (broken) - See libnemesi as an alternative
 
