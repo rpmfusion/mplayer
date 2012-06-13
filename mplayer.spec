@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.138.%{pre}%{?dist}
+Release:        0.139.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -23,6 +23,7 @@ Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.8.tar.bz2
 Source10:       mplayer-snapshot.sh
+Patch0:         %{name}-gmplayer-subtitles.patch
 # set defaults for Fedora
 Patch2:         %{name}-config.patch
 # use roff include statements instead of symlinks
@@ -220,6 +221,7 @@ This package contains various scripts from MPlayer TOOLS directory.
 %else
 %setup -q -n MPlayer-%{version}%{pre}
 %endif
+%patch0 -p0 -b .gmplayer-subtitles
 %patch2 -p1 -b .config
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
@@ -379,6 +381,10 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Wed Jun 13 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.139.20120205svn
+- Restored the ability to disable subtitles in gmplayer (RPM Fusion bug #2373)
+- Rebuilt for ffmpeg-0.10.4
+
 * Mon May 07 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.138.20120205svn
 - Rebuilt for ffmpeg-0.10.3
 
