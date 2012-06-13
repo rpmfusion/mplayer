@@ -75,7 +75,7 @@ BuildRequires:  libvorbis-devel
 BuildRequires:  lirc-devel
 #BuildRequires:  live555-devel #broken - see libnemesi as an alternative
 BuildRequires:  lzo-devel >= 2
-BuildRequires:  pulseaudio-lib-devel
+BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  speex-devel >= 1.1
 BuildRequires:  twolame-devel
 BuildRequires:  x264-devel >= 0.0.0-0.28
@@ -384,6 +384,7 @@ update-desktop-database &>/dev/null || :
 * Wed Jun 13 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.139.20120205svn
 - Restored the ability to disable subtitles in gmplayer (RPM Fusion bug #2373)
 - Rebuilt for ffmpeg-0.10.4
+- Fix BR to pulseaudio-libs-devel
 
 * Mon May 07 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.138.20120205svn
 - Rebuilt for ffmpeg-0.10.3
