@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20120205svn
-%define         svn 1
-%define         svnbuild 2012-02-05
+#define         pre 20120205svn
+#define         svn 1
+#define         svnbuild 2012-02-05
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
-Version:        1.0
-Release:        0.139.%{pre}%{?dist}
+Version:        1.1
+Release:        1%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -15,11 +15,11 @@ License:        GPLv3+
 License:        GPLv2+
 %endif
 URL:            http://www.mplayerhq.hu/
-%if %{svn}
+%if 0%{?svn}
 # run ./mplayer-snapshot.sh to get this
 Source0:        mplayer-export-%{svnbuild}.tar.bz2
 %else
-Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre}.tar.bz2
+Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pre}.tar.xz
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.8.tar.bz2
 Source10:       mplayer-snapshot.sh
@@ -94,7 +94,7 @@ BuildRequires:  yasm
 %{?_with_samba:BuildRequires: libsmbclient-devel}
 %{?_with_svgalib:BuildRequires: svgalib-devel}
 %{?_with_xmms:BuildRequires: xmms-devel}
-%if %{svn}
+%if 0%{?svn}
 # for XML docs, SVN only
 BuildRequires:  docbook-dtds
 BuildRequires:  docbook-style-xsl
@@ -216,10 +216,11 @@ This package contains various scripts from MPlayer TOOLS directory.
 
 
 %prep
-%if %{svn}
+%if 0%{?svn}
 %setup -q -n mplayer-export-%{svnbuild}
 %else
-%setup -q -n MPlayer-%{version}%{pre}
+%setup -q -n MPlayer-%{version}%{?pre}
+rm -rf ffmpeg libdvdcss libdvdnav libdvdread4
 %endif
 %patch0 -p0 -b .gmplayer-subtitles
 %patch2 -p1 -b .config
@@ -241,7 +242,7 @@ popd
 
 %{__make} V=1 %{?_smp_mflags}
 
-%if %{svn}
+%if 0%{?svn}
 # build HTML documentation from XML files 
 %{__make} html-chunked
 %endif
@@ -381,6 +382,12 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu Jun 14 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-1
+- Updated to 1.1
+- Made %%pre, %%svn and %%svnbuild defines optional
+- Switched to .xz sources
+- Updated the ffmpeg patch
+
 * Wed Jun 13 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.139.20120205svn
 - Restored the ability to disable subtitles in gmplayer (RPM Fusion bug #2373)
 - Rebuilt for ffmpeg-0.10.4
