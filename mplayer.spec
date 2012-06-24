@@ -224,7 +224,7 @@ This package contains various scripts from MPlayer TOOLS directory.
 rm -rf ffmpeg libdvdcss libdvdnav libdvdread4
 %endif
 %patch0 -p0 -b .gmplayer-subtitles
-%patch0 -p0 -b .pngalpha
+%patch1 -p0 -b .pngalpha
 %patch2 -p1 -b .config
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
