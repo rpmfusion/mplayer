@@ -39,7 +39,6 @@ BuildRequires:  aalib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  desktop-file-utils
-BuildRequires:  em8300-devel
 BuildRequires:  enca-devel
 BuildRequires:  faad2-devel >= %{faad2min}
 BuildRequires:  ffmpeg-devel >= 0.10
