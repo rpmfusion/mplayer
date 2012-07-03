@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-#define         pre 20120205svn
-#define         svn 1
-#define         svnbuild 2012-02-05
+%define         pre 20120205svn
+%define         svn 1
+%define         svnbuild 2012-02-05
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
-Version:        1.1
-Release:        1%{?pre}%{?dist}
+Version:        1.0
+Release:        0.140.%{pre}%{?dist}.1
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -15,15 +15,16 @@ License:        GPLv3+
 License:        GPLv2+
 %endif
 URL:            http://www.mplayerhq.hu/
-%if 0%{?svn}
+%if 0%{svn}
 # run ./mplayer-snapshot.sh to get this
 Source0:        mplayer-export-%{svnbuild}.tar.bz2
 %else
-Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pre}.tar.xz
+Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{pre}.tar.bz2
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.8.tar.bz2
 Source10:       mplayer-snapshot.sh
 Patch0:         %{name}-gmplayer-subtitles.patch
+Patch1:         %{name}-pngalpha.patch
 # set defaults for Fedora
 Patch2:         %{name}-config.patch
 # use roff include statements instead of symlinks
@@ -39,6 +40,9 @@ BuildRequires:  aalib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  desktop-file-utils
+%if 0%{?fedora}
+BuildRequires:  em8300-devel
+%endif
 BuildRequires:  enca-devel
 BuildRequires:  faad2-devel >= %{faad2min}
 BuildRequires:  ffmpeg-devel >= 0.10
@@ -93,7 +97,7 @@ BuildRequires:  yasm
 %{?_with_samba:BuildRequires: libsmbclient-devel}
 %{?_with_svgalib:BuildRequires: svgalib-devel}
 %{?_with_xmms:BuildRequires: xmms-devel}
-%if 0%{?svn}
+%if %{svn}
 # for XML docs, SVN only
 BuildRequires:  docbook-dtds
 BuildRequires:  docbook-style-xsl
@@ -215,13 +219,13 @@ This package contains various scripts from MPlayer TOOLS directory.
 
 
 %prep
-%if 0%{?svn}
+%if 0%{svn}
 %setup -q -n mplayer-export-%{svnbuild}
 %else
-%setup -q -n MPlayer-%{version}%{?pre}
-rm -rf ffmpeg libdvdcss libdvdnav libdvdread4
+%setup -q -n MPlayer-%{version}%{pre}
 %endif
 %patch0 -p0 -b .gmplayer-subtitles
+%patch1 -p0 -b .pngalpha
 %patch2 -p1 -b .config
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
@@ -241,7 +245,7 @@ popd
 
 %{__make} V=1 %{?_smp_mflags}
 
-%if 0%{?svn}
+%if 0%{svn}
 # build HTML documentation from XML files 
 %{__make} html-chunked
 %endif
@@ -381,16 +385,17 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
-* Sun Jun 24 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-1
-- Updated to 1.1
-- Made %%pre, %%svn and %%svnbuild defines optional
-- Switched to .xz sources
-- Updated the ffmpeg patch
+* Tue Jul 03 2012 Richard Shaw <hobbes1069@gmail.com> - 1.0-0.140.20120205svn.1
+- Update spec for initial build for EL-6.
+- Conditionalize em8300-devel requirement for Fedora only.
+- Fix typo in build requirement for pulseaudio-libs-devel.
+
+* Sun Jun 24 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.140.20120205svn
+- Fixed -vo png:alpha using a patch from SVN (RPM Fusion bug #2362)
 
 * Wed Jun 13 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.139.20120205svn
 - Restored the ability to disable subtitles in gmplayer (RPM Fusion bug #2373)
 - Rebuilt for ffmpeg-0.10.4
-- Fix BR to pulseaudio-libs-devel
 
 * Mon May 07 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.138.20120205svn
 - Rebuilt for ffmpeg-0.10.3

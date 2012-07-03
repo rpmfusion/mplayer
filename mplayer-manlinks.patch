@@ -1,32 +1,31 @@
-diff -up mplayer-export-2009-10-29/Makefile.manlinks mplayer-export-2009-10-29/Makefile
---- mplayer-export-2009-10-29/Makefile.manlinks	2009-10-19 11:56:18.000000000 +0200
-+++ mplayer-export-2009-10-29/Makefile	2009-10-30 00:42:36.000000000 +0100
-@@ -922,10 +922,10 @@ install-mencoder-man: $(foreach lang,$(M
+diff -up mplayer-export-2012-02-04/Makefile.manlinks mplayer-export-2012-02-04/Makefile
+--- mplayer-export-2012-02-04/Makefile.manlinks	2012-02-27 13:46:39.000000000 +0100
++++ mplayer-export-2012-02-04/Makefile	2012-02-27 20:43:47.286424087 +0100
+@@ -919,10 +919,10 @@ install-mencoder-man: $(foreach lang,$(M
  install-mplayer-man:  $(foreach lang,$(MAN_LANGS),install-mplayer-man-$(lang))
  
  install-gui-man-en: install-mplayer-man-en
 -	cd $(MANDIR)/man1/ && ln -sf mplayer.1 gmplayer.1
-+	echo ".so mplayer.1" > $(MANDIR)/man1/gmplayer.1
++	echo ".so man1/mplayer.1" > $(MANDIR)/man1/gmplayer.1
  
  install-mencoder-man-en: install-mplayer-man-en
 -	cd $(MANDIR)/man1 && ln -sf mplayer.1 mencoder.1
-+	echo ".so mplayer.1" > $(MANDIR)/man1/mencoder.1
++	echo ".so man1/mplayer.1" > $(MANDIR)/man1/mencoder.1
  
  install-mplayer-man-en:
  	$(INSTALL) -d $(MANDIR)/man1
-@@ -933,12 +933,12 @@ install-mplayer-man-en:
+@@ -936,12 +936,12 @@ endef
  
  define GUI_MAN_RULE
  install-gui-man-$(lang): install-mplayer-man-$(lang)
 -	cd $(MANDIR)/$(lang)/man1/ && ln -sf mplayer.1 gmplayer.1
-+	echo ".so mplayer.1" > $(MANDIR)/$(lang)/man1/gmplayer.1
++	echo ".so man1/mplayer.1" > $(MANDIR)/$(lang)/man1/gmplayer.1
  endef
  
  define MENCODER_MAN_RULE
  install-mencoder-man-$(lang): install-mplayer-man-$(lang)
 -	cd $(MANDIR)/$(lang)/man1 && ln -sf mplayer.1 mencoder.1
-+	echo ".so mplayer.1" > $(MANDIR)/$(lang)/man1/mencoder.1
++	echo ".so man1/mplayer.1" > $(MANDIR)/$(lang)/man1/mencoder.1
  endef
  
  define MPLAYER_MAN_RULE
-E
