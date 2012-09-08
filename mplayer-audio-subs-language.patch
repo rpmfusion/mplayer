@@ -1,0 +1,543 @@
+Index: stream/cache2.c
+===================================================================
+--- stream/cache2.c	(wersja 34735)
++++ stream/cache2.c	(wersja 34737)
+@@ -93,6 +93,7 @@
+   volatile int control;
+   volatile unsigned control_uint_arg;
+   volatile double control_double_arg;
++  volatile struct stream_lang_req control_lang_arg;
+   volatile int control_res;
+   volatile double stream_time_length;
+   volatile double stream_time_pos;
+@@ -318,6 +319,9 @@
+       s->control_res = s->stream->control(s->stream, s->control, &uint_res);
+       s->control_uint_arg = uint_res;
+       break;
++    case STREAM_CTRL_GET_LANG:
++      s->control_res = s->stream->control(s->stream, s->control, (void *)&s->control_lang_arg);
++      break;
+     default:
+       s->control_res = STREAM_UNSUPPORTED;
+       break;
+@@ -628,6 +632,8 @@
+     case STREAM_CTRL_GET_CURRENT_TIME:
+       *(double *)arg = s->stream_time_pos;
+       return s->stream_time_pos != MP_NOPTS_VALUE ? STREAM_OK : STREAM_UNSUPPORTED;
++    case STREAM_CTRL_GET_LANG:
++      s->control_lang_arg = *(struct stream_lang_req *)arg;
+     case STREAM_CTRL_GET_NUM_CHAPTERS:
+     case STREAM_CTRL_GET_CURRENT_CHAPTER:
+     case STREAM_CTRL_GET_ASPECT_RATIO:
+@@ -673,6 +679,9 @@
+     case STREAM_CTRL_GET_ANGLE:
+       *(unsigned *)arg = s->control_uint_arg;
+       break;
++    case STREAM_CTRL_GET_LANG:
++      *(struct stream_lang_req *)arg = s->control_lang_arg;
++      break;
+   }
+   return s->control_res;
+ }
+Index: stream/stream_dvd.c
+===================================================================
+--- stream/stream_dvd.c	(wersja 34735)
++++ stream/stream_dvd.c	(wersja 34737)
+@@ -149,7 +149,7 @@
+   return chapter;
+ }
+ 
+-int dvd_lang_from_aid(stream_t *stream, int id) {
++static int dvd_lang_from_aid(stream_t *stream, int id) {
+   dvd_priv_t *d;
+   int i;
+   if (!stream) return 0;
+@@ -195,7 +195,7 @@
+   return maxid + 1;
+ }
+ 
+-int dvd_lang_from_sid(stream_t *stream, int id) {
++static int dvd_lang_from_sid(stream_t *stream, int id) {
+   int i;
+   dvd_priv_t *d;
+   if (!stream) return 0;
+@@ -731,6 +731,25 @@
+             d->angle_seek = 1;
+             return 1;
+         }
++        case STREAM_CTRL_GET_LANG:
++        {
++            struct stream_lang_req *req = arg;
++            int lang = 0;
++            switch(req->type) {
++            case stream_ctrl_audio:
++                lang = dvd_lang_from_aid(stream, req->id);
++                break;
++            case stream_ctrl_sub:
++                lang = dvd_lang_from_sid(stream, req->id);
++                break;
++            }
++            if (!lang)
++                break;
++            req->buf[0] = lang >> 8;
++            req->buf[1] = lang;
++            req->buf[2] = 0;
++            return STREAM_OK;
++        }
+     }
+     return STREAM_UNSUPPORTED;
+ }
+Index: stream/stream_dvdnav.c
+===================================================================
+--- stream/stream_dvdnav.c	(wersja 34735)
++++ stream/stream_dvdnav.c	(wersja 34737)
+@@ -402,6 +402,9 @@
+   return len;
+ }
+ 
++static int mp_dvdnav_lang_from_sid(stream_t *stream, int sid);
++static int mp_dvdnav_lang_from_aid(stream_t *stream, int sid);
++
+ static int control(stream_t *stream, int cmd, void* arg) {
+   dvdnav_priv_t* priv=stream->priv;
+   int tit, part;
+@@ -496,6 +499,25 @@
+         if(dvdnav_angle_change(priv->dvdnav, new_angle) != DVDNAV_STATUS_OK)
+         return 1;
+     }
++    case STREAM_CTRL_GET_LANG:
++    {
++        struct stream_lang_req *req = arg;
++        int lang = 0;
++        switch(req->type) {
++        case stream_ctrl_audio:
++            lang = mp_dvdnav_lang_from_aid(stream, req->id);
++            break;
++        case stream_ctrl_sub:
++            lang = mp_dvdnav_lang_from_sid(stream, req->id);
++            break;
++        }
++        if (!lang)
++            break;
++        req->buf[0] = lang >> 8;
++        req->buf[1] = lang;
++        req->buf[2] = 0;
++        return STREAM_OK;
++    }
+   }
+ 
+   return STREAM_UNSUPPORTED;
+@@ -758,13 +780,12 @@
+ }
+ 
+ /**
+- * \brief mp_dvdnav_lang_from_aid() assigns to buf the language corresponding to audio id 'aid'
++ * \brief mp_dvdnav_lang_from_aid() returns the language corresponding to audio id 'aid'
+  * \param stream: - stream pointer
+  * \param sid: physical subtitle id
+- * \param buf: buffer to contain the 2-chars language string
+- * \return 0 on error, 1 if successful
++ * \return 0 on error, otherwise language id
+  */
+-int mp_dvdnav_lang_from_aid(stream_t *stream, int aid, unsigned char *buf) {
++static int mp_dvdnav_lang_from_aid(stream_t *stream, int aid) {
+   uint8_t lg;
+   uint16_t lang;
+   dvdnav_priv_t * priv = stream->priv;
+@@ -775,10 +796,7 @@
+   if(lg == 0xff) return 0;
+   lang = dvdnav_audio_stream_to_lang(priv->dvdnav, lg);
+   if(lang == 0xffff) return 0;
+-  buf[0] = lang >> 8;
+-  buf[1] = lang & 0xFF;
+-  buf[2] = 0;
+-  return 1;
++  return lang;
+ }
+ 
+ 
+@@ -810,13 +828,12 @@
+ }
+ 
+ /**
+- * \brief mp_dvdnav_lang_from_sid() assigns to buf the language corresponding to subtitle id 'sid'
++ * \brief mp_dvdnav_lang_from_sid() returns the language corresponding to subtitle id 'sid'
+  * \param stream: - stream pointer
+  * \param sid: physical subtitle id
+- * \param buf: buffer to contain the 2-chars language string
+- * \return 0 on error, 1 if successful
++ * \return 0 on error, otherwise language id
+  */
+-int mp_dvdnav_lang_from_sid(stream_t *stream, int sid, unsigned char *buf) {
++static int mp_dvdnav_lang_from_sid(stream_t *stream, int sid) {
+     uint8_t k;
+     uint16_t lang;
+     dvdnav_priv_t *priv = stream->priv;
+@@ -828,10 +845,7 @@
+         return 0;
+     lang = dvdnav_spu_stream_to_lang(priv->dvdnav, k);
+     if(lang == 0xffff) return 0;
+-    buf[0] = lang >> 8;
+-    buf[1] = lang & 0xFF;
+-    buf[2] = 0;
+-    return 1;
++    return lang;
+ }
+ 
+ /**
+Index: stream/stream_bd.c
+===================================================================
+--- stream/stream_bd.c	(wersja 34735)
++++ stream/stream_bd.c	(wersja 34737)
+@@ -25,6 +25,7 @@
+ #include "libavutil/common.h"
+ #include "libavutil/aes.h"
+ #include "libavutil/sha.h"
++#include "libavutil/avstring.h"
+ #include "libmpdemux/demuxer.h"
+ #include "libavutil/intreadwrite.h"
+ #include "m_struct.h"
+@@ -372,7 +373,7 @@
+     return 0;
+ }
+ 
+-const char *bd_lang_from_id(stream_t *s, int id)
++static const char *bd_lang_from_id(stream_t *s, int id)
+ {
+     struct bd_priv *bd = s->priv;
+     int i;
+@@ -451,6 +452,22 @@
+     free_stream(file);
+ }
+ 
++static int bd_stream_control(stream_t *s, int cmd, void *arg)
++{
++    switch (cmd) {
++    case STREAM_CTRL_GET_LANG:
++    {
++        struct stream_lang_req *req = arg;
++        const char *lang = bd_lang_from_id(s, req->id);
++        if (!lang)
++            return STREAM_ERROR;
++        av_strlcpy(req->buf, lang, sizeof(req->buf));
++        return STREAM_OK;
++    }
++    }
++    return STREAM_UNSUPPORTED;
++}
++
+ static int bd_stream_open(stream_t *s, int mode, void* opts, int* file_format)
+ {
+     char filename[PATH_MAX];
+@@ -470,6 +487,7 @@
+     s->flags       = STREAM_READ | MP_STREAM_SEEK;
+     s->fill_buffer = bd_stream_fill_buffer;
+     s->seek        = bd_stream_seek;
++    s->control     = bd_stream_control;
+     s->close       = bd_stream_close;
+     s->start_pos   = 0;
+     s->priv        = bd;
+Index: stream/stream_bluray.c
+===================================================================
+--- stream/stream_bluray.c	(wersja 34735)
++++ stream/stream_bluray.c	(wersja 34737)
+@@ -191,6 +191,36 @@
+         return 1;
+     }
+ 
++    case STREAM_CTRL_GET_LANG: {
++        struct stream_lang_req *req = arg;
++        BLURAY_TITLE_INFO *ti = bd_get_title_info(b->bd, b->current_title, b->current_angle);
++        if (ti->clip_count) {
++            BLURAY_STREAM_INFO *si = NULL;
++            int count = 0;
++            switch (req->type) {
++            case stream_ctrl_audio:
++                count = ti->clips[0].audio_stream_count;
++                si = ti->clips[0].audio_streams;
++                break;
++            case stream_ctrl_sub:
++                count = ti->clips[0].pg_stream_count;
++                si = ti->clips[0].pg_streams;
++                break;
++            }
++            while (count-- > 0) {
++                if (si->pid == req->id) {
++                    memcpy(req->buf, si->lang, 4);
++                    req->buf[4] = 0;
++                    bd_free_title_info(ti);
++                    return STREAM_OK;
++                }
++                si++;
++            }
++        }
++        bd_free_title_info(ti);
++        return STREAM_ERROR;
++    }
++
+     default:
+         break;
+     }
+Index: stream/stream.h
+===================================================================
+--- stream/stream.h	(wersja 34735)
++++ stream/stream.h	(wersja 34737)
+@@ -99,8 +99,19 @@
+ #define STREAM_CTRL_GET_ANGLE 10
+ #define STREAM_CTRL_SET_ANGLE 11
+ #define STREAM_CTRL_GET_NUM_TITLES 12
++#define STREAM_CTRL_GET_LANG 13
+ 
++enum stream_ctrl_type {
++	stream_ctrl_audio,
++	stream_ctrl_sub,
++};
+ 
++struct stream_lang_req {
++	enum stream_ctrl_type type;
++	int id;
++	char buf[40];
++};
++
+ typedef enum {
+ 	streaming_stopped_e,
+ 	streaming_playing_e
+Index: command.c
+===================================================================
+--- command.c	(wersja 34735)
++++ command.c	(wersja 34737)
+@@ -910,30 +910,7 @@
+             *(char **) arg = strdup(MSGTR_Disabled);
+         else {
+             char lang[40] = MSGTR_Unknown;
+-            sh_audio_t* sh = mpctx->sh_audio;
+-            if (sh && sh->lang)
+-                av_strlcpy(lang, sh->lang, 40);
+-            // TODO: use a proper STREAM_CTRL instead of this mess
+-            else if (sh && mpctx->stream->type == STREAMTYPE_BD) {
+-                const char *l = bd_lang_from_id(mpctx->stream, audio_id);
+-                if (l)
+-                    av_strlcpy(lang, l, sizeof(lang));
+-            }
+-#ifdef CONFIG_DVDREAD
+-            else if (mpctx->stream->type == STREAMTYPE_DVD) {
+-                int code = dvd_lang_from_aid(mpctx->stream, current_id);
+-                if (code) {
+-                    lang[0] = code >> 8;
+-                    lang[1] = code;
+-                    lang[2] = 0;
+-                }
+-            }
+-#endif
+-
+-#ifdef CONFIG_DVDNAV
+-            else if (mpctx->stream->type == STREAMTYPE_DVDNAV)
+-                mp_dvdnav_lang_from_aid(mpctx->stream, current_id, lang);
+-#endif
++            demuxer_audio_lang(mpctx->demuxer, current_id, lang, sizeof(lang));
+             *(char **) arg = malloc(64);
+             snprintf(*(char **) arg, 64, "(%d) %s", audio_id, lang);
+         }
+@@ -1497,37 +1474,7 @@
+                      strlen(tmp) < 20 ? tmp : tmp + strlen(tmp) - 19);
+             return M_PROPERTY_OK;
+         }
+-#ifdef CONFIG_DVDNAV
+-        if (mpctx->stream->type == STREAMTYPE_DVDNAV) {
+-            if (vo_spudec && dvdsub_id >= 0) {
+-                unsigned char lang[3];
+-                if (mp_dvdnav_lang_from_sid(mpctx->stream, dvdsub_id, lang)) {
+-                    snprintf(*(char **) arg, 63, "(%d) %s", dvdsub_id, lang);
+-                    return M_PROPERTY_OK;
+-                }
+-            }
+-        }
+-#endif
+ 
+-        if (mpctx->stream->type == STREAMTYPE_BD
+-            && d_sub && d_sub->sh && dvdsub_id >= 0) {
+-            const char *lang = bd_lang_from_id(mpctx->stream, ((sh_sub_t*)d_sub->sh)->sid);
+-            if (!lang) lang = MSGTR_Unknown;
+-            snprintf(*(char **) arg, 63, "(%d) %s", dvdsub_id, lang);
+-            return M_PROPERTY_OK;
+-        }
+-
+-        if ((mpctx->demuxer->type == DEMUXER_TYPE_MATROSKA
+-             || mpctx->demuxer->type == DEMUXER_TYPE_LAVF
+-             || mpctx->demuxer->type == DEMUXER_TYPE_LAVF_PREFERRED
+-             || mpctx->demuxer->type == DEMUXER_TYPE_OGG)
+-             && d_sub && d_sub->sh && dvdsub_id >= 0) {
+-            const char* lang = ((sh_sub_t*)d_sub->sh)->lang;
+-            if (!lang) lang = MSGTR_Unknown;
+-            snprintf(*(char **) arg, 63, "(%d) %s", dvdsub_id, lang);
+-            return M_PROPERTY_OK;
+-        }
+-
+         if (vo_vobsub && vobsub_id >= 0) {
+             const char *language = MSGTR_Unknown;
+             language = vobsub_get_id(vo_vobsub, (unsigned int) vobsub_id);
+@@ -1535,22 +1482,12 @@
+                      vobsub_id, language ? language : MSGTR_Unknown);
+             return M_PROPERTY_OK;
+         }
+-#ifdef CONFIG_DVDREAD
+-        if (vo_spudec && mpctx->stream->type == STREAMTYPE_DVD
+-            && dvdsub_id >= 0) {
+-            char lang[3];
+-            int code = dvd_lang_from_sid(mpctx->stream, dvdsub_id);
+-            lang[0] = code >> 8;
+-            lang[1] = code;
+-            lang[2] = 0;
++        if (dvdsub_id >= 0) {
++            char lang[40] = MSGTR_Unknown;
++            demuxer_sub_lang(mpctx->demuxer, dvdsub_id, lang, sizeof(lang));
+             snprintf(*(char **) arg, 63, "(%d) %s", dvdsub_id, lang);
+             return M_PROPERTY_OK;
+         }
+-#endif
+-        if (dvdsub_id >= 0) {
+-            snprintf(*(char **) arg, 63, "(%d) %s", dvdsub_id, MSGTR_Unknown);
+-            return M_PROPERTY_OK;
+-        }
+         snprintf(*(char **) arg, 63, MSGTR_Disabled);
+         return M_PROPERTY_OK;
+ 
+Index: libmpdemux/demuxer.c
+===================================================================
+--- libmpdemux/demuxer.c	(wersja 34735)
++++ libmpdemux/demuxer.c	(wersja 34737)
+@@ -53,6 +53,7 @@
+ #endif
+ #include "av_helpers.h"
+ #endif
++#include "libavutil/avstring.h"
+ 
+ // This is quite experimental, in particular it will mess up the pts values
+ // in the queue - on the other hand it might fix some issues like generating
+@@ -1785,6 +1786,50 @@
+     return angle;
+ }
+ 
++int demuxer_audio_lang(demuxer_t *d, int id, char *buf, int buf_len)
++{
++    struct stream_lang_req req;
++    sh_audio_t *sh;
++    if (id < 0 || id >= MAX_A_STREAMS)
++        return -1;
++    sh = d->a_streams[id];
++    if (!sh)
++        return -1;
++    if (sh->lang) {
++        av_strlcpy(buf, sh->lang, buf_len);
++        return 0;
++    }
++    req.type = stream_ctrl_audio;
++    req.id = sh->aid;
++    if (stream_control(d->stream, STREAM_CTRL_GET_LANG, &req) == STREAM_OK) {
++        av_strlcpy(buf, req.buf, buf_len);
++        return 0;
++    }
++    return -1;
++}
++
++int demuxer_sub_lang(demuxer_t *d, int id, char *buf, int buf_len)
++{
++    struct stream_lang_req req;
++    sh_sub_t *sh;
++    if (id < 0 || id >= MAX_S_STREAMS)
++        return -1;
++    sh = d->s_streams[id];
++    if (!sh)
++        return -1;
++    if (sh->lang) {
++        av_strlcpy(buf, sh->lang, buf_len);
++        return 0;
++    }
++    req.type = stream_ctrl_sub;
++    req.id = sh->sid;
++    if (stream_control(d->stream, STREAM_CTRL_GET_LANG, &req) == STREAM_OK) {
++        av_strlcpy(buf, req.buf, buf_len);
++        return 0;
++    }
++    return -1;
++}
++
+ int demuxer_audio_track_by_lang(demuxer_t *d, char *lang)
+ {
+     int i, len;
+Index: libmpdemux/demuxer.h
+===================================================================
+--- libmpdemux/demuxer.h	(wersja 34735)
++++ libmpdemux/demuxer.h	(wersja 34737)
+@@ -473,6 +473,9 @@
+ /// Get number of angles.
+ int demuxer_angles_count(demuxer_t *demuxer);
+ 
++int demuxer_audio_lang(demuxer_t *d, int id, char *buf, int buf_len);
++int demuxer_sub_lang(demuxer_t *d, int id, char *buf, int buf_len);
++
+ // get the index of a track
+ // lang is a comma-separated list
+ int demuxer_audio_track_by_lang(demuxer_t* demuxer, char* lang);
+Index: stream/stream_dvd.h
+===================================================================
+--- stream/stream_dvd.h	(wersja 34738)
++++ stream/stream_dvd.h	(wersja 34739)
+@@ -57,8 +57,6 @@
+ } dvd_priv_t;
+ 
+ int dvd_number_of_subs(stream_t *stream);
+-int dvd_lang_from_aid(stream_t *stream, int id);
+-int dvd_lang_from_sid(stream_t *stream, int id);
+ int dvd_aid_from_lang(stream_t *stream, const unsigned char* lang);
+ int dvd_sid_from_lang(stream_t *stream, const unsigned char* lang);
+ int dvd_chapter_from_cell(dvd_priv_t *dvd,int title,int cell);
+Index: stream/stream_dvdnav.h
+===================================================================
+--- stream/stream_dvdnav.h	(wersja 34738)
++++ stream/stream_dvdnav.h	(wersja 34739)
+@@ -31,9 +31,7 @@
+ int mp_dvdnav_number_of_subs(stream_t *stream);
+ int mp_dvdnav_aid_from_audio_num(stream_t *stream, int audio_num);
+ int mp_dvdnav_aid_from_lang(stream_t *stream, const unsigned char *language);
+-int mp_dvdnav_lang_from_aid(stream_t *stream, int id, unsigned char *buf);
+ int mp_dvdnav_sid_from_lang(stream_t *stream, const unsigned char *language);
+-int mp_dvdnav_lang_from_sid(stream_t *stream, int sid, unsigned char *buf);
+ void mp_dvdnav_handle_input(stream_t *stream, int cmd, int *button);
+ void mp_dvdnav_update_mouse_pos(stream_t *stream, int32_t x, int32_t y, int* button);
+ void mp_dvdnav_get_highlight (stream_t *stream, nav_highlight_t *hl);
+Index: stream/stream_bd.h
+===================================================================
+--- stream/stream_bd.h	(wersja 34738)
++++ stream/stream_bd.h	(wersja 34739)
+@@ -21,7 +21,6 @@
+ 
+ #include "stream.h"
+ 
+-const char *bd_lang_from_id(stream_t *s, int id);
+ int bd_aid_from_lang(stream_t *s, const char *lang);
+ int bd_sid_from_lang(stream_t *s, const char *lang);
+ 
+Index: libmpdemux/demuxer.c
+===================================================================
+--- libmpdemux/demuxer.c	(wersja 34776)
++++ libmpdemux/demuxer.c	(wersja 34777)
+@@ -1815,14 +1815,14 @@
+     if (id < 0 || id >= MAX_S_STREAMS)
+         return -1;
+     sh = d->s_streams[id];
+-    if (!sh)
+-        return -1;
+-    if (sh->lang) {
++    if (sh && sh->lang) {
+         av_strlcpy(buf, sh->lang, buf_len);
+         return 0;
+     }
+     req.type = stream_ctrl_sub;
+-    req.id = sh->sid;
++    // assume 1:1 mapping so we can show the language of
++    // DVD subs even when we have not yet created the stream.
++    req.id = sh ? sh->sid : id;
+     if (stream_control(d->stream, STREAM_CTRL_GET_LANG, &req) == STREAM_OK) {
+         av_strlcpy(buf, req.buf, buf_len);
+         return 0;

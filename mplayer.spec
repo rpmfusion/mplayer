@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.140.%{pre}%{?dist}
+Release:        0.141.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -27,6 +27,8 @@ Patch0:         %{name}-gmplayer-subtitles.patch
 Patch1:         %{name}-pngalpha.patch
 # set defaults for Fedora
 Patch2:         %{name}-config.patch
+# fix the display of audio and subtitle languages
+Patch3:         %{name}-audio-subs-language.patch
 # use roff include statements instead of symlinks
 Patch8:         %{name}-manlinks.patch
 # erase any trace of libdvdcss
@@ -225,6 +227,7 @@ This package contains various scripts from MPlayer TOOLS directory.
 %patch0 -p0 -b .gmplayer-subtitles
 %patch1 -p0 -b .pngalpha
 %patch2 -p1 -b .config
+%patch3 -p0 -b .audio-subs-language
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
 %patch18 -p1 -b .ffmpeg
@@ -383,6 +386,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Sep 08 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.141.20120205svn
+- Added a patch from SVN fixing the display of audio and subtitle languages 
+
 * Sun Jun 24 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.140.20120205svn
 - Fixed -vo png:alpha using a patch from SVN (RPM Fusion bug #2362)
 
