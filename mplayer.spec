@@ -181,9 +181,9 @@ This package contains various scripts from MPlayer TOOLS directory.
     --enable-menu \\\
     --enable-radio \\\
     --enable-radio-capture \\\
-%ifarch %{ix86} x86_64 ppc ppc64
+%ifarch %{ix86} x86_64 ppc ppc64 \
     --enable-runtime-cpudetection \\\
-%endif
+%endif \
     --enable-unrarexec \\\
     \\\
     --disable-dvdread-internal \\\
@@ -386,6 +386,7 @@ update-desktop-database &>/dev/null || :
 %changelog
 * Wed Sep 05 2012 Nicolas Chauvet <kwizart@gmail.com>
 - Rebuilt for x264 ABI 125
+- Use --cpu-runtime-detection only on supported arches - rfbz#2467
 
 * Sun Jun 24 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-1
 - Updated to 1.1
