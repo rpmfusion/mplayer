@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.141.%{pre}%{?dist}
+Release:        0.142.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -184,7 +184,9 @@ This package contains various scripts from MPlayer TOOLS directory.
     --enable-menu \\\
     --enable-radio \\\
     --enable-radio-capture \\\
+%ifarch %{ix86} x86_64 ppc ppc64 \
     --enable-runtime-cpudetection \\\
+%endif \
     --enable-unrarexec \\\
     \\\
     --disable-dvdread-internal \\\
@@ -386,6 +388,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Sep 16 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.142.20120205svn
+- Use --cpu-runtime-detection only on supported arches - rfbz#2467
+
 * Sat Sep 08 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.141.20120205svn
 - Added a patch from SVN fixing the display of audio and subtitle languages 
 
