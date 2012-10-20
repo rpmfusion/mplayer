@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-#define         pre 20120205svn
-#define         svn 1
-#define         svnbuild 2012-02-05
+%define         pre 20121008svn
+%define         svn 1
+%define         svnbuild 2012-10-08
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.1
-Release:        2%{?pre}%{?dist}
+Release:        3.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -23,7 +23,6 @@ Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pr
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.8.tar.bz2
 Source10:       mplayer-snapshot.sh
-Patch0:         %{name}-gmplayer-subtitles.patch
 # set defaults for Fedora
 Patch2:         %{name}-config.patch
 # use roff include statements instead of symlinks
@@ -198,7 +197,6 @@ This package contains various scripts from MPlayer TOOLS directory.
     %{!?_with_libmad:--disable-mad} \\\
     %{?_with_libmpcdec:--enable-musepack} \\\
     --disable-libmpeg2-internal \\\
-    --disable-tremor-internal \\\
     %{?_with_xmms:--enable-xmms} \\\
     %{?_with_xmms:--with-xmmslibdir=%{_libdir}} \\\
     \\\
@@ -224,7 +222,6 @@ This package contains various scripts from MPlayer TOOLS directory.
 %setup -q -n MPlayer-%{version}%{?pre}
 rm -rf ffmpeg libdvdcss libdvdnav libdvdread4
 %endif
-%patch0 -p0 -b .gmplayer-subtitles
 %patch2 -p1 -b .config
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
@@ -384,6 +381,11 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Oct 20 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-3.20121008svn
+- 20121008 snapshot
+- Internal tremor copy is no more
+- Dropped the included gmplayer subtitles patch 
+
 * Wed Sep 05 2012 Nicolas Chauvet <kwizart@gmail.com>
 - Rebuilt for x264 ABI 125
 - Use --cpu-runtime-detection only on supported arches - rfbz#2467
