@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.1
-Release:        3.%{?pre}%{?dist}
+Release:        4.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -381,6 +381,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Fri Nov 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.1-4.20121008svn
+- Rebuilt for x264
+
 * Sat Oct 20 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-3.20121008svn
 - 20121008 snapshot
 - Internal tremor copy is no more
