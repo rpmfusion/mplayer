@@ -1,7 +1,7 @@
 %define         codecdir %{_libdir}/codecs
 %define         pre 20130130svn
 %define         svn 1
-%define         svnbuild 2012-10-08
+%define         svnbuild 2013-01-30
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
