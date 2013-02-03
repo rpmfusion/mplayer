@@ -1,7 +1,7 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20130130svn
+%define         pre 20130123svn
 %define         svn 1
-%define         svnbuild 2013-01-30
+%define         svnbuild 2013-01-23
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
@@ -381,8 +381,10 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
-* Wed Jan 30 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-5.20130130svn
-- 20130130 snapshot
+* Sun Feb 03 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-5.20130123svn
+- 20130123 snapshot
+- Updated the nodvdcss patch
+- Updated the ffmpeg patch
 
 * Fri Nov 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.1-4.20121008svn
 - Rebuilt for x264

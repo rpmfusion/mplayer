@@ -1,7 +1,7 @@
-diff -up mplayer-export-2011-08-16/configure.nodvdcss mplayer-export-2011-08-16/configure
---- mplayer-export-2011-08-16/configure.nodvdcss	2011-08-11 19:45:43.000000000 +0200
-+++ mplayer-export-2011-08-16/configure	2011-08-16 21:53:23.000000000 +0200
-@@ -731,7 +731,7 @@ _dvdnavconfig=dvdnav-config
+diff -up mplayer-export-2013-01-23/configure.nodvdcss mplayer-export-2013-01-23/configure
+--- mplayer-export-2013-01-23/configure.nodvdcss	2013-02-02 10:03:58.000000000 +0100
++++ mplayer-export-2013-01-23/configure	2013-02-03 16:35:16.537604524 +0100
+@@ -780,7 +780,7 @@ _dvdnavconfig=dvdnav-config
  _dvdreadconfig=dvdread-config
  _dvdread=auto
  _dvdread_internal=auto
@@ -10,10 +10,10 @@ diff -up mplayer-export-2011-08-16/configure.nodvdcss mplayer-export-2011-08-16/
  _xanim=auto
  _real=auto
  _live=auto
-diff -up mplayer-export-2011-08-16/Makefile.nodvdcss mplayer-export-2011-08-16/Makefile
---- mplayer-export-2011-08-16/Makefile.nodvdcss	2011-08-16 21:53:23.000000000 +0200
-+++ mplayer-export-2011-08-16/Makefile	2011-08-16 21:53:55.000000000 +0200
-@@ -112,11 +112,6 @@ SRCS_COMMON-$(LIBDCA)                += 
+diff -up mplayer-export-2013-01-23/Makefile.nodvdcss mplayer-export-2013-01-23/Makefile
+--- mplayer-export-2013-01-23/Makefile.nodvdcss	2013-02-03 16:35:16.533604493 +0100
++++ mplayer-export-2013-01-23/Makefile	2013-02-03 16:35:16.537604524 +0100
+@@ -124,11 +124,6 @@ SRCS_COMMON-$(LIBDCA)                +=
  SRCS_COMMON-$(LIBDV)                 += libmpcodecs/ad_libdv.c \
                                          libmpcodecs/vd_libdv.c \
                                          libmpdemux/demux_rawdv.c
@@ -25,7 +25,7 @@ diff -up mplayer-export-2011-08-16/Makefile.nodvdcss mplayer-export-2011-08-16/M
  
  SRCS_COMMON-$(LIBMAD)                += libmpcodecs/ad_libmad.c
  
-@@ -741,7 +736,6 @@ DIRS =  . \
+@@ -720,7 +715,6 @@ DIRS =  . \
  
  ALL_DIRS = $(DIRS) \
          libass \
@@ -33,11 +33,11 @@ diff -up mplayer-export-2011-08-16/Makefile.nodvdcss mplayer-export-2011-08-16/M
          libdvdnav \
          libdvdnav/vm \
          libdvdread4 \
-@@ -830,7 +824,6 @@ osdep/mplayer-rc.o: osdep/mplayer.exe.ma
+@@ -847,7 +841,6 @@ osdep/mplayer-rc.o: osdep/mplayer.exe.ma
  
  gui/%: CFLAGS += -Wno-strict-prototypes
  
--libdvdcss/%:   CFLAGS := -Ilibdvdcss -D_GNU_SOURCE -DVERSION=\"1.2.10\" $(CFLAGS_LIBDVDCSS) $(CFLAGS)
+-libdvdcss/%:   CFLAGS := -Ilibdvdcss -D_GNU_SOURCE -DVERSION=\"1.2.12\" $(CFLAGS_LIBDVDCSS) $(CFLAGS)
  libdvdnav/%:   CFLAGS := -Ilibdvdnav -D_GNU_SOURCE -DHAVE_CONFIG_H -DVERSION=\"MPlayer-custom\" $(CFLAGS)
  libdvdread4/%: CFLAGS := -Ilibdvdread4 -D_GNU_SOURCE $(CFLAGS_LIBDVDCSS_DVDREAD) $(CFLAGS)
  

@@ -1,7 +1,7 @@
-diff -up MPlayer-1.1/configure.ffmpeg MPlayer-1.1/configure
---- MPlayer-1.1/configure.ffmpeg	2012-06-12 19:54:45.573647100 +0200
-+++ MPlayer-1.1/configure	2012-06-12 19:55:00.444732663 +0200
-@@ -6755,7 +6755,7 @@ elif test "$ffmpeg_so" = auto ; then
+diff -up mplayer-export-2013-01-23/configure.ffmpeg mplayer-export-2013-01-23/configure
+--- mplayer-export-2013-01-23/configure.ffmpeg	2013-02-03 16:31:05.861615031 +0100
++++ mplayer-export-2013-01-23/configure	2013-02-03 16:31:05.871615111 +0100
+@@ -6935,7 +6935,7 @@ elif test "$ffmpeg_so" = auto ; then
      inc_ffmpeg=$($_pkg_config --cflags libswscale libavformat libavcodec libavutil)
      ld_tmp=$($_pkg_config --libs libswscale libavformat libavcodec libavutil)
      header_check libavutil/avutil.h $inc_ffmpeg $ld_tmp &&
@@ -10,7 +10,7 @@ diff -up MPlayer-1.1/configure.ffmpeg MPlayer-1.1/configure
    elif header_check libavutil/avutil.h -lswscale -lavformat -lavcodec -lavutil ; then
      extra_ldflags="$extra_ldflags -lswscale -lavformat -lavcodec -lavutil"
      ffmpeg_so=yes
-@@ -7464,7 +7464,7 @@ if test "$_gui" = yes ; then
+@@ -7644,7 +7644,7 @@ if test "$_gui" = yes ; then
  
    # Required libraries
    if test "$ffmpeg" != yes ||
@@ -19,9 +19,9 @@ diff -up MPlayer-1.1/configure.ffmpeg MPlayer-1.1/configure
      die "The GUI requires libavcodec with PNG support (needs zlib)."
    fi
    test "$_freetype" = no && test "$_bitmap_font" = no &&
-diff -up MPlayer-1.1/ffmpeg/libavformat/internal.h.ffmpeg MPlayer-1.1/ffmpeg/libavformat/internal.h
---- MPlayer-1.1/ffmpeg/libavformat/internal.h.ffmpeg	2012-06-12 19:54:45.578647128 +0200
-+++ MPlayer-1.1/ffmpeg/libavformat/internal.h	2012-06-12 19:54:45.578647128 +0200
+diff -up mplayer-export-2013-01-23/ffmpeg/libavformat/internal.h.ffmpeg mplayer-export-2013-01-23/ffmpeg/libavformat/internal.h
+--- mplayer-export-2013-01-23/ffmpeg/libavformat/internal.h.ffmpeg	2013-02-03 16:31:05.872615119 +0100
++++ mplayer-export-2013-01-23/ffmpeg/libavformat/internal.h	2013-02-03 16:31:05.872615119 +0100
 @@ -0,0 +1,32 @@
 +/*
 + * copyright (c) 2001 Fabrice Bellard
@@ -55,10 +55,10 @@ diff -up MPlayer-1.1/ffmpeg/libavformat/internal.h.ffmpeg MPlayer-1.1/ffmpeg/lib
 +} AVCodecTag;
 +
 +#endif /* AVFORMAT_INTERNAL_H */
-diff -up MPlayer-1.1/ffmpeg/libavutil/x86_cpu.h.ffmpeg MPlayer-1.1/ffmpeg/libavutil/x86_cpu.h
---- MPlayer-1.1/ffmpeg/libavutil/x86_cpu.h.ffmpeg	2012-06-12 19:54:45.615647342 +0200
-+++ MPlayer-1.1/ffmpeg/libavutil/x86_cpu.h	2012-06-12 19:54:45.615647342 +0200
-@@ -0,0 +1,98 @@
+diff -up mplayer-export-2013-01-23/ffmpeg/libavutil/x86/asm.h.ffmpeg mplayer-export-2013-01-23/ffmpeg/libavutil/x86/asm.h
+--- mplayer-export-2013-01-23/ffmpeg/libavutil/x86/asm.h.ffmpeg	2013-02-03 16:31:05.873615127 +0100
++++ mplayer-export-2013-01-23/ffmpeg/libavutil/x86/asm.h	2013-02-03 16:31:05.873615127 +0100
+@@ -0,0 +1,110 @@
 +/*
 + * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
 + *
@@ -79,8 +79,8 @@ diff -up MPlayer-1.1/ffmpeg/libavutil/x86_cpu.h.ffmpeg MPlayer-1.1/ffmpeg/libavu
 + * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 + */
 +
-+#ifndef AVUTIL_X86_CPU_H
-+#define AVUTIL_X86_CPU_H
++#ifndef AVUTIL_X86_ASM_H
++#define AVUTIL_X86_ASM_H
 +
 +#include <stdint.h>
 +#include "config.h"
@@ -156,11 +156,23 @@ diff -up MPlayer-1.1/ffmpeg/libavutil/x86_cpu.h.ffmpeg MPlayer-1.1/ffmpeg/libavu
 +#    define XMM_CLOBBERS_ONLY(...)
 +#endif
 +
-+#endif /* AVUTIL_X86_CPU_H */
-diff -up MPlayer-1.1/Makefile.ffmpeg MPlayer-1.1/Makefile
---- MPlayer-1.1/Makefile.ffmpeg	2012-06-12 19:54:45.573647100 +0200
-+++ MPlayer-1.1/Makefile	2012-06-12 19:54:45.616647347 +0200
-@@ -788,7 +788,7 @@ mencoder$(EXESUF) mplayer$(EXESUF):
++/* Use to export labels from asm. */
++#define LABEL_MANGLE(a) EXTERN_PREFIX #a
++
++// Use rip-relative addressing if compiling PIC code on x86-64.
++#if ARCH_X86_64 && defined(PIC)
++#    define LOCAL_MANGLE(a) #a "(%%rip)"
++#else
++#    define LOCAL_MANGLE(a) #a
++#endif
++
++#define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
++
++#endif /* AVUTIL_X86_ASM_H */
+diff -up mplayer-export-2013-01-23/Makefile.ffmpeg mplayer-export-2013-01-23/Makefile
+--- mplayer-export-2013-01-23/Makefile.ffmpeg	2013-02-03 16:31:05.862615039 +0100
++++ mplayer-export-2013-01-23/Makefile	2013-02-03 16:31:05.874615134 +0100
+@@ -761,7 +761,7 @@ mencoder$(EXESUF) mplayer$(EXESUF):
  	$(CC) -o $@ $^ $(EXTRALIBS)
  
  codec-cfg$(EXESUF): codec-cfg.c codec-cfg.h help_mp.h
