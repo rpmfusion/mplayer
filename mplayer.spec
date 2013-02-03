@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.142.%{pre}%{?dist}
+Release:        0.144.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -35,6 +35,8 @@ Patch8:         %{name}-manlinks.patch
 Patch14:        %{name}-nodvdcss.patch
 # use system FFmpeg libraries
 Patch18:        %{name}-ffmpeg.patch
+#fix multi-line subtitles when using libass
+Patch20:        %{name}-libass-multiline.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -233,6 +235,7 @@ This package contains various scripts from MPlayer TOOLS directory.
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
 %patch18 -p1 -b .ffmpeg
+%patch20 -p0 -b .multiline
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
@@ -388,6 +391,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Feb 03 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.144.20120205svn
+- Fixed multi-line subtitles when using libass (RPM Fusion bug #2615)
+
 * Sun Sep 16 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.142.20120205svn
 - Use --cpu-runtime-detection only on supported arches - rfbz#2467
 
