@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20130123svn
+%define         pre 20130329svn
 %define         svn 1
-%define         svnbuild 2013-01-23
+%define         svnbuild 2013-03-29
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.1
-Release:        5.%{?pre}%{?dist}
+Release:        6.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -38,7 +38,6 @@ BuildRequires:  aalib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  desktop-file-utils
-BuildRequires:  em8300-devel
 BuildRequires:  enca-devel
 BuildRequires:  faad2-devel >= %{faad2min}
 BuildRequires:  ffmpeg-devel >= 0.10
@@ -381,6 +380,12 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu Mar 28 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-6.20130329svn
+- 20130329 snapshot
+- Updated the nodvdcss patch
+- Updated the ffmpeg patch
+- Dropped em8300-devel BR since the package was retired in Fedora
+
 * Sun Feb 03 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-5.20130123svn
 - 20130123 snapshot
 - Updated the nodvdcss patch
