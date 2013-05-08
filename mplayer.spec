@@ -39,7 +39,6 @@ BuildRequires:  aalib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  desktop-file-utils
-BuildRequires:  em8300-devel
 BuildRequires:  enca-devel
 BuildRequires:  faad2-devel >= %{faad2min}
 BuildRequires:  ffmpeg-devel >= 0.10
@@ -385,6 +384,7 @@ update-desktop-database &>/dev/null || :
 %changelog
 * Wed May 08 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-6.20130123svn
 - Fixed dangerous playlist parsing
+- Dropped em8300-devel BR since the package was retired in Fedora
 
 * Sun Feb 03 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-5.20130123svn
 - 20130123 snapshot
