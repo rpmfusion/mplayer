@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.0
-Release:        0.144.%{pre}%{?dist}
+Release:        0.145.%{pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -393,6 +393,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Wed May 08 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.145.20120205svn
+- Fixed dangerous playlist parsing
+
 * Sun Feb 03 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.0-0.144.20120205svn
 - Fixed multi-line subtitles when using libass (RPM Fusion bug #2615)
 
