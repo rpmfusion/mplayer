@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.1
-Release:        5.%{?pre}%{?dist}
+Release:        6.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -23,6 +23,7 @@ Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pr
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.8.tar.bz2
 Source10:       mplayer-snapshot.sh
+Patch0:         mplayer-asx-parser.patch
 # set defaults for Fedora
 Patch2:         %{name}-config.patch
 # use roff include statements instead of symlinks
@@ -222,6 +223,7 @@ This package contains various scripts from MPlayer TOOLS directory.
 %setup -q -n MPlayer-%{version}%{?pre}
 rm -rf ffmpeg libdvdcss libdvdnav libdvdread4
 %endif
+%patch0 -p0 -b .asx-parser
 %patch2 -p1 -b .config
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
@@ -381,6 +383,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Wed May 08 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-6.20130123svn
+- Fixed dangerous playlist parsing
+
 * Sun Feb 03 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-5.20130123svn
 - 20130123 snapshot
 - Updated the nodvdcss patch
