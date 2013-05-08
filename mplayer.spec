@@ -37,6 +37,7 @@ Patch14:        %{name}-nodvdcss.patch
 Patch18:        %{name}-ffmpeg.patch
 #fix multi-line subtitles when using libass
 Patch20:        %{name}-libass-multiline.patch
+Patch21:        %{name}-asx-parser.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -236,6 +237,7 @@ This package contains various scripts from MPlayer TOOLS directory.
 %patch14 -p1 -b .nodvdcss
 %patch18 -p1 -b .ffmpeg
 %patch20 -p0 -b .multiline
+%patch21 -p1 -b .asx-parser
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
