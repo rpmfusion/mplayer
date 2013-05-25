@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20130123svn
+%define         pre 20130416svn
 %define         svn 1
-%define         svnbuild 2013-01-23
+%define         svnbuild 2013-04-16
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.1
-Release:        6.%{?pre}%{?dist}
+Release:        7.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -382,6 +382,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat May 25 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-7.20130416svn
+- 20130416 snapshot
+
 * Wed May 08 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-6.20130123svn
 - Fixed dangerous playlist parsing
 - Dropped em8300-devel BR since the package was retired in Fedora
