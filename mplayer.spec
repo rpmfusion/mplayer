@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.1
-Release:        9.%{?pre}%{?dist}
+Release:        10.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -24,6 +24,7 @@ Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pr
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.8.tar.bz2
 Source10:       mplayer-snapshot.sh
 Patch0:         mplayer-asx-parser.patch
+Patch1:         mplayer-cpudetect.patch
 # set defaults for Fedora
 Patch2:         %{name}-config.patch
 # use roff include statements instead of symlinks
@@ -223,6 +224,7 @@ This package contains various scripts from MPlayer TOOLS directory.
 rm -rf ffmpeg libdvdcss libdvdnav libdvdread4
 %endif
 %patch0 -p0 -b .asx-parser
+%patch1 -p0 -b .cpudetect
 %patch2 -p1 -b .config
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
@@ -382,6 +384,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Fri Jun 07 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-10.20130416svn
+- Fixed cpu detection (mplayer #2141)
+
 * Wed May 08 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-9.20130416svn
 - Fixed dangerous playlist parsing
 
