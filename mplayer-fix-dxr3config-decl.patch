@@ -1,0 +1,18 @@
+--- a/gui/dialog/preferences.c	2013-04-21 21:50:57.000000000 +0200
++++ b/gui/dialog/preferences.c	2013-07-06 02:08:28.208202627 +0200
+@@ -188,6 +188,7 @@
+ static int    old_video_driver = 0;
+ 
+ static GtkWidget *AudioConfig;
++static GtkWidget *DXR3Config;
+ 
+  void ShowDXR3Config( void );
+  void ShowAudioConfig( void );
+@@ -1678,7 +1679,6 @@
+ 
+ /* dxr3 config box */
+ 
+-static GtkWidget * DXR3Config;
+ static GtkWidget * CBDevice;
+ static GtkWidget * CEDXR3Device;
+ static GtkWidget * RBVNone;

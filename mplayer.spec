@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.1
-Release:        8.%{?pre}%{?dist}
+Release:        9.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -33,6 +33,7 @@ Patch8:         %{name}-manlinks.patch
 Patch14:        %{name}-nodvdcss.patch
 # use system FFmpeg libraries
 Patch18:        %{name}-ffmpeg.patch
+Patch19:        mplayer-fix-dxr3config-decl.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -229,6 +230,7 @@ rm -rf ffmpeg libdvdcss libdvdnav libdvdread4
 %patch8 -p1 -b .manlinks
 %patch14 -p1 -b .nodvdcss
 %patch18 -p1 -b .ffmpeg
+%patch19 -p1 -b .fix-dxr3config-decl
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
@@ -384,6 +386,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Wed Jul 17 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-9.20130416svn
+- Fixed DXR3 declaration (RPM Fusion #2863)
+
 * Fri Jun 07 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-8.20130416svn
 - Fixed cpu detection (mplayer #2141)
 
