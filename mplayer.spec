@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20130416svn
+%define         pre 20130801svn
 %define         svn 1
-%define         svnbuild 2013-04-16
+%define         svnbuild 2013-08-01
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.1
-Release:        11.%{?pre}%{?dist}
+Release:        12.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -23,16 +23,14 @@ Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pr
 %endif
 Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.8.tar.bz2
 Source10:       mplayer-snapshot.sh
-Patch0:         mplayer-asx-parser.patch
-Patch1:         mplayer-cpudetect.patch
 # set defaults for Fedora
-Patch2:         %{name}-config.patch
+Patch0:         %{name}-config.patch
 # use roff include statements instead of symlinks
-Patch8:         %{name}-manlinks.patch
+Patch1:         %{name}-manlinks.patch
 # erase any trace of libdvdcss
-Patch14:        %{name}-nodvdcss.patch
+Patch2:        %{name}-nodvdcss.patch
 # use system FFmpeg libraries
-Patch18:        %{name}-ffmpeg.patch
+Patch3:        %{name}-ffmpeg.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -223,12 +221,10 @@ This package contains various scripts from MPlayer TOOLS directory.
 %setup -q -n MPlayer-%{version}%{?pre}
 rm -rf ffmpeg libdvdcss libdvdnav libdvdread4
 %endif
-%patch0 -p0 -b .asx-parser
-%patch1 -p0 -b .cpudetect
-%patch2 -p1 -b .config
-%patch8 -p1 -b .manlinks
-%patch14 -p1 -b .nodvdcss
-%patch18 -p1 -b .ffmpeg
+%patch0 -p1 -b .config
+%patch1 -p1 -b .manlinks
+%patch2 -p1 -b .nodvdcss
+%patch3 -p1 -b .ffmpeg
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
@@ -384,6 +380,11 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu Aug 01 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-12.20130801svn
+- 20130801 snapshot
+- Updated the ffmpeg patch
+- Re-numbered the patches
+
 * Sat Jul 20 2013 Nicolas Chauvet <kwizart@gmail.com> - 1.1-11.20130416svn
 - Rebuilt for x264
 
