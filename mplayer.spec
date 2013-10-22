@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.1
-Release:        13.%{?pre}%{?dist}
+Release:        14.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -380,6 +380,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Oct 22 2013 Nicolas Chauvet <kwizart@gmail.com> - 1.1-14.20130811svn
+- Rebuilt for x264
+
 * Tue Aug 13 2013 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-13.20130811svn
 - 20130811 snapshot
 
