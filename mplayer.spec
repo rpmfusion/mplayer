@@ -31,6 +31,7 @@ Patch1:         %{name}-manlinks.patch
 Patch2:        %{name}-nodvdcss.patch
 # use system FFmpeg libraries
 Patch3:        %{name}-ffmpeg.patch
+Patch4:        %{name}-format-security.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -225,6 +226,7 @@ rm -rf ffmpeg libdvdcss libdvdnav libdvdread4
 %patch1 -p1 -b .manlinks
 %patch2 -p1 -b .nodvdcss
 %patch3 -p1 -b .ffmpeg
+%patch4 -p1 -b .format-security
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/

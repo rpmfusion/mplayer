@@ -1,0 +1,24 @@
+diff -up mplayer-export-2014-01-11/gui/interface.c.format-security mplayer-export-2014-01-11/gui/interface.c
+--- mplayer-export-2014-01-11/gui/interface.c.format-security	2014-01-12 17:09:19.000000000 +0100
++++ mplayer-export-2014-01-11/gui/interface.c	2014-01-15 21:38:14.805772554 +0100
+@@ -1183,7 +1183,7 @@ void gmp_msg(int mod, int lev, const cha
+     vsnprintf(msg, sizeof(msg), format, va);
+     va_end(va);
+ 
+-    mp_msg(mod, lev, msg);
++    mp_msg(mod, lev, "%s", msg);
+ 
+     if (mp_msg_test(mod, lev))
+         gtkMessageBox(MSGBOX_FATAL, msg);
+diff -up mplayer-export-2014-01-11/stream/stream_radio.c.format-security mplayer-export-2014-01-11/stream/stream_radio.c
+--- mplayer-export-2014-01-11/stream/stream_radio.c.format-security	2014-01-12 17:09:18.000000000 +0100
++++ mplayer-export-2014-01-11/stream/stream_radio.c	2014-01-15 21:38:14.805772554 +0100
+@@ -1138,7 +1138,7 @@ static int open_s(stream_t *stream,int m
+     mp_msg(MSGT_RADIO,MSGL_V,"\n");
+ 
+     if(priv->driver)
+-        mp_msg(MSGT_RADIO, MSGL_INFO, priv->driver->info);
++        mp_msg(MSGT_RADIO, MSGL_INFO, "%s", priv->driver->info);
+     else{
+         mp_msg(MSGT_RADIO, MSGL_INFO, MSGTR_RADIO_DriverUnknownStr,priv->radio_param->driver);
+         close_s(stream);
