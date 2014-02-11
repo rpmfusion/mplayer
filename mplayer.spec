@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20140111svn
+%define         pre 20140211svn
 %define         svn 1
-%define         svnbuild 2014-01-11
+%define         svnbuild 2014-02-11
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.1
-Release:        18.%{?pre}%{?dist}
+Release:        19.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -111,7 +111,7 @@ RoQ, and PVA files. You can also use it to watch VCDs, SVCDs, DVDs,
 It supports a wide range of output drivers including X11, XVideo, DGA,
 OpenGL, SVGAlib, fbdev, AAlib, DirectFB etc. There are also nice
 antialiased shaded subtitles and OSD.
-Non-default rpmbuild options:
+The following on-default rpmbuild options are available:
 --with samba:   Enable Samba (smb://) support
 --with xmms:    Enable XMMS input plugin support
 --without amr:  Disable AMR support
@@ -380,6 +380,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Feb 11 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-19.20140211svn
+- 20140211 snapshot
+
 * Sun Jan 12 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-18.20140111svn
 - 20140111 snapshot
 
