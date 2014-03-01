@@ -1,7 +1,7 @@
-diff -up mplayer-export-2013-08-01/configure.ffmpeg mplayer-export-2013-08-01/configure
---- mplayer-export-2013-08-01/configure.ffmpeg	2013-08-01 12:37:20.815714081 +0200
-+++ mplayer-export-2013-08-01/configure	2013-08-01 12:37:20.817714096 +0200
-@@ -6987,7 +6987,7 @@ elif test "$ffmpeg_so" = auto ; then
+diff -up mplayer-export-2014-03-01/configure.ffmpeg mplayer-export-2014-03-01/configure
+--- mplayer-export-2014-03-01/configure.ffmpeg	2014-03-01 11:25:45.356757774 +0100
++++ mplayer-export-2014-03-01/configure	2014-03-01 11:25:45.359757607 +0100
+@@ -7082,7 +7082,7 @@ if test "$ffmpeg_so" = auto ; then
      inc_ffmpeg=$($_pkg_config --cflags libswscale libavformat libavcodec libavutil)
      ld_tmp=$($_pkg_config --libs libswscale libavformat libavcodec libavutil)
      header_check libavutil/avutil.h $inc_ffmpeg $ld_tmp &&
@@ -10,18 +10,9 @@ diff -up mplayer-export-2013-08-01/configure.ffmpeg mplayer-export-2013-08-01/co
    elif header_check libavutil/avutil.h -lswscale -lavformat -lavcodec -lavutil ; then
      extra_ldflags="$extra_ldflags -lswscale -lavformat -lavcodec -lavutil"
      ffmpeg_so=yes
-@@ -7696,7 +7696,7 @@ if test "$_gui" = yes ; then
- 
-   # Required libraries
-   if test "$ffmpeg" != yes ||
--      ! echo $libavdecoders | grep -q PNG_DECODER ; then
-+      ! cat $_libdir/pkgconfig/libavcodec.pc | grep -q lz ; then
-     die "The GUI requires libavcodec with PNG support (needs zlib)."
-   fi
-   test "$_freetype" = no && test "$_bitmap_font" = no &&
-diff -up mplayer-export-2013-08-01/ffmpeg/libavformat/internal.h.ffmpeg mplayer-export-2013-08-01/ffmpeg/libavformat/internal.h
---- mplayer-export-2013-08-01/ffmpeg/libavformat/internal.h.ffmpeg	2013-08-01 12:37:20.818714103 +0200
-+++ mplayer-export-2013-08-01/ffmpeg/libavformat/internal.h	2013-08-01 12:37:20.818714103 +0200
+diff -up mplayer-export-2014-03-01/ffmpeg/libavformat/internal.h.ffmpeg mplayer-export-2014-03-01/ffmpeg/libavformat/internal.h
+--- mplayer-export-2014-03-01/ffmpeg/libavformat/internal.h.ffmpeg	2014-03-01 11:25:45.359757607 +0100
++++ mplayer-export-2014-03-01/ffmpeg/libavformat/internal.h	2014-03-01 11:25:45.359757607 +0100
 @@ -0,0 +1,32 @@
 +/*
 + * copyright (c) 2001 Fabrice Bellard
@@ -55,9 +46,9 @@ diff -up mplayer-export-2013-08-01/ffmpeg/libavformat/internal.h.ffmpeg mplayer-
 +} AVCodecTag;
 +
 +#endif /* AVFORMAT_INTERNAL_H */
-diff -up mplayer-export-2013-08-01/ffmpeg/libavutil/x86/asm.h.ffmpeg mplayer-export-2013-08-01/ffmpeg/libavutil/x86/asm.h
---- mplayer-export-2013-08-01/ffmpeg/libavutil/x86/asm.h.ffmpeg	2013-08-01 12:37:20.818714103 +0200
-+++ mplayer-export-2013-08-01/ffmpeg/libavutil/x86/asm.h	2013-08-01 12:39:29.232657100 +0200
+diff -up mplayer-export-2014-03-01/ffmpeg/libavutil/x86/asm.h.ffmpeg mplayer-export-2014-03-01/ffmpeg/libavutil/x86/asm.h
+--- mplayer-export-2014-03-01/ffmpeg/libavutil/x86/asm.h.ffmpeg	2014-03-01 11:25:45.359757607 +0100
++++ mplayer-export-2014-03-01/ffmpeg/libavutil/x86/asm.h	2014-03-01 11:25:45.359757607 +0100
 @@ -0,0 +1,112 @@
 +/*
 + * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
@@ -171,10 +162,10 @@ diff -up mplayer-export-2013-08-01/ffmpeg/libavutil/x86/asm.h.ffmpeg mplayer-exp
 +#define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
 +
 +#endif /* AVUTIL_X86_ASM_H */
-diff -up mplayer-export-2013-08-01/Makefile.ffmpeg mplayer-export-2013-08-01/Makefile
---- mplayer-export-2013-08-01/Makefile.ffmpeg	2013-08-01 12:37:20.815714081 +0200
-+++ mplayer-export-2013-08-01/Makefile	2013-08-01 12:37:20.818714103 +0200
-@@ -775,7 +775,7 @@ mencoder$(EXESUF) mplayer$(EXESUF):
+diff -up mplayer-export-2014-03-01/Makefile.ffmpeg mplayer-export-2014-03-01/Makefile
+--- mplayer-export-2014-03-01/Makefile.ffmpeg	2014-03-01 11:25:45.357757718 +0100
++++ mplayer-export-2014-03-01/Makefile	2014-03-01 11:25:45.360757551 +0100
+@@ -776,7 +776,7 @@ mencoder$(EXESUF) mplayer$(EXESUF):
  codec-cfg-test$(EXESUF): HOSTCFLAGS := $(HOSTCFLAGS) -DTESTING
  codec-cfg$(EXESUF) codecs2html$(EXESUF):  HOSTCFLAGS := $(HOSTCFLAGS) -DCODECS2HTML
  codec-cfg$(EXESUF) codec-cfg-test$(EXESUF) codecs2html$(EXESUF): codec-cfg.c codec-cfg.h help_mp.h
