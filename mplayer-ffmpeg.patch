@@ -1,18 +1,6 @@
-diff -up mplayer-export-2014-03-01/configure.ffmpeg mplayer-export-2014-03-01/configure
---- mplayer-export-2014-03-01/configure.ffmpeg	2014-03-01 11:25:45.356757774 +0100
-+++ mplayer-export-2014-03-01/configure	2014-03-01 11:25:45.359757607 +0100
-@@ -7082,7 +7082,7 @@ if test "$ffmpeg_so" = auto ; then
-     inc_ffmpeg=$($_pkg_config --cflags libswscale libavformat libavcodec libavutil)
-     ld_tmp=$($_pkg_config --libs libswscale libavformat libavcodec libavutil)
-     header_check libavutil/avutil.h $inc_ffmpeg $ld_tmp &&
--      extra_ldflags="$extra_ldflags $ld_tmp" && ffmpeg_so=yes && ffmpeg=yes
-+      extra_ldflags="$extra_ldflags $ld_tmp" && ffmpeg_so=yes && ffmpeg=yes && extra_cflags="$extra_cflags $inc_ffmpeg"
-   elif header_check libavutil/avutil.h -lswscale -lavformat -lavcodec -lavutil ; then
-     extra_ldflags="$extra_ldflags -lswscale -lavformat -lavcodec -lavutil"
-     ffmpeg_so=yes
-diff -up mplayer-export-2014-03-01/ffmpeg/libavformat/internal.h.ffmpeg mplayer-export-2014-03-01/ffmpeg/libavformat/internal.h
---- mplayer-export-2014-03-01/ffmpeg/libavformat/internal.h.ffmpeg	2014-03-01 11:25:45.359757607 +0100
-+++ mplayer-export-2014-03-01/ffmpeg/libavformat/internal.h	2014-03-01 11:25:45.359757607 +0100
+diff -up mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h.ffmpeg mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h
+--- mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h.ffmpeg	2014-03-27 07:31:02.816463722 +0100
++++ mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h	2014-03-27 07:31:02.816463722 +0100
 @@ -0,0 +1,32 @@
 +/*
 + * copyright (c) 2001 Fabrice Bellard
@@ -46,9 +34,9 @@ diff -up mplayer-export-2014-03-01/ffmpeg/libavformat/internal.h.ffmpeg mplayer-
 +} AVCodecTag;
 +
 +#endif /* AVFORMAT_INTERNAL_H */
-diff -up mplayer-export-2014-03-01/ffmpeg/libavutil/x86/asm.h.ffmpeg mplayer-export-2014-03-01/ffmpeg/libavutil/x86/asm.h
---- mplayer-export-2014-03-01/ffmpeg/libavutil/x86/asm.h.ffmpeg	2014-03-01 11:25:45.359757607 +0100
-+++ mplayer-export-2014-03-01/ffmpeg/libavutil/x86/asm.h	2014-03-01 11:25:45.359757607 +0100
+diff -up mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h.ffmpeg mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h
+--- mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h.ffmpeg	2014-03-27 07:31:02.816463722 +0100
++++ mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h	2014-03-27 07:31:02.816463722 +0100
 @@ -0,0 +1,112 @@
 +/*
 + * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
@@ -162,9 +150,9 @@ diff -up mplayer-export-2014-03-01/ffmpeg/libavutil/x86/asm.h.ffmpeg mplayer-exp
 +#define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
 +
 +#endif /* AVUTIL_X86_ASM_H */
-diff -up mplayer-export-2014-03-01/Makefile.ffmpeg mplayer-export-2014-03-01/Makefile
---- mplayer-export-2014-03-01/Makefile.ffmpeg	2014-03-01 11:25:45.357757718 +0100
-+++ mplayer-export-2014-03-01/Makefile	2014-03-01 11:25:45.360757551 +0100
+diff -up mplayer-export-2014-03-27/Makefile.ffmpeg mplayer-export-2014-03-27/Makefile
+--- mplayer-export-2014-03-27/Makefile.ffmpeg	2014-03-27 07:31:02.814463712 +0100
++++ mplayer-export-2014-03-27/Makefile	2014-03-27 07:31:02.816463722 +0100
 @@ -776,7 +776,7 @@ mencoder$(EXESUF) mplayer$(EXESUF):
  codec-cfg-test$(EXESUF): HOSTCFLAGS := $(HOSTCFLAGS) -DTESTING
  codec-cfg$(EXESUF) codecs2html$(EXESUF):  HOSTCFLAGS := $(HOSTCFLAGS) -DCODECS2HTML
