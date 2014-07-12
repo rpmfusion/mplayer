@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20140327svn
+%define         pre 20140711svn
 %define         svn 1
-%define         svnbuild 2014-03-27
+%define         svnbuild 2014-07-11
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.1
-Release:        24.%{?pre}%{?dist}
+Release:        25.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -21,7 +21,7 @@ Source0:        mplayer-export-%{svnbuild}.tar.bz2
 %else
 Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pre}.tar.xz
 %endif
-Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.8.tar.bz2
+Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.10.tar.bz2
 Source10:       mplayer-snapshot.sh
 # set defaults for Fedora
 Patch0:         %{name}-config.patch
@@ -380,6 +380,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Jul 12 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-25.20140711svn
+- 20140711 snapshot
+
 * Thu Mar 27 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-24.20140327svn
 - 20140327 snapshot
 
