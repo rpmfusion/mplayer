@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20140711svn
+%define         pre 20140806svn
 %define         svn 1
-%define         svnbuild 2014-07-11
+%define         svnbuild 2014-08-06
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.1
-Release:        25.%{?pre}%{?dist}
+Release:        26.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -380,6 +380,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Wed Aug 06 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-26.20140806svn
+- 20140806 snapshot
+
 * Sat Jul 12 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-25.20140711svn
 - 20140711 snapshot
 
