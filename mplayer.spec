@@ -6,7 +6,7 @@
 
 Name:           mplayer
 Version:        1.1
-Release:        29.%{?pre}%{?dist}
+Release:        30.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -380,6 +380,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Mon Oct 20 2014 Sérgio Basto <sergio@serjux.com> - 1.1-30.20140919svn
+- Rebuilt for FFmpeg 2.4.3
+
 * Wed Oct 01 2014 Sérgio Basto <sergio@serjux.com> - 1.1-29.20140919svn
 - Rebuilt again for FFmpeg 2.3.x (with FFmpeg 2.3.x in buildroot)
 
