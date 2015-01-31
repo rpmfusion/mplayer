@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20141020svn
+%define         pre 20150123svn
 %define         svn 1
-%define         svnbuild 2014-10-20
+%define         svnbuild 2015-01-23
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.1
-Release:        31.%{?pre}%{?dist}
+Release:        32.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -27,8 +27,6 @@ Source10:       mplayer-snapshot.sh
 Patch0:         %{name}-config.patch
 # use roff include statements instead of symlinks
 Patch1:         %{name}-manlinks.patch
-# erase any trace of libdvdcss
-Patch2:        %{name}-nodvdcss.patch
 # use system FFmpeg libraries
 Patch3:        %{name}-ffmpeg.patch
 
@@ -184,8 +182,6 @@ This package contains various scripts from MPlayer TOOLS directory.
 %endif \
     --enable-unrarexec \\\
     \\\
-    --disable-dvdread-internal \\\
-    --disable-libdvdcss-internal \\\
     %{!?_with_nemesi:--disable-nemesi} \\\
     %{!?_with_samba:--disable-smb} \\\
     \\\
@@ -219,11 +215,9 @@ This package contains various scripts from MPlayer TOOLS directory.
 %setup -q -n mplayer-export-%{svnbuild}
 %else
 %setup -q -n MPlayer-%{version}%{?pre}
-rm -rf ffmpeg libdvdcss libdvdnav libdvdread4
 %endif
 %patch0 -p1 -b .config
 %patch1 -p1 -b .manlinks
-%patch2 -p1 -b .nodvdcss
 %patch3 -p1 -b .ffmpeg
 
 mkdir GUI
@@ -380,6 +374,10 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Jan 31 2015 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-32.20150123svn
+- 20150123 snapshot
+- Internal libdvd* are no more, cleaned up the spec accordingly
+
 * Tue Oct 21 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-31.20141020svn
 - 20141020 snapshot
 
