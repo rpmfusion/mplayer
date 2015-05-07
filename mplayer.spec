@@ -1,12 +1,12 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20150123svn
+%define         pre 20150505svn
 %define         svn 1
-%define         svnbuild 2015-01-23
+%define         svnbuild 2015-05-05
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.1
-Release:        32.%{?pre}%{?dist}
+Release:        33.%{?pre}%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -374,6 +374,10 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu May 07 2015 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-33.20150505svn
+- 20150505 snapshot
+- Updated ffmpeg patch
+
 * Sat Jan 31 2015 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-32.20150123svn
 - 20150123 snapshot
 - Internal libdvd* are no more, cleaned up the spec accordingly

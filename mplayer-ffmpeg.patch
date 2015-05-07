@@ -1,7 +1,7 @@
-diff -up mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h.ffmpeg mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h
---- mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h.ffmpeg	2014-03-27 07:31:02.816463722 +0100
-+++ mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h	2014-03-27 07:31:02.816463722 +0100
-@@ -0,0 +1,32 @@
+diff -up mplayer-export-2015-05-05/ffmpeg/libavformat/internal.h.ffmpeg mplayer-export-2015-05-05/ffmpeg/libavformat/internal.h
+--- mplayer-export-2015-05-05/ffmpeg/libavformat/internal.h.ffmpeg	2015-05-06 07:22:42.640716026 +0200
++++ mplayer-export-2015-05-05/ffmpeg/libavformat/internal.h	2015-05-06 07:26:44.614138993 +0200
+@@ -0,0 +1,84 @@
 +/*
 + * copyright (c) 2001 Fabrice Bellard
 + *
@@ -33,11 +33,63 @@ diff -up mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h.ffmpeg mplayer-
 +    unsigned int tag;
 +} AVCodecTag;
 +
++struct AVFormatInternal {
++    /**
++     * Number of streams relevant for interleaving.
++     * Muxing only.
++     */
++    int nb_interleaved_streams;
++
++    /**
++     * This buffer is only needed when packets were already buffered but
++     * not decoded, for example to get the codec parameters in MPEG
++     * streams.
++     */
++    struct AVPacketList *packet_buffer;
++    struct AVPacketList *packet_buffer_end;
++
++    /* av_seek_frame() support */
++    int64_t data_offset; /**< offset of the first packet */
++
++    /**
++     * Raw packets from the demuxer, prior to parsing and decoding.
++     * This buffer is used for buffering packets until the codec can
++     * be identified, as parsing cannot be done without knowing the
++     * codec.
++     */
++    struct AVPacketList *raw_packet_buffer;
++    struct AVPacketList *raw_packet_buffer_end;
++    /**
++     * Packets split by the parser get queued here.
++     */
++    struct AVPacketList *parse_queue;
++    struct AVPacketList *parse_queue_end;
++    /**
++     * Remaining size available for raw_packet_buffer, in bytes.
++     */
++#define RAW_PACKET_BUFFER_SIZE 2500000
++    int raw_packet_buffer_remaining_size;
++
++    /**
++     * Offset to remap timestamps to be non-negative.
++     * Expressed in timebase units.
++     * @see AVStream.mux_ts_offset
++     */
++    int64_t offset;
++
++    /**
++     * Timebase for the timestamp offset.
++     */
++    AVRational offset_timebase;
++
++    int inject_global_side_data;
++};
++
 +#endif /* AVFORMAT_INTERNAL_H */
-diff -up mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h.ffmpeg mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h
---- mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h.ffmpeg	2014-03-27 07:31:02.816463722 +0100
-+++ mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h	2014-03-27 07:31:02.816463722 +0100
-@@ -0,0 +1,112 @@
+diff -up mplayer-export-2015-05-05/ffmpeg/libavutil/x86/asm.h.ffmpeg mplayer-export-2015-05-05/ffmpeg/libavutil/x86/asm.h
+--- mplayer-export-2015-05-05/ffmpeg/libavutil/x86/asm.h.ffmpeg	2015-05-06 07:22:42.641716032 +0200
++++ mplayer-export-2015-05-05/ffmpeg/libavutil/x86/asm.h	2015-05-06 07:26:07.485717938 +0200
+@@ -0,0 +1,153 @@
 +/*
 + * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
 + *
@@ -65,6 +117,7 @@ diff -up mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h.ffmpeg mplayer-exp
 +#include "config.h"
 +
 +typedef struct xmm_reg { uint64_t a, b; } xmm_reg;
++typedef struct ymm_reg { uint64_t a, b, c, d; } ymm_reg;
 +
 +#if ARCH_X86_64
 +#    define OPSIZE "q"
@@ -147,13 +200,53 @@ diff -up mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h.ffmpeg mplayer-exp
 +#    define LOCAL_MANGLE(a) #a
 +#endif
 +
-+#define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
++#if HAVE_INLINE_ASM_DIRECT_SYMBOL_REFS
++#   define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
++#   define NAMED_CONSTRAINTS_ADD(...)
++#   define NAMED_CONSTRAINTS(...)
++#   define NAMED_CONSTRAINTS_ARRAY_ADD(...)
++#   define NAMED_CONSTRAINTS_ARRAY(...)
++#else
++    /* When direct symbol references are used in code passed to a compiler that does not support them
++     *  then these references need to be converted to named asm constraints instead.
++     * Instead of returning a direct symbol MANGLE now returns a named constraint for that specific symbol.
++     * In order for this to work there must also be a corresponding entry in the asm-interface. To add this
++     *  entry use the macro NAMED_CONSTRAINTS() and pass in a list of each symbol reference used in the
++     *  corresponding block of code. (e.g. NAMED_CONSTRAINTS(var1,var2,var3) where var1 is the first symbol etc. ).
++     * If there are already existing constraints then use NAMED_CONSTRAINTS_ADD to add to the existing constraint list.
++     */
++#   define MANGLE(a) "%["#a"]"
++    // Intel/MSVC does not correctly expand va-args so we need a rather ugly hack in order to get it to work
++#   define FE_0(P,X) P(X)
++#   define FE_1(P,X,X1) P(X), FE_0(P,X1)
++#   define FE_2(P,X,X1,X2) P(X), FE_1(P,X1,X2)
++#   define FE_3(P,X,X1,X2,X3) P(X), FE_2(P,X1,X2,X3)
++#   define FE_4(P,X,X1,X2,X3,X4) P(X), FE_3(P,X1,X2,X3,X4)
++#   define FE_5(P,X,X1,X2,X3,X4,X5) P(X), FE_4(P,X1,X2,X3,X4,X5)
++#   define FE_6(P,X,X1,X2,X3,X4,X5,X6) P(X), FE_5(P,X1,X2,X3,X4,X5,X6)
++#   define FE_7(P,X,X1,X2,X3,X4,X5,X6,X7) P(X), FE_6(P,X1,X2,X3,X4,X5,X6,X7)
++#   define FE_8(P,X,X1,X2,X3,X4,X5,X6,X7,X8) P(X), FE_7(P,X1,X2,X3,X4,X5,X6,X7,X8)
++#   define FE_9(P,X,X1,X2,X3,X4,X5,X6,X7,X8,X9) P(X), FE_8(P,X1,X2,X3,X4,X5,X6,X7,X8,X9)
++#   define GET_FE_IMPL(_0,_1,_2,_3,_4,_5,_6,_7,_8,_9,NAME,...) NAME
++#   define GET_FE(A) GET_FE_IMPL A
++#   define GET_FE_GLUE(x, y) x y
++#   define FOR_EACH_VA(P,...) GET_FE_GLUE(GET_FE((__VA_ARGS__,FE_9,FE_8,FE_7,FE_6,FE_5,FE_4,FE_3,FE_2,FE_1,FE_0)), (P,__VA_ARGS__))
++#   define NAME_CONSTRAINT(x) [x] "m"(x)
++    // Parameters are a list of each symbol reference required
++#   define NAMED_CONSTRAINTS_ADD(...) , FOR_EACH_VA(NAME_CONSTRAINT,__VA_ARGS__)
++    // Same but without comma for when there are no previously defined constraints
++#   define NAMED_CONSTRAINTS(...) FOR_EACH_VA(NAME_CONSTRAINT,__VA_ARGS__)
++    // Same as above NAMED_CONSTRAINTS except used for passing arrays/pointers instead of normal variables
++#   define NAME_CONSTRAINT_ARRAY(x) [x] "m"(*x)
++#   define NAMED_CONSTRAINTS_ARRAY_ADD(...) , FOR_EACH_VA(NAME_CONSTRAINT_ARRAY,__VA_ARGS__)
++#   define NAMED_CONSTRAINTS_ARRAY(...) FOR_EACH_VA(NAME_CONSTRAINT_ARRAY,__VA_ARGS__)
++#endif
 +
 +#endif /* AVUTIL_X86_ASM_H */
-diff -up mplayer-export-2014-03-27/Makefile.ffmpeg mplayer-export-2014-03-27/Makefile
---- mplayer-export-2014-03-27/Makefile.ffmpeg	2014-03-27 07:31:02.814463712 +0100
-+++ mplayer-export-2014-03-27/Makefile	2014-03-27 07:31:02.816463722 +0100
-@@ -776,7 +776,7 @@ mencoder$(EXESUF) mplayer$(EXESUF):
+diff -up mplayer-export-2015-05-05/Makefile.ffmpeg mplayer-export-2015-05-05/Makefile
+--- mplayer-export-2015-05-05/Makefile.ffmpeg	2015-05-06 07:22:42.638716016 +0200
++++ mplayer-export-2015-05-05/Makefile	2015-05-06 07:22:42.642716037 +0200
+@@ -754,7 +754,7 @@ mencoder$(EXESUF) mplayer$(EXESUF):
  codec-cfg-test$(EXESUF): HOSTCFLAGS := $(HOSTCFLAGS) -DTESTING
  codec-cfg$(EXESUF) codecs2html$(EXESUF):  HOSTCFLAGS := $(HOSTCFLAGS) -DCODECS2HTML
  codec-cfg$(EXESUF) codec-cfg-test$(EXESUF) codecs2html$(EXESUF): codec-cfg.c codec-cfg.h help_mp.h
