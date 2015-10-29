@@ -1,12 +1,16 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20150505svn
-%define         svn 1
-%define         svnbuild 2015-05-05
+#define         pre 20150505svn
+#define         svn 1
+#define         svnbuild 2015-05-05
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
-Version:        1.1
+Version:        1.2
+%if 0%{?svn}
 Release:        33.%{?pre}%{?dist}
+%else
+Release:        1%{?dist}
+%endif
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -21,7 +25,7 @@ Source0:        mplayer-export-%{svnbuild}.tar.bz2
 %else
 Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pre}.tar.xz
 %endif
-Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.10.tar.bz2
+Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.11.tar.bz2
 Source10:       mplayer-snapshot.sh
 # set defaults for Fedora
 Patch0:         %{name}-config.patch
@@ -215,6 +219,7 @@ This package contains various scripts from MPlayer TOOLS directory.
 %setup -q -n mplayer-export-%{svnbuild}
 %else
 %setup -q -n MPlayer-%{version}%{?pre}
+rm -rf ffmpeg
 %endif
 %patch0 -p1 -b .config
 %patch1 -p1 -b .manlinks
@@ -374,6 +379,10 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu Oct 29 2015 Julian Sikorski <belegdol@fedoraproject.org> - 1.2-1
+- Updated to 1.2
+- Updated Blue skin to 1.11
+
 * Thu May 07 2015 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-33.20150505svn
 - 20150505 snapshot
 - Updated ffmpeg patch
