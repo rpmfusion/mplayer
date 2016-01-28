@@ -5,9 +5,9 @@
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
-Version:        1.2
+Version:        1.2.1
 %if 0%{?svn}
-Release:        33.%{?pre}%{?dist}
+Release:        34.%{?pre}%{?dist}
 %else
 Release:        1%{?dist}
 %endif
@@ -379,6 +379,10 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu Jan 28 2016 Julian Sikorski <belegdol@fedoraproject.org> - 1.2.1-1
+- Updated to 1.2.1
+- Removed asm.h from mplayer-ffmpeg.patch
+
 * Thu Oct 29 2015 Julian Sikorski <belegdol@fedoraproject.org> - 1.2-1
 - Updated to 1.2
 - Updated Blue skin to 1.11
