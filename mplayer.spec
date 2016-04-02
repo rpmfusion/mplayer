@@ -9,7 +9,7 @@ Version:        1.2.1
 %if 0%{?svn}
 Release:        34.%{?pre}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -61,7 +61,7 @@ BuildRequires:  libass-devel >= 0.9.10
 BuildRequires:  libbluray-devel
 BuildRequires:  libbs2b-devel
 BuildRequires:  libcaca-devel
-BuildRequires:  libcdio-devel
+BuildRequires:  libcdio-paranoia-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdv-devel
 BuildRequires:  libdvdnav-devel >= 4.1.3-1
@@ -379,6 +379,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Apr 02 2016 Julian Sikorski <belegdol@fedoraproject.org> - 1.2.1-2
+- Fixed BuildRequires so that audio CD support actually works
+
 * Thu Jan 28 2016 Julian Sikorski <belegdol@fedoraproject.org> - 1.2.1-1
 - Updated to 1.2.1
 - Removed asm.h from mplayer-ffmpeg.patch
