@@ -5,11 +5,11 @@
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
-Version:        1.2.1
+Version:        1.3.0
 %if 0%{?svn}
 Release:        34.%{?pre}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        1%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -379,6 +379,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Wed May 18 2016 Julian Sikorski <belegdol@fedoraproject.org> - 1.3.0-1
+- Updated to 1.3.0
+
 * Sat Apr 02 2016 Julian Sikorski <belegdol@fedoraproject.org> - 1.2.1-2
 - Fixed BuildRequires so that audio CD support actually works
 
