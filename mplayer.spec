@@ -9,7 +9,7 @@ Version:        1.3.0
 %if 0%{?svn}
 Release:        35.%{?pre}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -75,6 +75,7 @@ BuildRequires:  libvorbis-devel
 BuildRequires:  lirc-devel
 #BuildRequires:  live555-devel #broken - see libnemesi as an alternative
 BuildRequires:  lzo-devel >= 2
+BuildRequires:  perl-generators
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  speex-devel >= 1.1
 BuildRequires:  twolame-devel
@@ -379,6 +380,10 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Oct 25 2016 Paul Howarth <paul@city-fan.org> - 1.3.0-3
+- BR: perl-generators for proper dependency generation
+  (https://fedoraproject.org/wiki/Changes/Build_Root_Without_Perl)
+
 * Sat Jul 30 2016 Julian Sikorski <belegdol@fedoraproject.org> - 1.3.0-2
 - Rebuilt for ffmpeg-3.1.1
 
