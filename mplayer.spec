@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        35.%{?pre}%{?dist}
+Release:        36.%{?pre}%{?dist}
 %else
-Release:        3%{?dist}
+Release:        4%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -105,6 +105,7 @@ BuildRequires:  libxslt
 Obsoletes:      mplayer-fonts
 Requires:       faad2-libs >= %{faad2min}
 Requires:       mplayer-common = %{version}-%{release}
+Provides:       mplayer-backend
 
 %description
 MPlayer is a movie player that plays most MPEG, VOB, AVI, OGG/OGM,
@@ -380,6 +381,10 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Nov 05 2016 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-4
+- Add provides mplayer-backend (rfbz#4284)
+- Rebuilt for new ffmpeg
+
 * Tue Oct 25 2016 Paul Howarth <paul@city-fan.org> - 1.3.0-3
 - BR: perl-generators for proper dependency generation
   (https://fedoraproject.org/wiki/Changes/Build_Root_Without_Perl)
