@@ -9,7 +9,7 @@ Version:        1.3.0
 %if 0%{?svn}
 Release:        36.%{?pre}%{?dist}
 %else
-Release:        4%{?dist}
+Release:        5%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -381,6 +381,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu Nov 17 2016 Adrian Reber <adrian@lisas.de> - 1.3.0-5
+- Rebuilt for libcdio-0.94
+
 * Sat Nov 05 2016 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-4
 - Add provides mplayer-backend (rfbz#4284)
 - Rebuilt for new ffmpeg
