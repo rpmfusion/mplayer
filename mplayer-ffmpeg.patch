@@ -162,3 +162,15 @@ diff -up mplayer-export-2014-03-27/Makefile.ffmpeg mplayer-export-2014-03-27/Mak
  
  codecs.conf.h: codec-cfg$(EXESUF) etc/codecs.conf
  	./$^ > $@
+diff --git a/libmpcodecs/ad_spdif.c b/libmpcodecs/ad_spdif.c
+index 542c3ff..ef3b960 100644
+--- a/libmpcodecs/ad_spdif.c
++++ b/libmpcodecs/ad_spdif.c
+@@ -130,7 +129,6 @@ static int init(sh_audio_t *sh)
+             break;
+         }
+     }
+-    lavf_ctx->raw_packet_buffer_remaining_size = RAW_PACKET_BUFFER_SIZE;
+     if (AVERROR_PATCHWELCOME == lavf_ctx->oformat->write_header(lavf_ctx)) {
+         mp_msg(MSGT_DECAUDIO,MSGL_INFO,
+                "This codec is not supported by spdifenc.\n");
