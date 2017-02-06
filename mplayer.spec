@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        36.%{?pre}%{?dist}
+Release:        37.%{?pre}%{?dist}
 %else
-Release:        5%{?dist}
+Release:        6%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -32,7 +32,11 @@ Patch0:         %{name}-config.patch
 # use roff include statements instead of symlinks
 Patch1:         %{name}-manlinks.patch
 # use system FFmpeg libraries
-Patch3:        %{name}-ffmpeg.patch
+Patch3:         %{name}-ffmpeg.patch
+# Fix screenshot crash
+# https://bugzilla.rpmfusion.org/show_bug.cgi?id=4391
+# Patch is from an upstream svn commit
+Patch4:         %{name}-fix-screenshot-crash.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -226,6 +230,7 @@ rm -rf ffmpeg
 %patch0 -p1 -b .config
 %patch1 -p1 -b .manlinks
 %patch3 -p1 -b .ffmpeg
+%patch4 -p1 -b .screenshot
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
@@ -381,6 +386,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Mon Feb 06 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-6
+- Fix screenshot crash (rfbz#4391)
+
 * Thu Nov 17 2016 Adrian Reber <adrian@lisas.de> - 1.3.0-5
 - Rebuilt for libcdio-0.94
 

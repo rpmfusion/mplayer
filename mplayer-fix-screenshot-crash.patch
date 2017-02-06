@@ -1,0 +1,26 @@
+From bbaf524d691d6bfecfd65175259fd61abc6e5f69 Mon Sep 17 00:00:00 2001
+From: rtogni <rtogni@b3059339-0415-0410-9bf9-f77b7e298cf2>
+Date: Sun, 3 Jul 2016 20:06:11 +0000
+Subject: [PATCH] Fix crash with screenshot filter.
+
+avcodec_open2() now requires timebase to be always set, even for png images.
+The patch sets it to 1/1, since pictures do not have a framerate.
+
+Patch by Thomas Kirsten (Tho_Ki gmx de)
+---
+ libmpcodecs/vf_screenshot.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/libmpcodecs/vf_screenshot.c b/libmpcodecs/vf_screenshot.c
+index 4692d20..992ea6d 100644
+--- a/libmpcodecs/vf_screenshot.c
++++ b/libmpcodecs/vf_screenshot.c
+@@ -81,6 +81,8 @@ static int config(struct vf_instance *vf,
+         vf->priv->avctx->pix_fmt = AV_PIX_FMT_RGB24;
+         vf->priv->avctx->width = d_width;
+         vf->priv->avctx->height = d_height;
++        vf->priv->avctx->time_base.num = 1;
++        vf->priv->avctx->time_base.den = 1;
+         vf->priv->avctx->compression_level = 0;
+         if (avcodec_open2(vf->priv->avctx, avcodec_find_encoder(AV_CODEC_ID_PNG), NULL)) {
+             mp_msg(MSGT_VFILTER, MSGL_FATAL, "Could not open libavcodec PNG encoder\n");
