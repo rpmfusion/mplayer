@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        37.%{?pre}%{?dist}
+Release:        38.%{?pre}%{?dist}
 %else
-Release:        6%{?dist}
+Release:        7%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -37,6 +37,10 @@ Patch3:         %{name}-ffmpeg.patch
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=4391
 # Patch is from an upstream svn commit
 Patch4:         %{name}-fix-screenshot-crash.patch
+# Fix vo_png with recent ffmpeg
+# https://bugzilla.rpmfusion.org/show_bug.cgi?id=4470
+# Patch is from an upstream svn commit
+Patch5:         %{name}-fix-vo_png.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -231,6 +235,7 @@ rm -rf ffmpeg
 %patch1 -p1 -b .manlinks
 %patch3 -p1 -b .ffmpeg
 %patch4 -p1 -b .screenshot
+%patch5 -p1 -b .vo_png
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
@@ -386,6 +391,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Fri Mar 03 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-7
+- Fix vo_png with recent ffmpeg (rfbz#4470)
+
 * Mon Feb 06 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-6
 - Fix screenshot crash (rfbz#4391)
 
