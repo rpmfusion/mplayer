@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        38.%{?pre}%{?dist}
+Release:        39.%{?pre}%{?dist}
 %else
-Release:        7%{?dist}
+Release:        8%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -391,6 +391,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Mon Mar 20 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 1.3.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Fri Mar 03 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-7
 - Fix vo_png with recent ffmpeg (rfbz#4470)
 
