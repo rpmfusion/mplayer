@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        40.%{?pre}%{?dist}
+Release:        41.%{?pre}%{?dist}
 %else
-Release:        10%{?dist}
+Release:        11%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -391,6 +391,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 1.3.0-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Sat Jul 15 2017 Paul Howarth <paul@city-fan.org> - 1.3.0-10
 - Perl 5.26 rebuild
 
