@@ -1,0 +1,23 @@
+From 2fe876f5ed67edd72e6da4fd0ccaae03a1952d4c Mon Sep 17 00:00:00 2001
+From: al <al@b3059339-0415-0410-9bf9-f77b7e298cf2>
+Date: Wed, 19 Apr 2017 23:06:04 +0000
+Subject: [PATCH] vo_vdpau: Explicitly include header vdpau_x11.h
+
+The include from inside libavcodec/vdpau.h was removed in FFmpeg
+commit d40e181bec22014a9ea312ab6837f7f0bc4f9e42 .
+---
+ libvo/vo_vdpau.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/libvo/vo_vdpau.c b/libvo/vo_vdpau.c
+index 7b94cad1b9..99f08d6c7b 100644
+--- a/libvo/vo_vdpau.c
++++ b/libvo/vo_vdpau.c
+@@ -34,6 +34,7 @@
+ 
+ #include <stdio.h>
+ #include <strings.h>
++#include <vdpau/vdpau_x11.h>
+ 
+ #include "config.h"
+ #include "sub/ass_mp.h"

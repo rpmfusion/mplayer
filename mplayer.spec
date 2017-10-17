@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        41.%{?pre}%{?dist}
+Release:        42.%{?pre}%{?dist}
 %else
-Release:        11%{?dist}
+Release:        12%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -41,6 +41,7 @@ Patch4:         %{name}-fix-screenshot-crash.patch
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=4470
 # Patch is from an upstream svn commit
 Patch5:         %{name}-fix-vo_png.patch
+Patch6:         %{name}-add-include_vdpau_x11.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -236,6 +237,7 @@ rm -rf ffmpeg
 %patch3 -p1 -b .ffmpeg
 %patch4 -p1 -b .screenshot
 %patch5 -p1 -b .vo_png
+%patch6 -p1 -b .vdpau_x11
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
@@ -391,6 +393,10 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Oct 17 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-12
+- Rebuild for ffmpeg update
+- Add build upstream build fix for newer ffmpeg
+
 * Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 1.3.0-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
