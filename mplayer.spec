@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        42.%{?pre}%{?dist}
+Release:        43.%{?pre}%{?dist}
 %else
-Release:        12%{?dist}
+Release:        13%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -42,6 +42,8 @@ Patch4:         %{name}-fix-screenshot-crash.patch
 # Patch is from an upstream svn commit
 Patch5:         %{name}-fix-vo_png.patch
 Patch6:         %{name}-add-include_vdpau_x11.patch
+
+ExcludeArch:    %{ix86}
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -393,6 +395,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Mon Oct 23 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-13
+- Exclude ix86 (rfbz #4687)
+
 * Tue Oct 17 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-12
 - Rebuild for ffmpeg update
 - Add build upstream build fix for newer ffmpeg
