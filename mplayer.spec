@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        44.%{?pre}%{?dist}
+Release:        45.%{?pre}%{?dist}
 %else
-Release:        14%{?dist}
+Release:        15%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -395,6 +395,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu Jan 18 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-15
+- Rebuilt for ffmpeg-3.5 git
+
 * Sun Dec 31 2017 Sérgio Basto <sergio@serjux.com> - 1.3.0-14
 - Mass rebuild for x264 and x265
 
