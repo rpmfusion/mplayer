@@ -1,15 +1,15 @@
 %define         codecdir %{_libdir}/codecs
-#define         pre 20150505svn
-#define         svn 1
-#define         svnbuild 2015-05-05
+%define         pre 20180119svn
+%define         svn 1
+%define         svnbuild 2018-01-19
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        45.%{?pre}%{?dist}
+Release:        46.%{?pre}%{?dist}
 %else
-Release:        15%{?dist}
+Release:        16%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -33,15 +33,6 @@ Patch0:         %{name}-config.patch
 Patch1:         %{name}-manlinks.patch
 # use system FFmpeg libraries
 Patch3:         %{name}-ffmpeg.patch
-# Fix screenshot crash
-# https://bugzilla.rpmfusion.org/show_bug.cgi?id=4391
-# Patch is from an upstream svn commit
-Patch4:         %{name}-fix-screenshot-crash.patch
-# Fix vo_png with recent ffmpeg
-# https://bugzilla.rpmfusion.org/show_bug.cgi?id=4470
-# Patch is from an upstream svn commit
-Patch5:         %{name}-fix-vo_png.patch
-Patch6:         %{name}-add-include_vdpau_x11.patch
 
 ExcludeArch:    %{ix86}
 
@@ -237,9 +228,6 @@ rm -rf ffmpeg
 %patch0 -p1 -b .config
 %patch1 -p1 -b .manlinks
 %patch3 -p1 -b .ffmpeg
-%patch4 -p1 -b .screenshot
-%patch5 -p1 -b .vo_png
-%patch6 -p1 -b .vdpau_x11
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
@@ -395,6 +383,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Fri Jan 19 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-46.20180119svn
+- Update to latest svn
+
 * Thu Jan 18 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-15
 - Rebuilt for ffmpeg-3.5 git
 
