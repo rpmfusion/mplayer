@@ -7,7 +7,7 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        46.%{?pre}%{?dist}
+Release:        16.%{?pre}%{?dist}
 %else
 Release:        16%{?dist}
 %endif
@@ -383,7 +383,7 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
-* Fri Jan 19 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-46.20180119svn
+* Fri Jan 19 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-16.20180119svn
 - Update to latest svn
 
 * Thu Jan 18 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-15
