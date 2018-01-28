@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        16.%{?pre}%{?dist}
+Release:        17.%{?pre}%{?dist}
 %else
-Release:        16%{?dist}
+Release:        17%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -383,6 +383,9 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Jan 28 2018 Nicolas Chauvet <kwizart@gmail.com> - 1.3.0-17.20180119svn
+- Rebuilt for libcdio
+
 * Fri Jan 19 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-16.20180119svn
 - Update to latest svn
 
