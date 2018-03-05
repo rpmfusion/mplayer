@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        18.%{?pre}%{?dist}
+Release:        19.%{?pre}%{?dist}
 %else
-Release:        18%{?dist}
+Release:        19%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -34,7 +34,6 @@ Patch1:         %{name}-manlinks.patch
 # use system FFmpeg libraries
 Patch3:         %{name}-ffmpeg.patch
 
-ExcludeArch:    %{ix86}
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -185,7 +184,7 @@ This package contains various scripts from MPlayer TOOLS directory.
     --enable-menu \\\
     --enable-radio \\\
     --enable-radio-capture \\\
-%ifarch %{ix86} x86_64 ppc ppc64 \
+%ifarch x86_64 ppc ppc64 \
     --enable-runtime-cpudetection \\\
 %endif \
     --enable-unrarexec \\\
@@ -306,16 +305,6 @@ desktop-file-install \
 install -dm 755 $RPM_BUILD_ROOT%{codecdir}
 
 
-%post gui
-gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
-update-desktop-database &>/dev/null || :
-
-
-%postun gui
-gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
-update-desktop-database &>/dev/null || :
-
-
 %files
 %{_bindir}/mplayer
 
@@ -383,6 +372,10 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Mon Mar 05 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-19.20180119svn
+- Disable runtime cpu detection for i686
+- Remove scriptlets
+
 * Thu Mar 01 2018 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 1.3.0-18.20180119svn
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
