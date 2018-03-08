@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        19.%{?pre}%{?dist}
+Release:        20.%{?pre}%{?dist}
 %else
-Release:        19%{?dist}
+Release:        20%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -372,6 +372,9 @@ install -dm 755 $RPM_BUILD_ROOT%{codecdir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu Mar 08 2018 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 1.3.0-20.20180119svn
+- Rebuilt for new ffmpeg snapshot
+
 * Mon Mar 05 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-19.20180119svn
 - Disable runtime cpu detection for i686
 - Remove scriptlets
