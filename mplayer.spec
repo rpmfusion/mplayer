@@ -1,15 +1,15 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20180119svn
+%define         pre 20180424svn
 %define         svn 1
-%define         svnbuild 2018-01-19
+%define         svnbuild 2018-04-24
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        21.%{?pre}%{?dist}
+Release:        22.%{?pre}%{?dist}
 %else
-Release:        21%{?dist}
+Release:        22%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -372,6 +372,9 @@ install -dm 755 $RPM_BUILD_ROOT%{codecdir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Apr 24 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-22.20180424svn
+- Update to latest svn
+
 * Tue Apr 24 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-21.20180119svn
 - Rebuild for ffmpeg-4.0 release
 
