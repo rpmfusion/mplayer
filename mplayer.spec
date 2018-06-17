@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        22.%{?pre}%{?dist}
+Release:        23.%{?pre}%{?dist}
 %else
-Release:        22%{?dist}
+Release:        23%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -372,6 +372,9 @@ install -dm 755 $RPM_BUILD_ROOT%{codecdir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Jun 17 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-23.20180424svn
+- Rebuild for new libass version
+
 * Tue Apr 24 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-22.20180424svn
 - Update to latest svn
 
