@@ -1,15 +1,15 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20180424svn
+%define         pre 20180620svn
 %define         svn 1
-%define         svnbuild 2018-04-24
+%define         svnbuild 2018-06-20
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        23.%{?pre}%{?dist}
+Release:        24.%{?pre}%{?dist}
 %else
-Release:        23%{?dist}
+Release:        24%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -184,7 +184,7 @@ This package contains various scripts from MPlayer TOOLS directory.
     --enable-menu \\\
     --enable-radio \\\
     --enable-radio-capture \\\
-%ifarch x86_64 ppc ppc64 \
+%ifarch %{ix86} x86_64 ppc ppc64 \
     --enable-runtime-cpudetection \\\
 %endif \
     --enable-unrarexec \\\
@@ -372,6 +372,10 @@ install -dm 755 $RPM_BUILD_ROOT%{codecdir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Wed Jun 20 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-24.20180620svn
+- Update to latest svn
+- Enable runtime cpu detection for i686 again
+
 * Sun Jun 17 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-23.20180424svn
 - Rebuild for new libass version
 

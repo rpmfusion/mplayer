@@ -13,7 +13,7 @@ cleanup() {
 unset CDPATH
 pwd=$(pwd)
 svn=$(date +%Y-%m-%d)
-svn=2018-04-24
+svn=2018-06-20
 dirname=mplayer-export-$svn
 mplayer_rev={$svn}
 #mplayer_rev=HEAD
