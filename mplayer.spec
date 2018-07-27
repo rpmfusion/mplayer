@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        24.%{?pre}%{?dist}
+Release:        25.%{?pre}%{?dist}
 %else
-Release:        24%{?dist}
+Release:        25%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -372,6 +372,9 @@ install -dm 755 $RPM_BUILD_ROOT%{codecdir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Fri Jul 27 2018 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.3.0-25.20180620svn
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Wed Jun 20 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-24.20180620svn
 - Update to latest svn
 - Enable runtime cpu detection for i686 again
