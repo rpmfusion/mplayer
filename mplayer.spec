@@ -304,7 +304,7 @@ desktop-file-install \
 
 # Codec dir
 install -dm 755 $RPM_BUILD_ROOT%{codecdir}
-find %{buildroot}%{_bindir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' {} ';'
+sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}/vobshift
 
 
 %files
