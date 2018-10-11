@@ -304,6 +304,7 @@ desktop-file-install \
 
 # Codec dir
 install -dm 755 $RPM_BUILD_ROOT%{codecdir}
+find %{buildroot}%{_bindir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' {} ';'
 
 
 %files
@@ -375,6 +376,9 @@ install -dm 755 $RPM_BUILD_ROOT%{codecdir}
 %changelog
 * Thu Oct 04 2018 Sérgio Basto <sergio@serjux.com> - 1.3.0-26.20180620svn
 - Mass rebuild for x264 and/or x265
+- Fix sources
+- Add BuildRequires: gcc-c++
+- Fix ambiguous python shebang
 
 * Fri Jul 27 2018 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.3.0-25.20180620svn
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
