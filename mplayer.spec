@@ -38,8 +38,8 @@ Patch3:         %{name}-ffmpeg.patch
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
 BuildRequires:  aalib-devel
-BuildRequires:  bzip2-devel
 BuildRequires:  alsa-lib-devel
+BuildRequires:  bzip2-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  enca-devel
 BuildRequires:  faad2-devel >= %{faad2min}
@@ -47,6 +47,7 @@ BuildRequires:  ffmpeg-devel >= 0.10
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
 BuildRequires:  fribidi-devel
+BuildRequires:  gcc-c++
 BuildRequires:  giflib-devel
 BuildRequires:  gsm-devel
 BuildRequires:  gtk2-devel
