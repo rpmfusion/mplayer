@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        26.%{?pre}%{?dist}
+Release:        27.%{?pre}%{?dist}
 %else
-Release:        26%{?dist}
+Release:        27%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -105,7 +105,7 @@ BuildRequires:  libxml2
 BuildRequires:  libxslt
 %endif
 Obsoletes:      mplayer-fonts
-Requires:       faad2-libs >= %{faad2min}
+Requires:       faad2-libs%{?_isa} >= %{faad2min}
 Requires:       mplayer-common = %{version}-%{release}
 Provides:       mplayer-backend
 
@@ -161,8 +161,8 @@ MPlayer documentation in various languages.
 
 %package        tools
 Summary:        Useful scripts for MPlayer
-Requires:       mencoder = %{version}-%{release}
-Requires:       mplayer = %{version}-%{release}
+Requires:       mencoder%{?_isa} = %{version}-%{release}
+Requires:       mplayer%{?_isa} = %{version}-%{release}
 
 %description    tools
 This package contains various scripts from MPlayer TOOLS directory.
@@ -234,24 +234,28 @@ cp -a `ls -1|grep -v GUI` GUI/
 
 %build
 pushd GUI
+export CC=gcc
+export CXX=g++
 %{mp_configure}--enable-gui --disable-mencoder
 
-%{__make} V=1 %{?_smp_mflags}
+%make_build V=1
 popd
 
+export CC=gcc
+export CXX=g++
 %{mp_configure}
 
-%{__make} V=1 %{?_smp_mflags}
+%make_build V=1
 
 %if 0%{?svn}
 # build HTML documentation from XML files 
-%{__make} html-chunked
+%make_build V=1 html-chunked
 %endif
 
 %install
 rm -rf $RPM_BUILD_ROOT doc
 
-make install DESTDIR=$RPM_BUILD_ROOT INSTALLSTRIP=
+%make_install INSTALLSTRIP=
 for file in aconvert.sh divx2svcd.sh mencvcd.sh midentify.sh mpconsole.sh qepdvcd.sh subsearch.sh ; do
 install -pm 755 TOOLS/$file $RPM_BUILD_ROOT%{_bindir}/`basename $file .sh`
 done
@@ -306,6 +310,19 @@ desktop-file-install \
 install -dm 755 $RPM_BUILD_ROOT%{codecdir}
 sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}/vobshift
 
+%if 0%{?rhel}
+%post
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+
+%postun
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+fi
+
+%posttrans
+/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+%endif
 
 %files
 %{_bindir}/mplayer
@@ -374,6 +391,11 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Mon Nov 12 2018 Antonio Trande <sagitter@fedoraproject.org> - 1.3.0-27.20180620svn
+- Rebuild for ffmpeg-3.4.5 on el7
+- Rebuild for x264-0.148 on el7
+- Add icon-cache scriptlets for epel only
+
 * Thu Oct 04 2018 Sérgio Basto <sergio@serjux.com> - 1.3.0-26.20180620svn
 - Mass rebuild for x264 and/or x265
 - Fix sources
