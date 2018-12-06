@@ -1,12 +1,16 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20140414svn
+%define         pre 20180620svn
 %define         svn 1
-%define         svnbuild 2014-04-14
+%define         svnbuild 2018-06-20
 %define         faad2min 1:2.6.1
 
 Name:           mplayer
-Version:        1.1
-Release:        23.%{?pre}%{?dist}
+Version:        1.3.0
+%if 0%{?svn}
+Release:        27.%{?pre}%{?dist}
+%else
+Release:        27%{?dist}
+%endif
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
@@ -21,22 +25,21 @@ Source0:        mplayer-export-%{svnbuild}.tar.bz2
 %else
 Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pre}.tar.xz
 %endif
-Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.10.tar.bz2
+Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.11.tar.bz2
 Source10:       mplayer-snapshot.sh
 # set defaults for Fedora
 Patch0:         %{name}-config.patch
 # use roff include statements instead of symlinks
 Patch1:         %{name}-manlinks.patch
-# erase any trace of libdvdcss
-Patch2:        %{name}-nodvdcss.patch
 # use system FFmpeg libraries
-Patch3:        %{name}-ffmpeg.patch
+Patch3:         %{name}-ffmpeg.patch
+
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
 BuildRequires:  aalib-devel
-BuildRequires:  bzip2-devel
 BuildRequires:  alsa-lib-devel
+BuildRequires:  bzip2-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  enca-devel
 BuildRequires:  faad2-devel >= %{faad2min}
@@ -44,6 +47,7 @@ BuildRequires:  ffmpeg-devel >= 0.10
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
 BuildRequires:  fribidi-devel
+BuildRequires:  gcc-c++
 BuildRequires:  giflib-devel
 BuildRequires:  gsm-devel
 BuildRequires:  gtk2-devel
@@ -59,7 +63,7 @@ BuildRequires:  libass-devel >= 0.9.10
 BuildRequires:  libbluray-devel
 BuildRequires:  libbs2b-devel
 BuildRequires:  libcaca-devel
-BuildRequires:  libcdio-devel
+BuildRequires:  libcdio-paranoia-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdv-devel
 BuildRequires:  libdvdnav-devel >= 4.1.3-1
@@ -73,6 +77,7 @@ BuildRequires:  libvorbis-devel
 BuildRequires:  lirc-devel
 #BuildRequires:  live555-devel #broken - see libnemesi as an alternative
 BuildRequires:  lzo-devel >= 2
+BuildRequires:  perl-generators
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  speex-devel >= 1.1
 BuildRequires:  twolame-devel
@@ -100,8 +105,9 @@ BuildRequires:  libxml2
 BuildRequires:  libxslt
 %endif
 Obsoletes:      mplayer-fonts
-Requires:       faad2-libs >= %{faad2min}
+Requires:       faad2-libs%{?_isa} >= %{faad2min}
 Requires:       mplayer-common = %{version}-%{release}
+Provides:       mplayer-backend
 
 %description
 MPlayer is a movie player that plays most MPEG, VOB, AVI, OGG/OGM,
@@ -155,8 +161,8 @@ MPlayer documentation in various languages.
 
 %package        tools
 Summary:        Useful scripts for MPlayer
-Requires:       mencoder = %{version}-%{release}
-Requires:       mplayer = %{version}-%{release}
+Requires:       mencoder%{?_isa} = %{version}-%{release}
+Requires:       mplayer%{?_isa} = %{version}-%{release}
 
 %description    tools
 This package contains various scripts from MPlayer TOOLS directory.
@@ -184,8 +190,6 @@ This package contains various scripts from MPlayer TOOLS directory.
 %endif \
     --enable-unrarexec \\\
     \\\
-    --disable-dvdread-internal \\\
-    --disable-libdvdcss-internal \\\
     %{!?_with_nemesi:--disable-nemesi} \\\
     %{!?_with_samba:--disable-smb} \\\
     \\\
@@ -219,11 +223,10 @@ This package contains various scripts from MPlayer TOOLS directory.
 %setup -q -n mplayer-export-%{svnbuild}
 %else
 %setup -q -n MPlayer-%{version}%{?pre}
-rm -rf ffmpeg libdvdcss libdvdnav libdvdread4
+rm -rf ffmpeg
 %endif
 %patch0 -p1 -b .config
 %patch1 -p1 -b .manlinks
-%patch2 -p1 -b .nodvdcss
 %patch3 -p1 -b .ffmpeg
 
 mkdir GUI
@@ -231,24 +234,28 @@ cp -a `ls -1|grep -v GUI` GUI/
 
 %build
 pushd GUI
+export CC=gcc
+export CXX=g++
 %{mp_configure}--enable-gui --disable-mencoder
 
-%{__make} V=1 %{?_smp_mflags}
+%make_build V=1
 popd
 
+export CC=gcc
+export CXX=g++
 %{mp_configure}
 
-%{__make} V=1 %{?_smp_mflags}
+%make_build V=1
 
 %if 0%{?svn}
 # build HTML documentation from XML files 
-%{__make} html-chunked
+%make_build V=1 html-chunked
 %endif
 
 %install
 rm -rf $RPM_BUILD_ROOT doc
 
-make install DESTDIR=$RPM_BUILD_ROOT INSTALLSTRIP=
+%make_install INSTALLSTRIP=
 for file in aconvert.sh divx2svcd.sh mencvcd.sh midentify.sh mpconsole.sh qepdvcd.sh subsearch.sh ; do
 install -pm 755 TOOLS/$file $RPM_BUILD_ROOT%{_bindir}/`basename $file .sh`
 done
@@ -301,17 +308,21 @@ desktop-file-install \
 
 # Codec dir
 install -dm 755 $RPM_BUILD_ROOT%{codecdir}
+sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}/vobshift
 
+%if 0%{?rhel}
+%post
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
-%post gui
-gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
-update-desktop-database &>/dev/null || :
+%postun
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+fi
 
-
-%postun gui
-gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
-update-desktop-database &>/dev/null || :
-
+%posttrans
+/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+%endif
 
 %files
 %{_bindir}/mplayer
@@ -380,14 +391,148 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/mplayer/*.fp
 
 %changelog
-* Thu Jan 12 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.1-23.20140414svn
-- Patch for ffmpeg-2.8
+* Mon Nov 12 2018 Antonio Trande <sagitter@fedoraproject.org> - 1.3.0-27.20180620svn
+- Rebuild for ffmpeg-3.4.5 on el7
+- Rebuild for x264-0.148 on el7
+- Add icon-cache scriptlets for epel only
 
-* Sat Jul 12 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-22.20140414svn
-- 20140414 snapshot
+* Thu Oct 04 2018 Sérgio Basto <sergio@serjux.com> - 1.3.0-26.20180620svn
+- Mass rebuild for x264 and/or x265
+- Fix sources
+- Add BuildRequires: gcc-c++
+- Fix ambiguous python shebang
 
-* Thu Mar 27 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-21.20140327svn
+* Fri Jul 27 2018 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.3.0-25.20180620svn
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
+* Wed Jun 20 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-24.20180620svn
+- Update to latest svn
+- Enable runtime cpu detection for i686 again
+
+* Sun Jun 17 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-23.20180424svn
+- Rebuild for new libass version
+
+* Tue Apr 24 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-22.20180424svn
+- Update to latest svn
+
+* Tue Apr 24 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-21.20180119svn
+- Rebuild for ffmpeg-4.0 release
+
+* Thu Mar 08 2018 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 1.3.0-20.20180119svn
+- Rebuilt for new ffmpeg snapshot
+
+* Mon Mar 05 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-19.20180119svn
+- Disable runtime cpu detection for i686
+- Remove scriptlets
+
+* Thu Mar 01 2018 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 1.3.0-18.20180119svn
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
+* Sun Jan 28 2018 Nicolas Chauvet <kwizart@gmail.com> - 1.3.0-17.20180119svn
+- Rebuilt for libcdio
+
+* Fri Jan 19 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-16.20180119svn
+- Update to latest svn
+
+* Thu Jan 18 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-15
+- Rebuilt for ffmpeg-3.5 git
+
+* Sun Dec 31 2017 Sérgio Basto <sergio@serjux.com> - 1.3.0-14
+- Mass rebuild for x264 and x265
+
+* Mon Oct 23 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-13
+- Exclude ix86 (rfbz #4687)
+
+* Tue Oct 17 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-12
+- Rebuild for ffmpeg update
+- Add build upstream build fix for newer ffmpeg
+
+* Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 1.3.0-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
+* Sat Jul 15 2017 Paul Howarth <paul@city-fan.org> - 1.3.0-10
+- Perl 5.26 rebuild
+
+* Sat Apr 29 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-9
+- Rebuild for ffmpeg update
+
+* Mon Mar 20 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 1.3.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
+* Fri Mar 03 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-7
+- Fix vo_png with recent ffmpeg (rfbz#4470)
+
+* Mon Feb 06 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-6
+- Fix screenshot crash (rfbz#4391)
+
+* Thu Nov 17 2016 Adrian Reber <adrian@lisas.de> - 1.3.0-5
+- Rebuilt for libcdio-0.94
+
+* Sat Nov 05 2016 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-4
+- Add provides mplayer-backend (rfbz#4284)
+- Rebuilt for new ffmpeg
+
+* Tue Oct 25 2016 Paul Howarth <paul@city-fan.org> - 1.3.0-3
+- BR: perl-generators for proper dependency generation
+  (https://fedoraproject.org/wiki/Changes/Build_Root_Without_Perl)
+
+* Sat Jul 30 2016 Julian Sikorski <belegdol@fedoraproject.org> - 1.3.0-2
+- Rebuilt for ffmpeg-3.1.1
+
+* Wed May 18 2016 Julian Sikorski <belegdol@fedoraproject.org> - 1.3.0-1
+- Updated to 1.3.0
+
+* Sat Apr 02 2016 Julian Sikorski <belegdol@fedoraproject.org> - 1.2.1-2
+- Fixed BuildRequires so that audio CD support actually works
+
+* Thu Jan 28 2016 Julian Sikorski <belegdol@fedoraproject.org> - 1.2.1-1
+- Updated to 1.2.1
+- Removed asm.h from mplayer-ffmpeg.patch
+
+* Thu Oct 29 2015 Julian Sikorski <belegdol@fedoraproject.org> - 1.2-1
+- Updated to 1.2
+- Updated Blue skin to 1.11
+
+* Thu May 07 2015 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-33.20150505svn
+- 20150505 snapshot
+- Updated ffmpeg patch
+
+* Sat Jan 31 2015 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-32.20150123svn
+- 20150123 snapshot
+- Internal libdvd* are no more, cleaned up the spec accordingly
+
+* Tue Oct 21 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-31.20141020svn
+- 20141020 snapshot
+
+* Mon Oct 20 2014 Sérgio Basto <sergio@serjux.com> - 1.1-30.20140919svn
+- Rebuilt for FFmpeg 2.4.3
+
+* Wed Oct 01 2014 Sérgio Basto <sergio@serjux.com> - 1.1-29.20140919svn
+- Rebuilt again for FFmpeg 2.3.x (with FFmpeg 2.3.x in buildroot)
+
+* Sat Sep 27 2014 kwizart <kwizart@gmail.com> - 1.1-28.20140919svn
+- Rebuilt for FFmpeg 2.3x
+
+* Thu Sep 25 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-27.20140919svn
+- 20140919 snapshot
+
+* Wed Aug 06 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-26.20140806svn
+- 20140806 snapshot
+
+* Sat Jul 12 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-25.20140711svn
+- 20140711 snapshot
+
+* Thu Mar 27 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-24.20140327svn
 - 20140327 snapshot
+
+* Fri Mar 21 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-23.20140301svn
+- Rebuilt for libass-0.10.2
+
+* Tue Mar 18 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-22.20140301svn
+- Rebuilt for x264
+
+* Thu Mar 06 2014 Nicolas Chauvet <kwizart@gmail.com> - 1.1-21.20140301svn
+- Rebuilt for x264
 
 * Sat Mar 01 2014 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-20.20140301svn
 - 20140301 snapshot

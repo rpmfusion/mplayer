@@ -1,7 +1,7 @@
-diff -up mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h.ffmpeg mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h
---- mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h.ffmpeg	2014-03-27 07:31:02.816463722 +0100
-+++ mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h	2014-03-27 07:31:02.816463722 +0100
-@@ -0,0 +1,32 @@
+diff -up mplayer-export-2015-05-05/ffmpeg/libavformat/internal.h.ffmpeg mplayer-export-2015-05-05/ffmpeg/libavformat/internal.h
+--- mplayer-export-2015-05-05/ffmpeg/libavformat/internal.h.ffmpeg	2015-05-06 07:22:42.640716026 +0200
++++ mplayer-export-2015-05-05/ffmpeg/libavformat/internal.h	2015-05-06 07:26:44.614138993 +0200
+@@ -0,0 +1,84 @@
 +/*
 + * copyright (c) 2001 Fabrice Bellard
 + *
@@ -33,127 +33,63 @@ diff -up mplayer-export-2014-03-27/ffmpeg/libavformat/internal.h.ffmpeg mplayer-
 +    unsigned int tag;
 +} AVCodecTag;
 +
++struct AVFormatInternal {
++    /**
++     * Number of streams relevant for interleaving.
++     * Muxing only.
++     */
++    int nb_interleaved_streams;
++
++    /**
++     * This buffer is only needed when packets were already buffered but
++     * not decoded, for example to get the codec parameters in MPEG
++     * streams.
++     */
++    struct AVPacketList *packet_buffer;
++    struct AVPacketList *packet_buffer_end;
++
++    /* av_seek_frame() support */
++    int64_t data_offset; /**< offset of the first packet */
++
++    /**
++     * Raw packets from the demuxer, prior to parsing and decoding.
++     * This buffer is used for buffering packets until the codec can
++     * be identified, as parsing cannot be done without knowing the
++     * codec.
++     */
++    struct AVPacketList *raw_packet_buffer;
++    struct AVPacketList *raw_packet_buffer_end;
++    /**
++     * Packets split by the parser get queued here.
++     */
++    struct AVPacketList *parse_queue;
++    struct AVPacketList *parse_queue_end;
++    /**
++     * Remaining size available for raw_packet_buffer, in bytes.
++     */
++#define RAW_PACKET_BUFFER_SIZE 2500000
++    int raw_packet_buffer_remaining_size;
++
++    /**
++     * Offset to remap timestamps to be non-negative.
++     * Expressed in timebase units.
++     * @see AVStream.mux_ts_offset
++     */
++    int64_t offset;
++
++    /**
++     * Timebase for the timestamp offset.
++     */
++    AVRational offset_timebase;
++
++    int inject_global_side_data;
++};
++
 +#endif /* AVFORMAT_INTERNAL_H */
-diff -up mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h.ffmpeg mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h
---- mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h.ffmpeg	2014-03-27 07:31:02.816463722 +0100
-+++ mplayer-export-2014-03-27/ffmpeg/libavutil/x86/asm.h	2014-03-27 07:31:02.816463722 +0100
-@@ -0,0 +1,112 @@
-+/*
-+ * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
-+ *
-+ * This file is part of FFmpeg.
-+ *
-+ * FFmpeg is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU Lesser General Public
-+ * License as published by the Free Software Foundation; either
-+ * version 2.1 of the License, or (at your option) any later version.
-+ *
-+ * FFmpeg is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * Lesser General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU Lesser General Public
-+ * License along with FFmpeg; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-+ */
-+
-+#ifndef AVUTIL_X86_ASM_H
-+#define AVUTIL_X86_ASM_H
-+
-+#include <stdint.h>
-+#include "config.h"
-+
-+typedef struct xmm_reg { uint64_t a, b; } xmm_reg;
-+
-+#if ARCH_X86_64
-+#    define OPSIZE "q"
-+#    define REG_a "rax"
-+#    define REG_b "rbx"
-+#    define REG_c "rcx"
-+#    define REG_d "rdx"
-+#    define REG_D "rdi"
-+#    define REG_S "rsi"
-+#    define PTR_SIZE "8"
-+typedef int64_t x86_reg;
-+
-+#    define REG_SP "rsp"
-+#    define REG_BP "rbp"
-+#    define REGBP   rbp
-+#    define REGa    rax
-+#    define REGb    rbx
-+#    define REGc    rcx
-+#    define REGd    rdx
-+#    define REGSP   rsp
-+
-+#elif ARCH_X86_32
-+
-+#    define OPSIZE "l"
-+#    define REG_a "eax"
-+#    define REG_b "ebx"
-+#    define REG_c "ecx"
-+#    define REG_d "edx"
-+#    define REG_D "edi"
-+#    define REG_S "esi"
-+#    define PTR_SIZE "4"
-+typedef int32_t x86_reg;
-+
-+#    define REG_SP "esp"
-+#    define REG_BP "ebp"
-+#    define REGBP   ebp
-+#    define REGa    eax
-+#    define REGb    ebx
-+#    define REGc    ecx
-+#    define REGd    edx
-+#    define REGSP   esp
-+#else
-+typedef int x86_reg;
-+#endif
-+
-+#define HAVE_7REGS (ARCH_X86_64 || (HAVE_EBX_AVAILABLE && HAVE_EBP_AVAILABLE))
-+#define HAVE_6REGS (ARCH_X86_64 || (HAVE_EBX_AVAILABLE || HAVE_EBP_AVAILABLE))
-+
-+#if ARCH_X86_64 && defined(PIC)
-+#    define BROKEN_RELOCATIONS 1
-+#endif
-+
-+/*
-+ * If gcc is not set to support sse (-msse) it will not accept xmm registers
-+ * in the clobber list for inline asm. XMM_CLOBBERS takes a list of xmm
-+ * registers to be marked as clobbered and evaluates to nothing if they are
-+ * not supported, or to the list itself if they are supported. Since a clobber
-+ * list may not be empty, XMM_CLOBBERS_ONLY should be used if the xmm
-+ * registers are the only in the clobber list.
-+ * For example a list with "eax" and "xmm0" as clobbers should become:
-+ * : XMM_CLOBBERS("xmm0",) "eax"
-+ * and a list with only "xmm0" should become:
-+ * XMM_CLOBBERS_ONLY("xmm0")
-+ */
-+#if HAVE_XMM_CLOBBERS
-+#    define XMM_CLOBBERS(...)        __VA_ARGS__
-+#    define XMM_CLOBBERS_ONLY(...) : __VA_ARGS__
-+#else
-+#    define XMM_CLOBBERS(...)
-+#    define XMM_CLOBBERS_ONLY(...)
-+#endif
-+
-+/* Use to export labels from asm. */
-+#define LABEL_MANGLE(a) EXTERN_PREFIX #a
-+
-+// Use rip-relative addressing if compiling PIC code on x86-64.
-+#if ARCH_X86_64 && defined(PIC)
-+#    define LOCAL_MANGLE(a) #a "(%%rip)"
-+#else
-+#    define LOCAL_MANGLE(a) #a
-+#endif
-+
-+#define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
-+
-+#endif /* AVUTIL_X86_ASM_H */
-diff -up mplayer-export-2014-03-27/Makefile.ffmpeg mplayer-export-2014-03-27/Makefile
---- mplayer-export-2014-03-27/Makefile.ffmpeg	2014-03-27 07:31:02.814463712 +0100
-+++ mplayer-export-2014-03-27/Makefile	2014-03-27 07:31:02.816463722 +0100
-@@ -776,7 +776,7 @@ mencoder$(EXESUF) mplayer$(EXESUF):
+diff -up mplayer-export-2015-05-05/Makefile.ffmpeg mplayer-export-2015-05-05/Makefile
+--- mplayer-export-2015-05-05/Makefile.ffmpeg	2015-05-06 07:22:42.638716016 +0200
++++ mplayer-export-2015-05-05/Makefile	2015-05-06 07:22:42.642716037 +0200
+@@ -754,7 +754,7 @@ mencoder$(EXESUF) mplayer$(EXESUF):
  codec-cfg-test$(EXESUF): HOSTCFLAGS := $(HOSTCFLAGS) -DTESTING
  codec-cfg$(EXESUF) codecs2html$(EXESUF):  HOSTCFLAGS := $(HOSTCFLAGS) -DCODECS2HTML
  codec-cfg$(EXESUF) codec-cfg-test$(EXESUF) codecs2html$(EXESUF): codec-cfg.c codec-cfg.h help_mp.h
@@ -162,15 +98,3 @@ diff -up mplayer-export-2014-03-27/Makefile.ffmpeg mplayer-export-2014-03-27/Mak
  
  codecs.conf.h: codec-cfg$(EXESUF) etc/codecs.conf
  	./$^ > $@
-diff --git a/libmpcodecs/ad_spdif.c b/libmpcodecs/ad_spdif.c
-index 542c3ff..ef3b960 100644
---- a/libmpcodecs/ad_spdif.c
-+++ b/libmpcodecs/ad_spdif.c
-@@ -130,7 +129,6 @@ static int init(sh_audio_t *sh)
-             break;
-         }
-     }
--    lavf_ctx->raw_packet_buffer_remaining_size = RAW_PACKET_BUFFER_SIZE;
-     if (AVERROR_PATCHWELCOME == lavf_ctx->oformat->write_header(lavf_ctx)) {
-         mp_msg(MSGT_DECAUDIO,MSGL_INFO,
-                "This codec is not supported by spdifenc.\n");
