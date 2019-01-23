@@ -50,6 +50,7 @@ BuildRequires:  gcc-c++
 BuildRequires:  giflib-devel
 BuildRequires:  gsm-devel
 BuildRequires:  gtk2-devel
+BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  ladspa-devel
 BuildRequires:  lame-devel
 BuildRequires:  libGL-devel
@@ -84,7 +85,6 @@ BuildRequires:  yasm
 %{?_with_esound:BuildRequires: esound-devel}
 %{?_with_faac:BuildRequires:  faac-devel}
 %{?_with_faad:BuildRequires:  faad2-devel}
-%{?_with_jack:BuildRequires: jack-audio-connection-kit-devel}
 %{?_with_dca:BuildRequires:  libdca-devel}
 %{?_with_libmad:BuildRequires:  libmad-devel}
 %{?_with_libmpcdec:BuildRequires:  libmpcdec-devel}
@@ -125,7 +125,6 @@ The following on-default rpmbuild options are available:
 --with libmpeg2:Enable libmpeg2 support
 --with libmpg123:Enable libmpg123 support
 --with openal:  Enable OpenAL support
---with jack:    Enable JACK support
 --with arts:    Enable aRts support
 --with esound:  Enable EsounD support
 --with dga:     Enable DGA support
@@ -216,7 +215,6 @@ This package contains various scripts from MPlayer TOOLS directory.
     \\\
     %{!?_with_arts:--disable-arts} \\\
     %{!?_with_esound:--disable-esd} \\\
-    %{!?_with_jack:--disable-jack} \\\
     %{!?_with_openal:--disable-openal} \\\
     --disable-live \\\
 
@@ -385,6 +383,7 @@ fi
 - Make dependencies which duplicate existing FFmpeg features optional by default
 - Generate manpage translation list automatically
 - Use license macro
+- Enable JACK support by default (rfbz #4556)
 
 * Mon Nov 12 2018 Antonio Trande <sagitter@fedoraproject.org> - 1.3.0-27.20180620svn
 - Rebuild for ffmpeg-3.4.5 on el7
