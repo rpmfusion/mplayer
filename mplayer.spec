@@ -2,14 +2,14 @@
 %define         pre 20180620svn
 %define         svn 1
 %define         svnbuild 2018-06-20
-%define         faad2min 1:2.6.1
+%define         rel 28
 
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        27.%{?pre}%{?dist}
+Release:        %{rel}%{?pre:.%{pre}}%{?dist}
 %else
-Release:        27%{?dist}
+Release:        %{rel}%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -18,14 +18,14 @@ License:        GPLv3+
 %else
 License:        GPLv2+
 %endif
-URL:            http://www.mplayerhq.hu/
+URL:            https://www.mplayerhq.hu/
 %if 0%{?svn}
 # run ./mplayer-snapshot.sh to get this
 Source0:        mplayer-export-%{svnbuild}.tar.bz2
 %else
-Source0:        http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pre}.tar.xz
+Source0:        https://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pre}.tar.xz
 %endif
-Source1:        http://www.mplayerhq.hu/MPlayer/skins/Blue-1.11.tar.bz2
+Source1:        https://www.mplayerhq.hu/MPlayer/skins/Blue-1.11.tar.bz2
 Source10:       mplayer-snapshot.sh
 # set defaults for Fedora
 Patch0:         %{name}-config.patch
@@ -42,7 +42,6 @@ BuildRequires:  alsa-lib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  enca-devel
-BuildRequires:  faad2-devel >= %{faad2min}
 BuildRequires:  ffmpeg-devel >= 0.10
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
@@ -64,18 +63,13 @@ BuildRequires:  libbluray-devel
 BuildRequires:  libbs2b-devel
 BuildRequires:  libcaca-devel
 BuildRequires:  libcdio-paranoia-devel
-BuildRequires:  libdca-devel
-BuildRequires:  libdv-devel
 BuildRequires:  libdvdnav-devel >= 4.1.3-1
 BuildRequires:  libjpeg-devel
-BuildRequires:  libmpeg2-devel
-BuildRequires:  libmpg123-devel
 BuildRequires:  librtmp-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvdpau-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  lirc-devel
-#BuildRequires:  live555-devel #broken - see libnemesi as an alternative
 BuildRequires:  lzo-devel >= 2
 BuildRequires:  perl-generators
 BuildRequires:  pulseaudio-libs-devel
@@ -84,15 +78,18 @@ BuildRequires:  twolame-devel
 BuildRequires:  x264-devel >= 0.0.0-0.28
 BuildRequires:  xvidcore-devel >= 0.9.2
 BuildRequires:  yasm
+%{?_with_a52dec:BuildRequires:  a52dec-devel}
 %{?_with_arts:BuildRequires: arts-devel}
 %{?_with_dga:BuildRequires: libXxf86dga-devel}
-%{?_with_directfb:BuildRequires: directfb-devel}
 %{?_with_esound:BuildRequires: esound-devel}
 %{?_with_faac:BuildRequires:  faac-devel}
+%{?_with_faad:BuildRequires:  faad2-devel}
 %{?_with_jack:BuildRequires: jack-audio-connection-kit-devel}
+%{?_with_dca:BuildRequires:  libdca-devel}
 %{?_with_libmad:BuildRequires:  libmad-devel}
 %{?_with_libmpcdec:BuildRequires:  libmpcdec-devel}
-%{?_with_nemesi:BuildRequires:  libnemesi-devel >= 0.6.3}
+%{?_with_libmpeg2:BuildRequires:  libmpeg2-devel}
+%{?_with_libmpg123:BuildRequires:  libmpg123-devel}
 %{?_with_openal:BuildRequires: openal-soft-devel}
 %{?_with_samba:BuildRequires: libsmbclient-devel}
 %{?_with_svgalib:BuildRequires: svgalib-devel}
@@ -104,8 +101,6 @@ BuildRequires:  docbook-style-xsl
 BuildRequires:  libxml2
 BuildRequires:  libxslt
 %endif
-Obsoletes:      mplayer-fonts
-Requires:       faad2-libs%{?_isa} >= %{faad2min}
 Requires:       mplayer-common = %{version}-%{release}
 Provides:       mplayer-backend
 
@@ -115,22 +110,26 @@ VIVO, ASF/WMA/WMV, QT/MOV/MP4, FLI, RM, NuppelVideo, yuv4mpeg, FILM,
 RoQ, and PVA files. You can also use it to watch VCDs, SVCDs, DVDs,
 3ivx, RealMedia, and DivX movies.
 It supports a wide range of output drivers including X11, XVideo, DGA,
-OpenGL, SVGAlib, fbdev, AAlib, DirectFB etc. There are also nice
+OpenGL, SVGAlib, fbdev, AAlib etc. There are also nice
 antialiased shaded subtitles and OSD.
 The following on-default rpmbuild options are available:
 --with samba:   Enable Samba (smb://) support
 --with xmms:    Enable XMMS input plugin support
+--with a52dec:  Enable a52dec support
 --without amr:  Disable AMR support
+--with dca:     Enable libdca support
 --with faac:    Enable FAAC support
+--with faad:    Enable FAAD support
+--with dv:      Enable libdv support
 --with libmad:  Enable libmad support
+--with libmpeg2:Enable libmpeg2 support
+--with libmpg123:Enable libmpg123 support
 --with openal:  Enable OpenAL support
 --with jack:    Enable JACK support
 --with arts:    Enable aRts support
 --with esound:  Enable EsounD support
 --with dga:     Enable DGA support
---with directfb:Enable DirectFB support
 --with svgalib: Enable SVGAlib support
---with nemesi:  Enable libnemesi RTSP support
 
 %package        common
 Summary:        MPlayer common files
@@ -185,27 +184,31 @@ This package contains various scripts from MPlayer TOOLS directory.
     --enable-menu \\\
     --enable-radio \\\
     --enable-radio-capture \\\
-%ifarch %{ix86} x86_64 ppc ppc64 \
+%ifarch %{ix86} x86_64 %{power64} \
     --enable-runtime-cpudetection \\\
 %endif \
     --enable-unrarexec \\\
     \\\
-    %{!?_with_nemesi:--disable-nemesi} \\\
     %{!?_with_samba:--disable-smb} \\\
     \\\
     --disable-ffmpeg_a \\\
     \\\
+    %{!?_with_a52dec:--disable-liba52} \\\
     %{?_without_amr:--disable-libopencore_amrnb --disable-libopencore_amrwb} \\\
     %{!?_with_faac:--disable-faac} \\\
+    %{!?_with_faad:--disable-faad} \\\
+    %{!?_with_dca:--disable-libdca} \\\
+    %{!?_with_dv:--disable-libdv} \\\
     %{!?_with_libmad:--disable-mad} \\\
     %{?_with_libmpcdec:--enable-musepack} \\\
     --disable-libmpeg2-internal \\\
+    %{!?_with_libmpeg2:--disable-libmpeg2} \\\
+    %{!?_with_libmpg123:--disable-mpg123} \\\
     %{?_with_xmms:--enable-xmms} \\\
     %{?_with_xmms:--with-xmmslibdir=%{_libdir}} \\\
     \\\
     --disable-bitmap-font \\\
     %{!?_with_dga:--disable-dga1 --disable-dga2} \\\
-    %{!?_with_directfb:--disable-directfb} \\\
     %{!?_with_svgalib:--disable-svga} \\\
     --disable-termcap \\\
     --enable-xvmc \\\
@@ -302,13 +305,15 @@ done
 
 # Desktop file
 desktop-file-install \
-        --vendor livna \
         --dir $RPM_BUILD_ROOT%{_datadir}/applications \
         etc/%{name}.desktop
 
 # Codec dir
 install -dm 755 $RPM_BUILD_ROOT%{codecdir}
 sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}/vobshift
+
+%find_lang %{name} --with-man
+%find_lang mencoder --with-man
 
 %if 0%{?rhel}
 %post
@@ -327,8 +332,9 @@ fi
 %files
 %{_bindir}/mplayer
 
-%files common
-%doc AUTHORS Changelog Copyright LICENSE README
+%files common -f mplayer.lang
+%license LICENSE
+%doc AUTHORS Changelog Copyright README
 %dir %{_sysconfdir}/mplayer
 %config(noreplace) %{_sysconfdir}/mplayer/mplayer.conf
 %config(noreplace) %{_sysconfdir}/mplayer/input.conf
@@ -336,15 +342,6 @@ fi
 %dir %{codecdir}/
 %dir %{_datadir}/mplayer/
 %{_mandir}/man1/mplayer.1*
-%lang(cs) %{_mandir}/cs/man1/mplayer.1*
-%lang(de) %{_mandir}/de/man1/mplayer.1*
-%lang(es) %{_mandir}/es/man1/mplayer.1*
-%lang(fr) %{_mandir}/fr/man1/mplayer.1*
-%lang(hu) %{_mandir}/hu/man1/mplayer.1*
-%lang(it) %{_mandir}/it/man1/mplayer.1*
-%lang(pl) %{_mandir}/pl/man1/mplayer.1*
-%lang(ru) %{_mandir}/ru/man1/mplayer.1*
-%lang(zh_CN) %{_mandir}/zh_CN/man1/mplayer.1*
 
 %files gui
 %{_bindir}/gmplayer
@@ -352,18 +349,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/mplayer.png
 %{_datadir}/mplayer/skins/
 
-%files -n mencoder
+%files -n mencoder -f mencoder.lang
 %{_bindir}/mencoder
 %{_mandir}/man1/mencoder.1*
-%lang(cs) %{_mandir}/cs/man1/mencoder.1*
-%lang(de) %{_mandir}/de/man1/mencoder.1*
-%lang(es) %{_mandir}/es/man1/mencoder.1*
-%lang(fr) %{_mandir}/fr/man1/mencoder.1*
-%lang(hu) %{_mandir}/hu/man1/mencoder.1*
-%lang(it) %{_mandir}/it/man1/mencoder.1*
-%lang(pl) %{_mandir}/pl/man1/mencoder.1*
-%lang(ru) %{_mandir}/ru/man1/mencoder.1*
-%lang(zh_CN) %{_mandir}/zh_CN/man1/mencoder.1*
 
 %files doc
 %doc doc/en/ doc/tech/
@@ -391,6 +379,13 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Wed Jan 23 2019 Dominik Mierzejewski <rpm@greysector.net> - 1.3.0-28.20180620svn
+- Use HTTPS for URLs
+- Drop obsolete stuff
+- Make dependencies which duplicate existing FFmpeg features optional by default
+- Generate manpage translation list automatically
+- Use license macro
+
 * Mon Nov 12 2018 Antonio Trande <sagitter@fedoraproject.org> - 1.3.0-27.20180620svn
 - Rebuild for ffmpeg-3.4.5 on el7
 - Rebuild for x264-0.148 on el7
