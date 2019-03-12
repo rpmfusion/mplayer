@@ -7,9 +7,9 @@
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        %{rel}%{?pre:.%{pre}}%{?dist}.1
+Release:        %{rel}%{?pre:.%{pre}}%{?dist}.2
 %else
-Release:        %{rel}%{?dist}.1
+Release:        %{rel}%{?dist}.2
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -377,6 +377,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Mar 12 2019 Sérgio Basto <sergio@serjux.com> - 1.3.0-28.20180620svn.2
+- Mass rebuild for x264
+
 * Mon Mar 04 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.3.0-28.20180620svn.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
