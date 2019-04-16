@@ -1,15 +1,14 @@
 %define         codecdir %{_libdir}/codecs
-%define         pre 20180620svn
+%define         pre 20190416svn
 %define         svn 1
-%define         svnbuild 2018-06-20
-%define         rel 28
+%define         svnbuild 2019-04-16
 
 Name:           mplayer
 Version:        1.3.0
 %if 0%{?svn}
-Release:        %{rel}%{?pre:.%{pre}}%{?dist}.2
+Release:        29%{?pre:.%{pre}}%{?dist}
 %else
-Release:        %{rel}%{?dist}.2
+Release:        29%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -377,6 +376,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Apr 16 2019 Leigh Scott <leigh123linux@googlemail.com> - 1.3.0-29.20190416svn
+- Update to latest svn
+
 * Tue Mar 12 2019 Sérgio Basto <sergio@serjux.com> - 1.3.0-28.20180620svn.2
 - Mass rebuild for x264
 
