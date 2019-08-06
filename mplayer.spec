@@ -6,9 +6,9 @@
 Name:           mplayer
 Version:        1.4
 %if 0%{?svn}
-Release:        1{?pre:.%{pre}}%{?dist}
+Release:        2{?pre:.%{pre}}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -376,6 +376,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Aug 06 2019 Leigh Scott <leigh123linux@gmail.com> - 1.4-2
+- Rebuild for new ffmpeg version
+
 * Fri Apr 19 2019 Leigh Scott <leigh123linux@googlemail.com> - 1.4-1
 - Update to 1.4 release
 
