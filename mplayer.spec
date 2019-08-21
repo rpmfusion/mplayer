@@ -6,9 +6,9 @@
 Name:           mplayer
 Version:        1.4
 %if 0%{?svn}
-Release:        2{?pre:.%{pre}}%{?dist}
+Release:        3{?pre:.%{pre}}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -56,7 +56,6 @@ BuildRequires:  libGL-devel
 BuildRequires:  libXinerama-devel
 BuildRequires:  libXScrnSaver-devel
 BuildRequires:  libXv-devel
-BuildRequires:  libXvMC-devel
 BuildRequires:  libXxf86vm-devel
 BuildRequires:  libass-devel >= 0.9.10
 BuildRequires:  libbluray-devel
@@ -209,8 +208,6 @@ This package contains various scripts from MPlayer TOOLS directory.
     %{!?_with_dga:--disable-dga1 --disable-dga2} \\\
     %{!?_with_svgalib:--disable-svga} \\\
     --disable-termcap \\\
-    --enable-xvmc \\\
-    --with-xvmclib=XvMCW \\\
     \\\
     %{!?_with_arts:--disable-arts} \\\
     %{!?_with_esound:--disable-esd} \\\
@@ -376,6 +373,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Wed Aug 21 2019 Leigh Scott <leigh123linux@gmail.com> - 1.4-3
+- Drop XvMC support (rfbz #5328)
+
 * Tue Aug 06 2019 Leigh Scott <leigh123linux@gmail.com> - 1.4-2
 - Rebuild for new ffmpeg version
 
