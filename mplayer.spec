@@ -6,9 +6,9 @@
 Name:           mplayer
 Version:        1.4
 %if 0%{?svn}
-Release:        3{?pre:.%{pre}}%{?dist}
+Release:        4{?pre:.%{pre}}%{?dist}
 %else
-Release:        3%{?dist}
+Release:        4%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -373,6 +373,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Fri Nov 15 2019 Dominik 'Rathann' Mierzejewski <rpm@greysector.net> - 1.4-4
+- rebuild for libdvdread ABI bump
+
 * Wed Aug 21 2019 Leigh Scott <leigh123linux@gmail.com> - 1.4-3
 - Drop XvMC support (rfbz #5328)
 
