@@ -6,9 +6,9 @@
 Name:           mplayer
 Version:        1.4
 %if 0%{?svn}
-Release:        7{?pre:.%{pre}}%{?dist}
+Release:        8{?pre:.%{pre}}%{?dist}
 %else
-Release:        7%{?dist}
+Release:        8%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -373,6 +373,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Fri Apr 10 2020 Leigh Scott <leigh123linux@gmail.com> - 1.4-8
+- Rebuild for new libcdio version
+
 * Sat Feb 22 2020 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 1.4-7
 - Rebuild for ffmpeg-4.3 git
 
