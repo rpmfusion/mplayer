@@ -6,9 +6,9 @@
 Name:           mplayer
 Version:        1.4
 %if 0%{?svn}
-Release:        8{?pre:.%{pre}}%{?dist}
+Release:        9{?pre:.%{pre}}%{?dist}
 %else
-Release:        8%{?dist}
+Release:        9%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -33,6 +33,9 @@ Patch1:         %{name}-manlinks.patch
 # use system FFmpeg libraries
 Patch3:         %{name}-ffmpeg.patch
 
+Patch4:         0001-codecs.conf-Add-AV1-decoder-dav1d-via-FFmpeg.patch
+Patch5:         0002-codecs.conf-Add-AOM-AV1-decoder-via-FFmpeg.patch
+Patch6:         0003-codecs.conf-Bump-version.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -225,6 +228,9 @@ rm -rf ffmpeg
 %patch0 -p1 -b .config
 %patch1 -p1 -b .manlinks
 %patch3 -p1 -b .ffmpeg
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
@@ -309,7 +315,7 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %find_lang %{name} --with-man
 %find_lang mencoder --with-man
 
-%if 0%{?rhel}
+%if (0%{?rhel} && 0%{?rhel} <= 7)
 %post
 /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
@@ -373,6 +379,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Fri Apr 17 2020 Leigh Scott <leigh123linux@gmail.com> - 1.4-9
+- Add AV1 support
+
 * Fri Apr 10 2020 Leigh Scott <leigh123linux@gmail.com> - 1.4-8
 - Rebuild for new libcdio version
 
