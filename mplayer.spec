@@ -1,3 +1,7 @@
+%ifarch x86_64
+%global _lto_cflags %{nil}
+%endif
+
 %define         codecdir %{_libdir}/codecs
 #define         pre 20190416svn
 #define         svn 1
