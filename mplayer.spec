@@ -10,9 +10,9 @@
 Name:           mplayer
 Version:        1.4
 %if 0%{?svn}
-Release:        11{?pre:.%{pre}}%{?dist}
+Release:        12{?pre:.%{pre}}%{?dist}
 %else
-Release:        11%{?dist}
+Release:        12%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -383,6 +383,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Wed Oct 21 2020 Leigh Scott <leigh123linux@gmail.com> - 1.4-12
+- Rebuild for new libdvdread
+
 * Tue Aug 18 2020 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.4-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
