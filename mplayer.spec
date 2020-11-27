@@ -10,9 +10,9 @@
 Name:           mplayer
 Version:        1.4
 %if 0%{?svn}
-Release:        12{?pre:.%{pre}}%{?dist}
+Release:        13{?pre:.%{pre}}%{?dist}
 %else
-Release:        12%{?dist}
+Release:        13%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -383,6 +383,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Fri Nov 27 2020 Sérgio Basto <sergio@serjux.com> - 1.4-13
+- Mass rebuild for x264-0.161
+
 * Wed Oct 21 2020 Leigh Scott <leigh123linux@gmail.com> - 1.4-12
 - Rebuild for new libdvdread
 
