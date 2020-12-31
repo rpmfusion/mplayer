@@ -40,6 +40,7 @@ Patch3:         %{name}-ffmpeg.patch
 Patch4:         0001-codecs.conf-Add-AV1-decoder-dav1d-via-FFmpeg.patch
 Patch5:         0002-codecs.conf-Add-AOM-AV1-decoder-via-FFmpeg.patch
 Patch6:         0003-codecs.conf-Bump-version.patch
+Patch7:         mplayer.git-7ba6fc7408b5fb46c698e17471d12dd53d5685ec.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -235,6 +236,7 @@ rm -rf ffmpeg
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
