@@ -10,9 +10,9 @@
 Name:           mplayer
 Version:        1.4
 %if 0%{?svn}
-Release:        13{?pre:.%{pre}}%{?dist}
+Release:        14{?pre:.%{pre}}%{?dist}
 %else
-Release:        13%{?dist}
+Release:        14%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -383,6 +383,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu Dec 31 2020 Leigh Scott <leigh123linux@gmail.com> - 1.4-14
+- Rebuilt for new ffmpeg snapshot
+
 * Fri Nov 27 2020 Sérgio Basto <sergio@serjux.com> - 1.4-13
 - Mass rebuild for x264-0.161
 
