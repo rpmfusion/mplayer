@@ -10,9 +10,9 @@
 Name:           mplayer
 Version:        1.4
 %if 0%{?svn}
-Release:        14{?pre:.%{pre}}%{?dist}
+Release:        15{?pre:.%{pre}}%{?dist}
 %else
-Release:        14%{?dist}
+Release:        15%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -385,6 +385,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Wed Feb 03 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.4-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Thu Dec 31 2020 Leigh Scott <leigh123linux@gmail.com> - 1.4-14
 - Rebuilt for new ffmpeg snapshot
 
