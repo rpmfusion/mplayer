@@ -13,7 +13,7 @@ cleanup() {
 unset CDPATH
 pwd=$(pwd)
 svn=$(date +%Y-%m-%d)
-svn=2019-04-16
+#svn=2019-04-16
 dirname=mplayer-export-$svn
 mplayer_rev={$svn}
 #mplayer_rev=HEAD
@@ -26,5 +26,5 @@ svn_revision=`LC_ALL=C svn info 2> /dev/null | grep Revision | cut -d' ' -f2`
 sed -i -e 's/\(SVN-r[0-9]* \)/\1rpmfusion /' -e "s/UNKNOWN/SVN-r$svn_revision/" version.sh
 find . -type d -name .svn -print0 | xargs -0r rm -rf
 cd ..
-tar jcf "$pwd"/$dirname.tar.bz2 $dirname
+tar Jcf "$pwd"/$dirname.tar.xz $dirname
 cd - >/dev/null

@@ -3,16 +3,16 @@
 %endif
 
 %define         codecdir %{_libdir}/codecs
-#define         pre 20190416svn
-#define         svn 1
-#define         svnbuild 2019-04-16
+%define         pre 20210313svn
+%define         svn 1
+%define         svnbuild 2021-03-13
 
 Name:           mplayer
-Version:        1.4
+Version:        1.4.1
 %if 0%{?svn}
-Release:        15{?pre:.%{pre}}%{?dist}
+Release:        0.1%{?pre:.%{pre}}%{?dist}
 %else
-Release:        15%{?dist}
+Release:        2%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -24,7 +24,7 @@ License:        GPLv2+
 URL:            https://www.mplayerhq.hu/
 %if 0%{?svn}
 # run ./mplayer-snapshot.sh to get this
-Source0:        mplayer-export-%{svnbuild}.tar.bz2
+Source0:        mplayer-export-%{svnbuild}.tar.xz
 %else
 Source0:        https://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pre}.tar.xz
 %endif
@@ -35,12 +35,7 @@ Patch0:         %{name}-config.patch
 # use roff include statements instead of symlinks
 Patch1:         %{name}-manlinks.patch
 # use system FFmpeg libraries
-Patch3:         %{name}-ffmpeg.patch
-
-Patch4:         0001-codecs.conf-Add-AV1-decoder-dav1d-via-FFmpeg.patch
-Patch5:         0002-codecs.conf-Add-AOM-AV1-decoder-via-FFmpeg.patch
-Patch6:         0003-codecs.conf-Bump-version.patch
-Patch7:         mplayer.git-7ba6fc7408b5fb46c698e17471d12dd53d5685ec.patch
+Patch2:         %{name}-ffmpeg.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -232,11 +227,7 @@ rm -rf ffmpeg
 %endif
 %patch0 -p1 -b .config
 %patch1 -p1 -b .manlinks
-%patch3 -p1 -b .ffmpeg
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
+%patch2 -p1 -b .ffmpeg
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
@@ -385,6 +376,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Mar 13 2021 Leigh Scott <leigh123linux@gmail.com> - 1.4.1-0.1.20210313svn
+- Update to latest svn
+
 * Wed Feb 03 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.4-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
