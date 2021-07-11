@@ -10,9 +10,9 @@
 Name:           mplayer
 Version:        1.4.1
 %if 0%{?svn}
-Release:        0.1%{?pre:.%{pre}}%{?dist}
+Release:        0.2%{?pre:.%{pre}}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -376,6 +376,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Jul 11 2021 Sérgio Basto <sergio@serjux.com> - 1.4.1-0.2.20210313svn
+- Mass rebuild for x264-0.163
+
 * Sat Mar 13 2021 Leigh Scott <leigh123linux@gmail.com> - 1.4.1-0.1.20210313svn
 - Update to latest svn
 
