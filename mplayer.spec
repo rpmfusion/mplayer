@@ -3,14 +3,14 @@
 %endif
 
 %define         codecdir %{_libdir}/codecs
-%define         pre 20210313svn
+%define         pre 20211109svn
 %define         svn 1
-%define         svnbuild 2021-03-13
+%define         svnbuild 2021-11-09
 
 Name:           mplayer
 Version:        1.4.1
 %if 0%{?svn}
-Release:        0.4%{?pre:.%{pre}}%{?dist}
+Release:        0.5%{?pre:.%{pre}}%{?dist}
 %else
 Release:        5%{?dist}
 %endif
@@ -376,6 +376,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Nov 09 2021 Leigh Scott <leigh123linux@gmail.com> - 1.4.1-0.5.20211109svn
+- Update to latest svn
+
 * Tue Nov 09 2021 Leigh Scott <leigh123linux@gmail.com> - 1.4.1-0.4.20210313svn
 - Rebuilt for new ffmpeg snapshot
 
