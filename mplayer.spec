@@ -3,16 +3,16 @@
 %endif
 
 %define         codecdir %{_libdir}/codecs
-%define         pre 20211109svn
-%define         svn 1
-%define         svnbuild 2021-11-09
+#define         pre 20211109svn
+#define         svn 1
+#define         svnbuild 2021-11-09
 
 Name:           mplayer
-Version:        1.4.1
+Version:        1.5
 %if 0%{?svn}
-Release:        0.6%{?pre:.%{pre}}%{?dist}
+Release:        0.1%{?pre:.%{pre}}%{?dist}
 %else
-Release:        6%{?dist}
+Release:        1%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -376,6 +376,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Mon Feb 28 2022 Leigh Scott <leigh123linux@gmail.com> - 1.5-1
+- Update to 1.5 release
+
 * Wed Feb 09 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.4.1-0.6.20211109svn
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
 
