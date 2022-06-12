@@ -10,9 +10,9 @@
 Name:           mplayer
 Version:        1.5
 %if 0%{?svn}
-Release:        0.1%{?pre:.%{pre}}%{?dist}
+Release:        0.2%{?pre:.%{pre}}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -376,6 +376,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Jun 12 2022 Sérgio Basto <sergio@serjux.com> - 1.5-2
+- Mass rebuild for x264-0.164
+
 * Mon Feb 28 2022 Leigh Scott <leigh123linux@gmail.com> - 1.5-1
 - Update to 1.5 release
 
