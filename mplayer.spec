@@ -2,17 +2,17 @@
 %global _lto_cflags %{nil}
 %endif
 
-%define         codecdir %{_libdir}/codecs
-#define         pre 20211109svn
-#define         svn 1
-#define         svnbuild 2021-11-09
+%global         codecdir %{_libdir}/codecs
+%global         pre 20220726svn
+%global         svn 1
+%global         svnbuild 2022-07-26
 
 Name:           mplayer
-Version:        1.5
+Version:        1.5.1
 %if 0%{?svn}
-Release:        0.2%{?pre:.%{pre}}%{?dist}
+Release:        0.1%{?pre:.%{pre}}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        1%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -376,6 +376,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Aug 06 2022 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.1.20220726svn
+- Update to latest svn
+
 * Sun Jun 12 2022 Sérgio Basto <sergio@serjux.com> - 1.5-2
 - Mass rebuild for x264-0.164
 
