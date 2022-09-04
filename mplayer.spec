@@ -10,9 +10,9 @@
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.1%{?pre:.%{pre}}%{?dist}
+Release:        0.2%{?pre:.%{pre}}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -103,6 +103,7 @@ BuildRequires:  libxml2
 BuildRequires:  libxslt
 %endif
 Requires:       mplayer-common = %{version}-%{release}
+Requires:       ffmpeg-libs%{?_isa}
 Provides:       mplayer-backend
 
 %description
@@ -140,6 +141,7 @@ This package contains common files for MPlayer packages.
 %package        gui
 Summary:        GUI for MPlayer
 Requires:       mplayer-common = %{version}-%{release}
+Requires:       ffmpeg-libs%{?_isa}
 Requires:       hicolor-icon-theme
 
 %description    gui
@@ -148,6 +150,7 @@ This package contains a GUI for MPlayer and a default skin for it.
 %package     -n mencoder
 Summary:        MPlayer movie encoder
 Requires:       mplayer-common = %{version}-%{release}
+Requires:       ffmpeg-libs%{?_isa}
 
 %description -n mencoder
 This package contains the MPlayer movie encoder. 
@@ -376,6 +379,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Sep 04 2022 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.2.20220726svn
+- Add requires ffmpeg-libs
+
 * Sat Aug 06 2022 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.1.20220726svn
 - Update to latest svn
 
