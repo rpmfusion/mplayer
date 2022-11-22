@@ -10,9 +10,9 @@
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.2%{?pre:.%{pre}}%{?dist}
+Release:        0.3%{?pre:.%{pre}}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -235,6 +235,8 @@ rm -rf ffmpeg
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
 
+sed -i '1s=^#! */usr/bin/\(python\|env python\)[23]\?=#!%{__python3}=' TOOLS/{mphelp_check,vobshift}.py
+
 %build
 pushd GUI
 export CC=gcc
@@ -379,6 +381,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Nov 22 2022 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.3.20220726svn
+- Fix rfbz#6500
+
 * Sun Sep 04 2022 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.2.20220726svn
 - Add requires ffmpeg-libs
 
