@@ -3,16 +3,16 @@
 %endif
 
 %global         codecdir %{_libdir}/codecs
-%global         pre 20220726svn
+%global         pre 20230228svn
 %global         svn 1
-%global         svnbuild 2022-07-26
+%global         svnbuild 2023-02-28
 
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.3%{?pre:.%{pre}}%{?dist}
+Release:        0.4%{?pre:.%{pre}}%{?dist}
 %else
-Release:        3%{?dist}
+Release:        4%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -381,6 +381,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Feb 28 2023 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.4.20230228svn
+- Rebuild for new ffmpeg
+
 * Tue Nov 22 2022 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.3.20220726svn
 - Fix rfbz#6500
 
