@@ -140,7 +140,6 @@ This package contains common files for MPlayer packages.
 %package        gui
 Summary:        GUI for MPlayer
 Requires:       mplayer-common = %{version}-%{release}
-Requires:       ffmpeg-libs%{?_isa}
 Requires:       hicolor-icon-theme
 
 %description    gui
@@ -149,7 +148,6 @@ This package contains a GUI for MPlayer and a default skin for it.
 %package     -n mencoder
 Summary:        MPlayer movie encoder
 Requires:       mplayer-common = %{version}-%{release}
-Requires:       ffmpeg-libs%{?_isa}
 
 %description -n mencoder
 This package contains the MPlayer movie encoder. 
