@@ -10,9 +10,9 @@
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.5%{?pre:.%{pre}}%{?dist}
+Release:        0.6%{?pre:.%{pre}}%{?dist}
 %else
-Release:        5%{?dist}
+Release:        6%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -103,7 +103,6 @@ BuildRequires:  libxml2
 BuildRequires:  libxslt
 %endif
 Requires:       mplayer-common = %{version}-%{release}
-Requires:       ffmpeg-libs%{?_isa}
 Provides:       mplayer-backend
 
 %description
@@ -382,6 +381,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue May 30 2023 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.6.20230530svn
+- Drop requires ffmpeg-libs
+
 * Tue May 30 2023 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.5.20230530svn
 - Use compat-ffmpeg4 as mplayer doesn't support ffmpeg-6.0 (rfbz#6692)
 
