@@ -3,16 +3,16 @@
 %endif
 
 %global         codecdir %{_libdir}/codecs
-%global         pre 20230228svn
+%global         pre 20230530svn
 %global         svn 1
-%global         svnbuild 2023-02-28
+%global         svnbuild 2023-05-30
 
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.4%{?pre:.%{pre}}%{?dist}
+Release:        0.5%{?pre:.%{pre}}%{?dist}
 %else
-Release:        4%{?dist}
+Release:        5%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -44,7 +44,7 @@ BuildRequires:  alsa-lib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  enca-devel
-BuildRequires:  ffmpeg-devel >= 0.10
+BuildRequires:  compat-ffmpeg4-devel
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
 BuildRequires:  fribidi-devel
@@ -228,9 +228,9 @@ This package contains various scripts from MPlayer TOOLS directory.
 %setup -q -n MPlayer-%{version}%{?pre}
 rm -rf ffmpeg
 %endif
-%patch0 -p1 -b .config
-%patch1 -p1 -b .manlinks
-%patch2 -p1 -b .ffmpeg
+%patch -P 0 -p1 -b .config
+%patch -P 1 -p1 -b .manlinks
+%patch -P 2 -p1 -b .ffmpeg
 
 mkdir GUI
 cp -a `ls -1|grep -v GUI` GUI/
@@ -241,6 +241,7 @@ sed -i '1s=^#! */usr/bin/\(python\|env python\)[23]\?=#!%{__python3}=' TOOLS/{mp
 pushd GUI
 export CC=gcc
 export CXX=g++
+export PKG_CONFIG_PATH="%{_libdir}/compat-ffmpeg4/pkgconfig/"
 %{mp_configure}--enable-gui --disable-mencoder
 
 %make_build V=1
@@ -381,6 +382,9 @@ fi
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue May 30 2023 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.5.20230530svn
+- Use compat-ffmpeg4 as mplayer doesn't support ffmpeg-6.0 (rfbz#6692)
+
 * Tue Feb 28 2023 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.4.20230228svn
 - Rebuild for new ffmpeg
 
