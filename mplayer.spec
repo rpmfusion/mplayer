@@ -10,9 +10,9 @@
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.8%{?pre:.%{pre}}%{?dist}
+Release:        0.9%{?pre:.%{pre}}%{?dist}
 %else
-Release:        8%{?dist}
+Release:        9%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -43,7 +43,7 @@ BuildRequires:  alsa-lib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  enca-devel
-BuildRequires:  compat-ffmpeg4-devel
+BuildRequires:  compat-ffmpeg5-devel
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
 BuildRequires:  fribidi-devel
@@ -224,7 +224,7 @@ rm -rf ffmpeg
 sed -i '1s=^#! */usr/bin/\(python\|env python\)[23]\?=#!%{__python3}=' TOOLS/{mphelp_check,vobshift}.py
 
 %build
-export PKG_CONFIG_PATH="%{_libdir}/compat-ffmpeg4/pkgconfig/"
+export PKG_CONFIG_PATH="%{_libdir}/compat-ffmpeg5/pkgconfig/"
 export CC=gcc
 export CXX=g++
 %{mp_configure}
@@ -319,6 +319,9 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Jan 09 2024 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.9.20230811svn
+- Use compat-ffmpeg5
+
 * Fri Aug 11 2023 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.8.20230811svn
 - Update snapshot
 - Drop GUI
