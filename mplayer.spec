@@ -1,6 +1,5 @@
-%ifarch x86_64
 %global _lto_cflags %{nil}
-%endif
+%global build_type_safety_c 0
 
 %global         codecdir %{_libdir}/codecs
 %global         pre 20230811svn
