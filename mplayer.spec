@@ -2,16 +2,16 @@
 %global build_type_safety_c 0
 
 %global         codecdir %{_libdir}/codecs
-%global         pre 20230811svn
+%global         pre 20240317svn
 %global         svn 1
-%global         svnbuild 2023-08-11
+%global         svnbuild 2024-03-17
 
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.10%{?pre:.%{pre}}%{?dist}
+Release:        0.11%{?pre:.%{pre}}%{?dist}
 %else
-Release:        10%{?dist}
+Release:        11%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -27,6 +27,7 @@ Source0:        mplayer-export-%{svnbuild}.tar.xz
 %else
 Source0:        https://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pre}.tar.xz
 %endif
+Source1:        https://www.mplayerhq.hu/MPlayer/skins/Blue-1.11.tar.bz2
 Source10:       mplayer-snapshot.sh
 # set defaults for Fedora
 Patch0:         %{name}-config.patch
@@ -34,6 +35,7 @@ Patch0:         %{name}-config.patch
 Patch1:         %{name}-manlinks.patch
 # use system FFmpeg libraries
 Patch2:         %{name}-ffmpeg.patch
+Patch3:         mplayer-mga-fix-using-gettext-0.22.5.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -42,13 +44,14 @@ BuildRequires:  alsa-lib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  enca-devel
-BuildRequires:  compat-ffmpeg5-devel
+BuildRequires:  ffmpeg-devel
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
 BuildRequires:  fribidi-devel
 BuildRequires:  gcc-c++
 BuildRequires:  giflib-devel
 BuildRequires:  gsm-devel
+BuildRequires:  gtk2-devel
 BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  ladspa-devel
 BuildRequires:  lame-devel
@@ -76,7 +79,7 @@ BuildRequires:  speex-devel >= 1.1
 BuildRequires:  twolame-devel
 BuildRequires:  x264-devel >= 0.0.0-0.28
 BuildRequires:  xvidcore-devel >= 0.9.2
-BuildRequires:  yasm
+BuildRequires:  nasm
 %{?_with_a52dec:BuildRequires:  a52dec-devel}
 %{?_with_arts:BuildRequires: arts-devel}
 %{?_with_dga:BuildRequires: libXxf86dga-devel}
@@ -101,7 +104,6 @@ BuildRequires:  libxslt
 %endif
 Requires:       mplayer-common = %{version}-%{release}
 Provides:       mplayer-backend
-Obsoletes:      mplayer-gui
 
 %description
 MPlayer is a movie player that plays most MPEG, VOB, AVI, OGG/OGM,
@@ -134,6 +136,14 @@ Summary:        MPlayer common files
 
 %description    common
 This package contains common files for MPlayer packages.
+
+%package        gui
+Summary:        GUI for MPlayer
+Requires:       mplayer-common = %{version}-%{release}
+Requires:       hicolor-icon-theme
+
+%description    gui
+This package contains a GUI for MPlayer and a default skin for it.
 
 %package     -n mencoder
 Summary:        MPlayer movie encoder
@@ -218,12 +228,22 @@ rm -rf ffmpeg
 %patch -P 0 -p1 -b .config
 %patch -P 1 -p1 -b .manlinks
 %patch -P 2 -p1 -b .ffmpeg
+%patch -P 3 -p1 -b .gui_fix
 
+mkdir GUI
+cp -a `ls -1|grep -v GUI` GUI/
 
 sed -i '1s=^#! */usr/bin/\(python\|env python\)[23]\?=#!%{__python3}=' TOOLS/{mphelp_check,vobshift}.py
 
 %build
-export PKG_CONFIG_PATH="%{_libdir}/compat-ffmpeg5/pkgconfig/"
+pushd GUI
+export CC=gcc
+export CXX=g++
+%{mp_configure}--enable-gui --disable-mencoder
+
+%make_build V=1
+popd
+
 export CC=gcc
 export CXX=g++
 %{mp_configure}
@@ -267,6 +287,27 @@ install -Dpm 644 etc/example.conf \
 
 install -pm 644 etc/{input,menu}.conf $RPM_BUILD_ROOT%{_sysconfdir}/mplayer/
 
+# GUI mplayer
+install -pm 755 GUI/%{name} $RPM_BUILD_ROOT%{_bindir}/gmplayer
+
+# Default skin
+install -dm 755 $RPM_BUILD_ROOT%{_datadir}/mplayer/skins
+tar xjC $RPM_BUILD_ROOT%{_datadir}/mplayer/skins --exclude=.svn -f %{SOURCE1}
+ln -s Blue $RPM_BUILD_ROOT%{_datadir}/mplayer/skins/default
+
+# Icons
+for iconsize in 16x16 22x22 24x24 32x32 48x48 256x256
+do
+install -dm 755 $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/$iconsize/apps
+install -pm 644 etc/mplayer$iconsize.png \
+    $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/$iconsize/apps/mplayer.png
+done
+
+# Desktop file
+desktop-file-install \
+        --dir $RPM_BUILD_ROOT%{_datadir}/applications \
+        etc/%{name}.desktop
+
 # Codec dir
 install -dm 755 $RPM_BUILD_ROOT%{codecdir}
 sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}/vobshift
@@ -287,6 +328,12 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %dir %{codecdir}/
 %dir %{_datadir}/mplayer/
 %{_mandir}/man1/mplayer.1*
+
+%files gui
+%{_bindir}/gmplayer
+%{_datadir}/applications/*mplayer.desktop
+%{_datadir}/icons/hicolor/*/apps/mplayer.png
+%{_datadir}/mplayer/skins/
 
 %files -n mencoder -f mencoder.lang
 %{_bindir}/mencoder
@@ -318,6 +365,10 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Mar 17 2024 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.11.20240317svn
+- Update snapshot
+- Readd GUI
+
 * Sun Feb 04 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.5.1-0.10.20230811svn
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
 
