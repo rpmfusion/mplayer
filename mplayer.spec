@@ -100,9 +100,7 @@ BuildRequires:  libxslt
 %endif
 Requires:       mplayer-common = %{version}-%{release}
 Provides:       mplayer-backend
-%if 0%{?fedora} >= 39 || 0%{?rhel}
 Obsoletes:      mplayer-gui
-%endif
 
 %description
 MPlayer is a movie player that plays most MPEG, VOB, AVI, OGG/OGM,
