@@ -2,16 +2,16 @@
 %global build_type_safety_c 0
 
 %global         codecdir %{_libdir}/codecs
-%global         pre 20240317svn
+%global         pre 20240409svn
 %global         svn 1
-%global         svnbuild 2024-03-17
+%global         svnbuild 2024-04-09
 
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.12%{?pre:.%{pre}}%{?dist}
+Release:        0.13%{?pre:.%{pre}}%{?dist}
 %else
-Release:        12%{?dist}
+Release:        13%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -315,6 +315,9 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Tue Apr 09 2024 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.13.20240409svn
+- Update snapshot to fix AVChannelLayout issue (rfbz#6911)
+
 * Mon Mar 18 2024 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.12.20240317svn
 - Drop GUI
 
