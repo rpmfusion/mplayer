@@ -9,9 +9,9 @@
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.14%{?pre:.%{pre}}%{?dist}
+Release:        0.15%{?pre:.%{pre}}%{?dist}
 %else
-Release:        14%{?dist}
+Release:        15%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -315,6 +315,9 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Fri Aug 02 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.5.1-0.15.20240415svn
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
+
 * Mon Apr 15 2024 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.14.20240415svn
 - Update snapshot to fix AVChannelLayout issue (rfbz#6911)
 
