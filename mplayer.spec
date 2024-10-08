@@ -34,6 +34,7 @@ Patch0:         %{name}-config.patch
 Patch1:         %{name}-manlinks.patch
 # use system FFmpeg libraries
 Patch2:         %{name}-ffmpeg.patch
+Patch3:         0204_fix-ftbfs-jack-ffmpeg7.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -217,6 +218,7 @@ rm -rf ffmpeg
 %patch -P 0 -p1 -b .config
 %patch -P 1 -p1 -b .manlinks
 %patch -P 2 -p1 -b .ffmpeg
+%patch -P 3 -p1 -b .ffmpeg7
 
 sed -i '1s=^#! */usr/bin/\(python\|env python\)[23]\?=#!%{__python3}=' TOOLS/{mphelp_check,vobshift}.py
 
