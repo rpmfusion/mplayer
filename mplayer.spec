@@ -48,7 +48,7 @@ BuildRequires:  fribidi-devel
 BuildRequires:  gcc-c++
 BuildRequires:  giflib-devel
 BuildRequires:  gsm-devel
-BuildRequires:  jack-audio-connection-kit-devel
+#BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  ladspa-devel
 BuildRequires:  lame-devel
 BuildRequires:  libGL-devel
