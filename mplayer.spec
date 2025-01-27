@@ -1,17 +1,16 @@
 %global _lto_cflags %{nil}
-%global build_type_safety_c 0
 
 %global         codecdir %{_libdir}/codecs
-%global         pre 20241008svn
+%global         pre 20250127svn
 %global         svn 1
-%global         svnbuild 2024-10-08
+%global         svnbuild 2025-01-27
 
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.16%{?pre:.%{pre}}%{?dist}
+Release:        0.17%{?pre:.%{pre}}%{?dist}
 %else
-Release:        16%{?dist}
+Release:        17%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -101,7 +100,7 @@ BuildRequires:  libxslt
 %endif
 Requires:       mplayer-common = %{version}-%{release}
 Provides:       mplayer-backend
-Obsoletes:      mplayer-gui
+Obsoletes:      mplayer-gui <= %{version}-%{release}
 
 %description
 MPlayer is a movie player that plays most MPEG, VOB, AVI, OGG/OGM,
@@ -317,6 +316,9 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Mon Jan 27 2025 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.17.20250127svn
+- Update snapshot
+
 * Tue Oct 08 2024 Nicolas Chauvet <kwizart@gmail.com> - 1.5.1-0.16.20241008svn
 - Update snapshot
 
