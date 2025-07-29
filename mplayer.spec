@@ -40,7 +40,9 @@ BuildRequires:  a52dec-devel
 BuildRequires:  aalib-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  bzip2-devel
+%if ! %{?rhel} >= 10
 BuildRequires:  enca-devel
+%endif
 BuildRequires:  ffmpeg-devel
 BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel >= 2.0.9
@@ -53,7 +55,9 @@ BuildRequires:  ladspa-devel
 BuildRequires:  lame-devel
 BuildRequires:  libGL-devel
 BuildRequires:  libXinerama-devel
+%if ! %{?rhel} >= 10
 BuildRequires:  libXScrnSaver-devel
+%endif
 BuildRequires:  libXv-devel
 BuildRequires:  libXxf86vm-devel
 BuildRequires:  libass-devel >= 0.9.10
