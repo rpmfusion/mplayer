@@ -8,9 +8,9 @@
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.19%{?pre:.%{pre}}%{?dist}
+Release:        0.20%{?pre:.%{pre}}%{?dist}
 %else
-Release:        19%{?dist}
+Release:        20%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -320,6 +320,9 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Wed Nov 05 2025 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.20.20250127svn
+- Rebuild for ffmpeg-8.0
+
 * Thu Sep 04 2025 Sérgio Basto <sergio@serjux.com> - 1.5.1-0.19.20250127svn
 - Rebuild for x264
 
