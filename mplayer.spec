@@ -34,6 +34,8 @@ Patch1:         %{name}-manlinks.patch
 # use system FFmpeg libraries
 Patch2:         %{name}-ffmpeg.patch
 Patch3:         0204_fix-ftbfs-jack-ffmpeg7.patch
+# https://lists.mplayerhq.hu/pipermail/mplayer-dev-eng/2025-May/074270.html
+Patch4:         fix-ffmpeg8.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  a52dec-devel
@@ -69,7 +71,6 @@ BuildRequires:  libdvdnav-devel >= 4.1.3-1
 BuildRequires:  libjpeg-devel
 BuildRequires:  librtmp-devel
 BuildRequires:  libtheora-devel
-BuildRequires:  libvdpau-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  lirc-devel
 BuildRequires:  lzo-devel >= 2
@@ -222,6 +223,7 @@ rm -rf ffmpeg
 %patch -P 1 -p1 -b .manlinks
 %patch -P 2 -p1 -b .ffmpeg
 %patch -P 3 -p1 -b .ffmpeg7
+%patch -P 4 -p1 -b .ffmpeg8
 
 sed -i '1s=^#! */usr/bin/\(python\|env python\)[23]\?=#!%{__python3}=' TOOLS/{mphelp_check,vobshift}.py
 
@@ -322,6 +324,7 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %changelog
 * Thu Nov 06 2025 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.21.20251106svn
 - Update snapshot
+- Remove vdpau build requires
 
 * Wed Nov 05 2025 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.20.20250127svn
 - Rebuild for ffmpeg-8.0
