@@ -1,16 +1,16 @@
 %global _lto_cflags %{nil}
 
 %global         codecdir %{_libdir}/codecs
-%global         pre 20250127svn
+%global         pre 20251106svn
 %global         svn 1
-%global         svnbuild 2025-01-27
+%global         svnbuild 2025-11-06
 
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.20%{?pre:.%{pre}}%{?dist}
+Release:        0.21%{?pre:.%{pre}}%{?dist}
 %else
-Release:        20%{?dist}
+Release:        21%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -320,6 +320,9 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Thu Nov 06 2025 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.21.20251106svn
+- Update snapshot
+
 * Wed Nov 05 2025 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.20.20250127svn
 - Rebuild for ffmpeg-8.0
 
