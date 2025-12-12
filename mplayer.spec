@@ -8,9 +8,9 @@
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.21%{?pre:.%{pre}}%{?dist}
+Release:        0.22%{?pre:.%{pre}}%{?dist}
 %else
-Release:        21%{?dist}
+Release:        22%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -322,6 +322,9 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Fri Dec 12 2025 Nicolas Chauvet <kwizart@gmail.com> - 1.5.1-0.22.20251106svn
+- Rebuilt for libbluray
+
 * Thu Nov 06 2025 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.21.20251106svn
 - Update snapshot
 - Remove vdpau build requires
