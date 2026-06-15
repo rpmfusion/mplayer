@@ -15,9 +15,9 @@ Release:        23%{?dist}
 Summary:        Movie player playing most video formats and DVDs
 
 %if 0%{!?_without_amr:1}
-License:        GPLv3+
+License:        GPL-3.0-or-later
 %else
-License:        GPLv2+
+License:        GPL-2.0-or-later
 %endif
 URL:            https://www.mplayerhq.hu/
 %if 0%{?svn}
@@ -38,7 +38,6 @@ Patch3:         0204_fix-ftbfs-jack-ffmpeg7.patch
 Patch4:         fix-ffmpeg8.patch
 
 BuildRequires:  SDL-devel
-BuildRequires:  a52dec-devel
 BuildRequires:  aalib-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  bzip2-devel
@@ -144,7 +143,7 @@ Summary:        MPlayer movie encoder
 Requires:       mplayer-common = %{version}-%{release}
 
 %description -n mencoder
-This package contains the MPlayer movie encoder. 
+This package contains the MPlayer movie encoder.
 
 %package        doc
 Summary:        MPlayer documentation in various languages
@@ -684,9 +683,9 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 * Sat Oct 20 2012 Julian Sikorski <belegdol@fedoraproject.org> - 1.1-3.20121008svn
 - 20121008 snapshot
 - Internal tremor copy is no more
-- Dropped the included gmplayer subtitles patch 
+- Dropped the included gmplayer subtitles patch
 
-* Wed Sep 05 2012 Nicolas Chauvet <kwizart@gmail.com>
+* Wed Sep 05 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.1-2
 - Rebuilt for x264 ABI 125
 - Use --cpu-runtime-detection only on supported arches - rfbz#2467
 
@@ -1026,8 +1025,8 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 * Sat Mar 10 2007 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.70.rc1
 - fix buffer overflow in DMO_VideoDecoder.c
 
-* Wed Jan 03 2007 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.69.rc1                                          
-- fix buffer overflow in asmrp.c 
+* Wed Jan 03 2007 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.69.rc1
+- fix buffer overflow in asmrp.c
 
 * Thu Dec 28 2006 Dominik Mierzejewski <rpm at greysector.net> - 1.0-0.68.rc1
 - don't depend on urw-fonts, use generic Sans font instead
