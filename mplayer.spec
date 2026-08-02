@@ -8,9 +8,9 @@
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?svn}
-Release:        0.23%{?pre:.%{pre}}%{?dist}
+Release:        0.24%{?pre:.%{pre}}%{?dist}
 %else
-Release:        23%{?dist}
+Release:        24%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -321,6 +321,9 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Aug 02 2026 RPM Fusion Release Engineering <leigh123linux@rpmfusion.org> - 1.5.1-0.24.20251106svn
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+
 * Mon Feb 02 2026 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.5.1-0.23.20251106svn
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_44_Mass_Rebuild
 
