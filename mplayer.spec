@@ -36,6 +36,8 @@ Patch2:         %{name}-ffmpeg.patch
 Patch3:         0204_fix-ftbfs-jack-ffmpeg7.patch
 # https://lists.mplayerhq.hu/pipermail/mplayer-dev-eng/2025-May/074270.html
 Patch4:         fix-ffmpeg8.patch
+# https://github.com/OpenMandrivaAssociation/mplayer/blob/master/mplayer-ffmpeg-9-sample-fmts.patch
+Patch5:         mplayer-ffmpeg-9-sample-fmts.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  aalib-devel
@@ -223,6 +225,7 @@ rm -rf ffmpeg
 %patch -P 2 -p1 -b .ffmpeg
 %patch -P 3 -p1 -b .ffmpeg7
 %patch -P 4 -p1 -b .ffmpeg8
+%patch -P 5 -p1 -b .ffmpeg9
 
 sed -i '1s=^#! */usr/bin/\(python\|env python\)[23]\?=#!%{__python3}=' TOOLS/{mphelp_check,vobshift}.py
 
