@@ -1,16 +1,19 @@
+# globals for mplayer-38531-20260727-f401198.tar.bz2
+%global gitversion  38531
+%global gitdate     20260727
+%global gittag      f401198
+
 %global _lto_cflags %{nil}
 
 %global         codecdir %{_libdir}/codecs
-%global         pre 20251106svn
-%global         svn 1
-%global         svnbuild 2025-11-06
+%global         git 1
 
 Name:           mplayer
 Version:        1.5.1
-%if 0%{?svn}
-Release:        0.25%{?pre:.%{pre}}%{?dist}
+%if 0%{?git}
+Release:        0.26.r%{gitversion}.%{gitdate}.%{gittag}%{?dist}
 %else
-Release:        25%{?dist}
+Release:        26%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -20,13 +23,14 @@ License:        GPL-3.0-or-later
 License:        GPL-2.0-or-later
 %endif
 URL:            https://www.mplayerhq.hu/
-%if 0%{?svn}
+%if 0%{?git}
 # run ./mplayer-snapshot.sh to get this
-Source0:        mplayer-export-%{svnbuild}.tar.xz
+Source0:        mplayer-%{gitversion}-%{gitdate}-%{gittag}.tar.bz2
 %else
 Source0:        https://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pre}.tar.xz
 %endif
-Source10:       mplayer-snapshot.sh
+# new mplayer-snapshot.sh that use git
+Source11:       mplayer-localgitsnapshot.sh
 # set defaults for Fedora
 Patch0:         %{name}-config.patch
 # use roff include statements instead of symlinks
@@ -97,8 +101,8 @@ BuildRequires:  nasm
 %{?_with_samba:BuildRequires: libsmbclient-devel}
 %{?_with_svgalib:BuildRequires: svgalib-devel}
 %{?_with_xmms:BuildRequires: xmms-devel}
-%if 0%{?svn}
-# for XML docs, SVN only
+%if 0%{?git}
+# for XML docs, Git only
 BuildRequires:  docbook-dtds
 BuildRequires:  docbook-style-xsl
 BuildRequires:  libxml2
@@ -214,8 +218,8 @@ This package contains various scripts from MPlayer TOOLS directory.
 
 
 %prep
-%if 0%{?svn}
-%setup -q -n mplayer-export-%{svnbuild}
+%if 0%{?git}
+%setup -q -n mplayer-%{gitversion}
 %else
 %setup -q -n MPlayer-%{version}%{?pre}
 rm -rf ffmpeg
@@ -236,7 +240,7 @@ export CXX=g++
 
 %make_build V=1
 
-%if 0%{?svn}
+%if 0%{?git}
 # build HTML documentation from XML files 
 %make_build V=1 html-chunked
 %endif
@@ -324,6 +328,9 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sat Sep 12 2026 Sérgio Basto <sergio@serjux.com> - 1.5.1-0.26.r38531.20260727.f401198
+- Switch MPlayer from SVN to git.ffmpeg.org/mplayer.git
+
 * Sat Aug 22 2026 Leigh Scott <leigh123linux@gmail.com> - 1.5.1-0.25.20251106svn
 - Rebuild for new ffmpeg
 
