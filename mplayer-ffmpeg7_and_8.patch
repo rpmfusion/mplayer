@@ -1,0 +1,148 @@
+diff -rup mplayer-38544.orig/libaf/af_lavcac3enc.c mplayer-38544/libaf/af_lavcac3enc.c
+--- mplayer-38544.orig/libaf/af_lavcac3enc.c	2026-11-23 01:37:54.153430259 +0000
++++ mplayer-38544/libaf/af_lavcac3enc.c	2026-11-23 01:35:21.290020531 +0000
+@@ -282,12 +282,6 @@ static int af_open(af_instance_t* af){
+         return AF_ERROR;
+     }
+ 
+-    s->lavc_actx = avcodec_alloc_context3(NULL);
+-    if (!s->lavc_actx) {
+-        mp_msg(MSGT_AFILTER, MSGL_ERR, MSGTR_CouldntAllocateLavcContext);
+-        return AF_ERROR;
+-    }
+-
+     return AF_OK;
+ }
+ 
+diff -rup mplayer-38544.orig/libao2/ao_jack.c mplayer-38544/libao2/ao_jack.c
+--- mplayer-38544.orig/libao2/ao_jack.c	2026-11-23 01:37:54.153626043 +0000
++++ mplayer-38544/libao2/ao_jack.c	2026-11-23 01:35:21.305217049 +0000
+@@ -71,7 +71,7 @@ static volatile float callback_time = 0;
+ #define BUFFSIZE (NUM_CHUNKS * CHUNK_SIZE)
+ 
+ //! buffer for audio data
+-static AVFifoBuffer *buffer;
++static AVFifo *buffer;
+ 
+ /**
+  * \brief insert len bytes into buffer
+@@ -82,9 +82,10 @@ static AVFifoBuffer *buffer;
+  * If there is not enough room, the buffer is filled up
+  */
+ static int write_buffer(unsigned char* data, int len) {
+-  int free = av_fifo_space(buffer);
++  int free = av_fifo_can_write(buffer);
+   if (len > free) len = free;
+-  return av_fifo_generic_write(buffer, data, len, NULL);
++  av_fifo_write(buffer, data, len);
++  return len;
+ }
+ 
+ static void silence(float **bufs, int cnt, int num_bufs);
+@@ -125,12 +126,12 @@ static void deinterleave(void *info, voi
+  */
+ static int read_buffer(float **bufs, int cnt, int num_bufs) {
+   struct deinterleave di = {bufs, num_bufs, 0, 0};
+-  int buffered = av_fifo_size(buffer);
++  int buffered = av_fifo_can_read(buffer);
+   if (cnt * sizeof(float) * num_bufs > buffered) {
+     silence(bufs, cnt, num_bufs);
+     cnt = buffered / sizeof(float) / num_bufs;
+   }
+-  av_fifo_generic_read(buffer, &di, cnt * num_bufs * sizeof(float), deinterleave);
++  av_fifo_read(buffer, &di, cnt * num_bufs * sizeof(float));
+   return cnt;
+ }
+ 
+@@ -242,7 +243,7 @@ static int init(int rate, int channels,
+     mp_msg(MSGT_AO, MSGL_FATAL, "[JACK] cannot open server\n");
+     goto err_out;
+   }
+-  buffer = av_fifo_alloc(BUFFSIZE);
++  buffer = av_fifo_alloc2(BUFFSIZE, 1, 0);
+   jack_set_process_callback(client, outputaudio, 0);
+ 
+   // list matching ports if connections should be made
+@@ -302,7 +303,7 @@ err_out:
+   free(client_name);
+   if (client)
+     jack_client_close(client);
+-  av_fifo_free(buffer);
++  av_fifo_freep2(&buffer);
+   buffer = NULL;
+   return 0;
+ }
+@@ -315,7 +316,7 @@ static void uninit(int immed) {
+   reset();
+   usec_sleep(100 * 1000);
+   jack_client_close(client);
+-  av_fifo_free(buffer);
++  av_fifo_freep2(&buffer);
+   buffer = NULL;
+ }
+ 
+@@ -324,7 +325,7 @@ static void uninit(int immed) {
+  */
+ static void reset(void) {
+   paused = 1;
+-  av_fifo_reset(buffer);
++  av_fifo_reset2(buffer);
+   paused = 0;
+ }
+ 
+@@ -343,7 +344,7 @@ static void audio_resume(void) {
+ }
+ 
+ static int get_space(void) {
+-  return av_fifo_space(buffer);
++  return av_fifo_can_write(buffer);
+ }
+ 
+ /**
+@@ -357,7 +358,7 @@ static int play(void *data, int len, int
+ }
+ 
+ static float get_delay(void) {
+-  int buffered = av_fifo_size(buffer); // could be less
++  int buffered = av_fifo_can_read(buffer); // could be less
+   float in_jack = jack_latency;
+   if (estimate && callback_interval > 0) {
+     float elapsed = (float)GetTimer() / 1000000.0 - callback_time;
+diff -rup mplayer-38544.orig/libmpcodecs/ve_lavc.c mplayer-38544/libmpcodecs/ve_lavc.c
+--- mplayer-38544.orig/libmpcodecs/ve_lavc.c	2026-11-23 01:37:54.153846677 +0000
++++ mplayer-38544/libmpcodecs/ve_lavc.c	2026-11-23 01:35:21.290387328 +0000
+@@ -152,7 +152,7 @@ static int lavc_param_video_global_heade
+ static int lavc_param_mv0_threshold = 256;
+ static int lavc_param_refs = 1;
+ static int lavc_param_b_sensitivity = 40;
+-static int lavc_param_level = FF_LEVEL_UNKNOWN;
++static int lavc_param_level = AV_LEVEL_UNKNOWN;
+ 
+ char *lavc_param_acodec = "mp2";
+ int lavc_param_atag = 0;
+@@ -722,12 +722,12 @@ static int put_image(struct vf_instance
+ 
+     if(lavc_param_interlaced_dct){
+         if((mpi->fields & MP_IMGFIELD_ORDERED) && (mpi->fields & MP_IMGFIELD_INTERLACED))
+-            pic->top_field_first= !!(mpi->fields & MP_IMGFIELD_TOP_FIRST);
++            pic->flags |= (mpi->fields & MP_IMGFIELD_TOP_FIRST) ? AV_FRAME_FLAG_TOP_FIELD_FIRST : 0;
+         else
+-            pic->top_field_first= 1;
++            pic->flags |= AV_FRAME_FLAG_TOP_FIELD_FIRST;
+ 
+         if(lavc_param_top!=-1)
+-            pic->top_field_first= lavc_param_top;
++            pic->flags= (pic->flags & ~AV_FRAME_FLAG_TOP_FIELD_FIRST) | lavc_param_top ? AV_FRAME_FLAG_TOP_FIELD_FIRST : 0;
+     }
+ 
+     return encode_frame(vf, pic, pts) >= 0;
+@@ -852,9 +852,6 @@ static void uninit(struct vf_instance *v
+     av_freep(&lavc_venc_context->intra_matrix);
+     av_freep(&lavc_venc_context->inter_matrix);
+ 
+-    if (lavc_venc_context->codec)
+-        avcodec_close(lavc_venc_context);
+-
+     if(stats_file) fclose(stats_file);
+ 
+     /* free rc_override */

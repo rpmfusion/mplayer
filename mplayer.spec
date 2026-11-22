@@ -1,7 +1,7 @@
-# globals for mplayer-38531-20260727-f401198.tar.bz2
-%global gitversion  38531
-%global gitdate     20260727
-%global gittag      f401198
+# globals for mplayer-38544-20261101-7bee813.tar.bz2
+%global gitversion 38544
+%global gitdate 20261101
+%global gittag 7bee813
 
 %global _lto_cflags %{nil}
 
@@ -11,9 +11,9 @@
 Name:           mplayer
 Version:        1.5.1
 %if 0%{?git}
-Release:        0.26.r%{gitversion}.%{gitdate}.%{gittag}%{?dist}
+Release:        0.27.r%{gitversion}.%{gitdate}.%{gittag}%{?dist}
 %else
-Release:        26%{?dist}
+Release:        27%{?dist}
 %endif
 Summary:        Movie player playing most video formats and DVDs
 
@@ -37,10 +37,9 @@ Patch0:         %{name}-config.patch
 Patch1:         %{name}-manlinks.patch
 # use system FFmpeg libraries
 Patch2:         %{name}-ffmpeg.patch
-Patch3:         0204_fix-ftbfs-jack-ffmpeg7.patch
 # https://lists.mplayerhq.hu/pipermail/mplayer-dev-eng/2025-May/074270.html
-Patch4:         fix-ffmpeg8.patch
-# https://github.com/OpenMandrivaAssociation/mplayer/blob/master/mplayer-ffmpeg-9-sample-fmts.patch
+Patch4:         mplayer-ffmpeg7_and_8.patch
+#https://gitlab.archlinux.org/archlinux/packaging/packages/mplayer
 Patch5:         mplayer-ffmpeg-9-sample-fmts.patch
 
 BuildRequires:  SDL-devel
@@ -224,12 +223,7 @@ This package contains various scripts from MPlayer TOOLS directory.
 %setup -q -n MPlayer-%{version}%{?pre}
 rm -rf ffmpeg
 %endif
-%patch -P 0 -p1 -b .config
-%patch -P 1 -p1 -b .manlinks
-%patch -P 2 -p1 -b .ffmpeg
-%patch -P 3 -p1 -b .ffmpeg7
-%patch -P 4 -p1 -b .ffmpeg8
-%patch -P 5 -p1 -b .ffmpeg9
+%autopatch -p1
 
 sed -i '1s=^#! */usr/bin/\(python\|env python\)[23]\?=#!%{__python3}=' TOOLS/{mphelp_check,vobshift}.py
 
@@ -328,6 +322,9 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %{_datadir}/mplayer/*.fp
 
 %changelog
+* Sun Nov 22 2026 Sérgio Basto <sergio@serjux.com> - 1.5.1-0.27.r38544.20261101.7bee813
+- Update to r38544.20261101.7bee813
+
 * Sat Sep 12 2026 Sérgio Basto <sergio@serjux.com> - 1.5.1-0.26.r38531.20260727.f401198
 - Switch MPlayer from SVN to git.ffmpeg.org/mplayer.git
 
