@@ -29,6 +29,8 @@ Source0:        mplayer-%{gitversion}-%{gitdate}-%{gittag}.tar.bz2
 %else
 Source0:        https://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{version}%{?pre}.tar.xz
 %endif
+Source1:        https://www.mplayerhq.hu/MPlayer/skins/Blue-1.11.tar.bz2
+Source2:        http://www1.mplayerhq.hu/MPlayer/skins/Clearlooks-1.7.tar.bz2
 # new mplayer-snapshot.sh that use git
 Source11:       mplayer-localgitsnapshot.sh
 # set defaults for Fedora
@@ -116,9 +118,11 @@ BuildRequires:  docbook-style-xsl
 BuildRequires:  libxml2
 BuildRequires:  libxslt
 %endif
+# for gui
+BuildRequires:  desktop-file-utils
+BuildRequires:  gtk2-devel
 Requires:       mplayer-common = %{version}-%{release}
 Provides:       mplayer-backend
-Obsoletes:      mplayer-gui <= %{version}-%{release}
 
 %description
 MPlayer is a movie player that plays most MPEG, VOB, AVI, OGG/OGM,
@@ -151,6 +155,15 @@ Summary:        MPlayer common files
 
 %description    common
 This package contains common files for MPlayer packages.
+
+%package -n gmplayer
+Summary:        GUI for MPlayer
+Requires:       mplayer-common = %{version}-%{release}
+Requires:       hicolor-icon-theme
+Provides:       mplayer-gui = %{version}-%{release}
+
+%description -n gmplayer
+This package contains a GUI for MPlayer and a default skin for it.
 
 %package     -n mencoder
 Summary:        MPlayer movie encoder
@@ -234,9 +247,20 @@ rm -rf ffmpeg
 %endif
 %autopatch -p1
 
+mkdir GUI
+cp -a `ls -1|grep -v GUI` GUI/
+
 sed -i '1s=^#! */usr/bin/\(python\|env python\)[23]\?=#!%{__python3}=' TOOLS/{mphelp_check,vobshift}.py
 
 %build
+pushd GUI
+export CC=gcc
+export CXX=g++
+%{mp_configure}--enable-gui --disable-mencoder
+
+%make_build V=1
+popd
+
 export CC=gcc
 export CXX=g++
 %{mp_configure}
@@ -280,6 +304,29 @@ install -Dpm 644 etc/example.conf \
 
 install -pm 644 etc/{input,menu}.conf $RPM_BUILD_ROOT%{_sysconfdir}/mplayer/
 
+# GUI mplayer
+install -pm 755 GUI/%{name} $RPM_BUILD_ROOT%{_bindir}/gmplayer
+
+# Default skin
+install -dm 755 $RPM_BUILD_ROOT%{_datadir}/mplayer/skins
+tar xjC $RPM_BUILD_ROOT%{_datadir}/mplayer/skins --exclude=.svn -f %{SOURCE1}
+tar xjC $RPM_BUILD_ROOT%{_datadir}/mplayer/skins --exclude=.svn -f %{SOURCE2}
+ln -s Blue $RPM_BUILD_ROOT%{_datadir}/mplayer/skins/default
+
+
+# Icons
+for iconsize in 16x16 22x22 24x24 32x32 48x48 256x256
+do
+install -dm 755 $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/$iconsize/apps
+install -pm 644 etc/mplayer$iconsize.png \
+    $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/$iconsize/apps/mplayer.png
+done
+
+# Desktop file
+desktop-file-install \
+        --dir $RPM_BUILD_ROOT%{_datadir}/applications \
+        etc/%{name}.desktop
+
 # Codec dir
 install -dm 755 $RPM_BUILD_ROOT%{codecdir}
 sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}/vobshift
@@ -300,6 +347,12 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %dir %{codecdir}/
 %dir %{_datadir}/mplayer/
 %{_mandir}/man1/mplayer.1*
+
+%files -n gmplayer
+%{_bindir}/gmplayer
+%{_datadir}/applications/*mplayer.desktop
+%{_datadir}/icons/hicolor/*/apps/mplayer.png
+%{_datadir}/mplayer/skins/
 
 %files -n mencoder -f mencoder.lang
 %{_bindir}/mencoder
@@ -335,6 +388,7 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 - Update to r38544.20261101.7bee813
 - Re-enable JACK support except on EL10
 - Add five patches from the Packman Build Service (PMBS) project: https://pmbs.links2linux.org/package/show/Multimedia/MPlayer
+- Add GUI, name it gmplayer, and add the Clearlooks skin
 
 * Sat Sep 12 2026 Sérgio Basto <sergio@serjux.com> - 1.5.1-0.26.r38531.20260727.f401198
 - Switch MPlayer from SVN to git.ffmpeg.org/mplayer.git
