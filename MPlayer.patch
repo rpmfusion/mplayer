@@ -1,0 +1,22 @@
+--- a/m_property.c
++++ b/m_property.c
+@@ -358,7 +358,7 @@ int m_property_time_ro(const m_option_t*
+ 	    s -= h * 3600;
+ 	    m = s / 60;
+ 	    s -= m * 60;
+-	    *(char **) arg = malloc(20);
++	    *(char **) arg = malloc(32);
+ 	    if (h > 0)
+ 		sprintf(*(char **) arg, "%d:%02d:%02d", h, m, s);
+ 	    else if (m > 0)
+--- a/libmenu/menu_console.c
++++ b/libmenu/menu_console.c
+@@ -469,7 +469,7 @@ static int read_key(menu_t* menu,int c)
+     int l = strlen(mpriv->cur_history->buffer);
+     if(l >= mpriv->cur_history->size) {
+       mpriv->cur_history->size += 255;
+-      mpriv->cur_history->buffer = realloc(mpriv->cur_history,mpriv->cur_history->size);
++      mpriv->cur_history->buffer = realloc(mpriv->cur_history->buffer,mpriv->cur_history->size);
+     }
+     mpriv->cur_history->buffer[l] = (char)c;
+     mpriv->cur_history->buffer[l+1] = '\0';

@@ -1,0 +1,20 @@
+--- a/vidix/pci.c
++++ b/vidix/pci.c
+@@ -51,6 +51,7 @@
+  *
+  */
+ 
++#define _GNU_SOURCE
+ #include "dha.h"
+ #include "config.h"
+ #include "mp_msg.h"
+--- a/vidix/sysdep/pci_linux.c
++++ b/vidix/sysdep/pci_linux.c
+@@ -26,6 +26,7 @@
+  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  */
+ 
++#define _GNU_SOURCE
+ #include <errno.h>
+ #if ARCH_X86
+ //#include <sys/perm.h> doesn't exist on libc5 systems

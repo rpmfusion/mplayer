@@ -1,0 +1,29 @@
+--- a/stream/librtsp/rtsp_session.c
++++ b/stream/librtsp/rtsp_session.c
+@@ -167,8 +167,8 @@ rtsp_session_t *rtsp_session_start(int f
+     }
+ 
+     rtsp_session->real_session = init_real_rtsp_session ();
+-    if(!strncmp(h->streams[0]->mime_type, "application/vnd.rn-rmadriver", h->streams[0]->mime_type_size) ||
+-       !strncmp(h->streams[0]->mime_type, "application/smil", h->streams[0]->mime_type_size)) {
++    if(h->streams[0] && (!strncmp(h->streams[0]->mime_type, "application/vnd.rn-rmadriver", h->streams[0]->mime_type_size) ||
++       !strncmp(h->streams[0]->mime_type, "application/smil", h->streams[0]->mime_type_size))) {
+       rtsp_session->real_session->header_len = 0;
+       rtsp_session->real_session->recv_size = 0;
+       rtsp_session->real_session->rdt_rawdata = 1;
+--- a/stream/realrtsp/sdpplin.c
++++ b/stream/realrtsp/sdpplin.c
+@@ -277,6 +277,13 @@ sdpplin_t *sdpplin_parse(char *data) {
+ 
+     if (filter(data, "m=", &buf)) {
+       sdpplin_stream_t *stream=sdpplin_parse_stream(&data);
++      if (!stream) {
++        mp_msg(MSGT_OPEN, MSGL_ERR, "sdpplin: can't parse stream\n");
++        free(desc);
++        free(buf);
++        free(decoded);
++        return NULL;
++      }
+ #ifdef LOG
+       printf("got data for stream id %u\n", stream->stream_id);
+ #endif

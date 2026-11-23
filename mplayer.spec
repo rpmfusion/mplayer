@@ -42,6 +42,13 @@ Patch4:         mplayer-ffmpeg7_and_8.patch
 #https://gitlab.archlinux.org/archlinux/packaging/packages/mplayer
 Patch5:         mplayer-ffmpeg-9-sample-fmts.patch
 
+#https://pmbs.links2linux.org/package/show/Multimedia/MPlayer
+Patch6:         MPlayer-fix-dvd-crash.patch
+Patch7:         MPlayer-pci_linux_gnu_source.patch
+Patch8:         MPlayer-rtsp-extra-fixes.patch
+Patch9:         MPlayer.patch
+Patch10:        bug490-demux_lavf.patch
+
 BuildRequires:  SDL-devel
 BuildRequires:  aalib-devel
 BuildRequires:  alsa-lib-devel
@@ -327,6 +334,7 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 * Sun Nov 22 2026 Sérgio Basto <sergio@serjux.com> - 1.5.1-0.27.r38544.20261101.7bee813
 - Update to r38544.20261101.7bee813
 - Re-enable JACK support except on EL10
+- Add five patches from the Packman Build Service (PMBS) project: https://pmbs.links2linux.org/package/show/Multimedia/MPlayer
 
 * Sat Sep 12 2026 Sérgio Basto <sergio@serjux.com> - 1.5.1-0.26.r38531.20260727.f401198
 - Switch MPlayer from SVN to git.ffmpeg.org/mplayer.git

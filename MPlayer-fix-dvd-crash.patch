@@ -1,0 +1,14 @@
+--- a/libmpcodecs/vd_ffmpeg.c
++++ b/libmpcodecs/vd_ffmpeg.c
+@@ -176,7 +176,10 @@ static enum AVDiscard str2AVDiscard(char
+ // to set/get/query special features/parameters
+ static int control(sh_video_t *sh, int cmd, void *arg, ...){
+     vd_ffmpeg_ctx *ctx = sh->context;
+-    AVCodecContext *avctx = ctx->avctx;
++    AVCodecContext *avctx;
++    
++    if (!ctx) return CONTROL_UNKNOWN;
++    avctx = ctx->avctx;
+     switch(cmd){
+     case VDCTRL_QUERY_FORMAT:
+     {
