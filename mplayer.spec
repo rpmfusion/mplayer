@@ -56,7 +56,9 @@ BuildRequires:  fribidi-devel
 BuildRequires:  gcc-c++
 BuildRequires:  giflib-devel
 BuildRequires:  gsm-devel
-#BuildRequires:  jack-audio-connection-kit-devel
+%if ! 0%{?rhel} >= 10
+BuildRequires:  jack-audio-connection-kit-devel
+%endif
 BuildRequires:  ladspa-devel
 BuildRequires:  lame-devel
 BuildRequires:  libGL-devel
@@ -324,6 +326,7 @@ sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' %{buildroot}%{_bindir}
 %changelog
 * Sun Nov 22 2026 Sérgio Basto <sergio@serjux.com> - 1.5.1-0.27.r38544.20261101.7bee813
 - Update to r38544.20261101.7bee813
+- Re-enable JACK support except on EL10
 
 * Sat Sep 12 2026 Sérgio Basto <sergio@serjux.com> - 1.5.1-0.26.r38531.20260727.f401198
 - Switch MPlayer from SVN to git.ffmpeg.org/mplayer.git
